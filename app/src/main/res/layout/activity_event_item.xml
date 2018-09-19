@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/event_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:hint="@string/title"
+        android:inputType="textCapSentences"
+        android:maxLength="80"
+        android:maxLines="1"
+        android:minEms="20"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/day_text_size" />
+
+    <EditText
+        android:id="@+id/event_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/event_title"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:hint="@string/location"
+        android:inputType="textCapWords"
+        android:maxLength="80"
+        android:maxLines="1"
+        android:minEms="20"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/day_text_size" />
+
+    <EditText
+        android:id="@+id/event_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/event_location"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:autoLink="all"
+        android:gravity="top"
+        android:hint="@string/description"
+        android:inputType="textCapSentences|textMultiLine"
+        android:linksClickable="true"
+        android:minEms="20"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/day_text_size" />
+
+    <ImageView
+        android:id="@+id/event_description_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/event_description"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:importantForAccessibility="no" />
+
+    <ImageView
+        android:id="@+id/event_time_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/event_all_day"
+        android:layout_alignTop="@+id/event_all_day"
+        android:layout_below="@+id/event_description_divider"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:alpha="0.8"
+        android:padding="@dimen/medium_margin"
+        android:src="@drawable/ic_time"
+        android:contentDescription="TODO" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/event_all_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/event_description_divider"
+        android:layout_marginEnd="18dp"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_toEndOf="@+id/event_time_image"
+        android:layout_toRightOf="@+id/event_time_image"
+        android:paddingBottom="@dimen/normal_margin"
+        android:paddingTop="@dimen/normal_margin"
+        android:text="@string/all_day"
+        android:textSize="@dimen/day_text_size"
+        app:switchPadding="@dimen/small_margin" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/event_start_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/event_all_day"
+        android:layout_alignStart="@+id/event_all_day"
+        android:layout_below="@+id/event_time_image"
+        android:background="?attr/selectableItemBackground"
+        android:paddingBottom="@dimen/activity_margin"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingRight="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin"
+        android:textSize="@dimen/day_text_size"
+        tools:text="January 1 1970" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/event_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/event_time_image"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_margin"
+        android:textSize="@dimen/day_text_size"
+        tools:text="00:00"
+        android:layout_marginEnd="@dimen/activity_margin" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/event_end_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/event_all_day"
+        android:layout_alignStart="@+id/event_all_day"
+        android:layout_below="@+id/event_start_date"
+        android:background="?attr/selectableItemBackground"
+        android:paddingBottom="@dimen/activity_margin"
+        android:paddingEnd="@dimen/activity_margin"
+        android:paddingRight="@dimen/activity_margin"
+        android:paddingTop="@dimen/activity_margin"
+        android:textSize="@dimen/day_text_size"
+        tools:text="January 1 1970" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/event_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/event_start_time"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/activity_margin"
+        android:textSize="@dimen/day_text_size"
+        tools:text="00:00"
+        android:layout_marginEnd="@dimen/activity_margin" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/addEventButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/primary_color" />
+</RelativeLayout>

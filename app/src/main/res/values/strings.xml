@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aplicatie Android</string>
+    <string name="app_launcher_name">Aplicatia lui Narcis</string>
+    <string name="change_view">Change view</string>
+    <string name="daily_view">Daily view</string>
+    <string name="monthly_view">Monthly view</string>
+    <string name="simple_event_list">Simple event list</string>
+
+    <!-- Event -->
+    <string name="event">Event</string>
+    <string name="edit_event">Edit Event</string>
+    <string name="new_event">New Event</string>
+    <string name="create_new_event">Create a new event</string>
+    <string name="end_before_start">The event cannot end earlier than it starts</string>
+    <string name="event_added">Event added successfully</string>
+    <string name="event_updated">Event updated successfully</string>
+    <string name="override_event_types">Override event types in the file</string>
+
+    <!-- Event details -->
+    <string name="title">Title</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="all_day">All-day</string>
+    <string name="save">Save</string>
+    <string name="write_note">write note</string>
+    <string name="no_note">no note</string>
+
+    <!-- Fab menu -->
+    <string name="note">Note</string>
+    <string name="audio">Audio</string>
+
+</resources>
