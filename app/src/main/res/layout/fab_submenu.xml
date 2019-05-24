@@ -84,5 +84,16 @@
             fab:fab_colorPressed="@color/primary_dark_color"
             fab:fab_colorRipple="#99FFFFFF"/>
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_draw"
+            fab:fab_size="mini"
+            fab:fab_label="@string/draw"
+            fab:fab_colorNormal="@color/primary_color"
+            fab:fab_colorPressed="@color/primary_dark_color"
+            fab:fab_colorRipple="#99FFFFFF"/>
+
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

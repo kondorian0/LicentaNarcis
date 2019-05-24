@@ -29,5 +29,11 @@
     <!-- Fab menu -->
     <string name="note">Note</string>
     <string name="audio">Audio</string>
+    <string name="draw">Draw</string>
+
+
+    <string name="redo">Redo</string>
+    <string name="undo">Undo</string>
+    <string name="clear">Clear</string>
 
 </resources>

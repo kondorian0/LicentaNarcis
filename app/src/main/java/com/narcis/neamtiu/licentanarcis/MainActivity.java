@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private FloatingActionButton mEventItem, mNoteItem, mAudioItem;
+    private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
     public MaterialCalendarView mCalendarView;
     public Calendar calendar = Calendar.getInstance();
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         mNoteItem = findViewById(R.id.menu_item_note);
         mNoteItem.setOnClickListener(new View.OnClickListener() {
+
             public void onClick(View v) {
 
                 Intent eventsIntent = new Intent(MainActivity.this, EventItem.class);
@@ -87,10 +88,25 @@ public class MainActivity extends AppCompatActivity {
 
         mAudioItem = findViewById(R.id.menu_item_audio);
         mAudioItem.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
                 Intent eventsIntent = new Intent(MainActivity.this, EventItem.class);
                 startActivity(eventsIntent);
+
+            }
+        });
+
+        mDrawItem = findViewById(R.id.menu_item_draw);
+        mDrawItem.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Intent eventsIntent = new Intent(MainActivity.this, DrawActivity.class);
+                startActivity(eventsIntent);
+
             }
         });
 
@@ -98,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+
         super.onStop();
         this.selectTodayDateCalendar();
+
     }
 }

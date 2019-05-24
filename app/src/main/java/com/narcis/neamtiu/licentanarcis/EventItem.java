@@ -40,6 +40,7 @@ public class EventItem extends AppCompatActivity  {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_item);
 
@@ -67,6 +68,7 @@ public class EventItem extends AppCompatActivity  {
         mEventTimeEnd.setText(currentHour);
 
         mEventDateStart.setOnClickListener(new View.OnClickListener() {
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
@@ -75,24 +77,31 @@ public class EventItem extends AppCompatActivity  {
 
             }
         });
+
         mEventDateEnd.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
                 DialogDateTime.onDateSelectedClick();
+
             }
         });
 
         mEventTimeStart.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                DialogDateTime.onTimeSelectedClick();
 
+                DialogDateTime.onTimeSelectedClick();
 
             }
         });
+
         mEventTimeStart.setText(DialogDateTime.getTimeHourMinute());
 
         mEventTimeEnd.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 DialogDateTime.onTimeSelectedClick();
@@ -100,35 +109,44 @@ public class EventItem extends AppCompatActivity  {
             }
         });
 
+
         mAllDay.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+
                 isTouched = true;
                 return false;
+
             }
         });
-        mAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+
+        mAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 if (isTouched) {
+
                     isTouched = false;
                     if (isChecked) {
+
                         mEventDateStart.setVisibility(View.GONE);
                         mEventDateEnd.setVisibility(View.GONE);
                         mEventTimeStart.setVisibility(View.GONE);
                         mEventTimeEnd.setVisibility(View.GONE);
+
                     }
                     else {
+
                         mEventDateStart.setVisibility(View.VISIBLE);
                         mEventDateEnd.setVisibility(View.VISIBLE);
                         mEventTimeStart.setVisibility(View.VISIBLE);
                         mEventTimeEnd.setVisibility(View.VISIBLE);
+
                     }
                 }
             }
         });
-
     }
 }
