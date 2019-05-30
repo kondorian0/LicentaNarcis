@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent eventsIntent = new Intent(MainActivity.this, EventItem.class);
+                Intent eventsIntent = new Intent(MainActivity.this, RecordActivity.class);
                 startActivity(eventsIntent);
 
             }

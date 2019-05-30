@@ -35,5 +35,10 @@
     <string name="redo">Redo</string>
     <string name="undo">Undo</string>
     <string name="clear">Clear</string>
+    <string name="record">Record</string>
+    <string name="Stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Delete</string>
 
 </resources>

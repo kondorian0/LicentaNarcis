@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecordActivity">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:textAlignment="center"
+        android:textSize="48dp"
+        android:textColor="#5D3EFF"
+        android:text="Record Audio"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/recording_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_recording"
+        android:layout_centerInParent="true"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/no_recording_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_no_recording"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/recording_image"
+        android:layout_margin="8dp"
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/record_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/record"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/stop_record_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/stop"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/linearLayout1"
+        android:layout_margin="8dp"
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/play"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/stop_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/stop"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/save_record_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/save"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/delete_record_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_delete"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
