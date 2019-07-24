@@ -1,6 +1,7 @@
 package com.narcis.neamtiu.licentanarcis;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -10,6 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +27,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity {
 
-    private Button record_button, stop_record_button, play_button, stop_play_button, save_record_button, delete_record_button;
-    ImageView recording, not_recording;
+    private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
+    private AppCompatButton save_record_button, delete_record_button;
+    private AppCompatImageView recording, not_recording;
 
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
@@ -37,6 +41,7 @@ public class RecordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
@@ -82,8 +87,8 @@ public class RecordActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, "prepare() failed");
 
                         }
-                            mRecorder.start();
 
+                        mRecorder.start();
 
                     }else{
 
@@ -183,10 +188,10 @@ public class RecordActivity extends AppCompatActivity {
             case REQUEST_PERMISSIOON_CODE:{
 
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
 
                 else
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
 
             }break;
 
@@ -205,7 +210,7 @@ public class RecordActivity extends AppCompatActivity {
 
     private void requestPermission() {
 
-        ActivityCompat.requestPermissions(RecordActivity.this, new String[]{
+        ActivityCompat.requestPermissions(this, new String[]{
 
                 WRITE_EXTERNAL_STORAGE,
                 RECORD_AUDIO
