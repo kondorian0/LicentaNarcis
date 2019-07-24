@@ -20,7 +20,7 @@
         android:minEms="20"
         android:textCursorDrawable="@null"
         android:textSize="@dimen/day_text_size"
-        android:autofillHints="" tools:targetApi="o"/>
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/event_location"

@@ -13,6 +13,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
     public MaterialCalendarView mCalendarView;
-    public Calendar calendar = Calendar.getInstance();
+    public LocalDate calendar = LocalDate.getInstance();
 
 
     public void selectTodayDateCalendar() {
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-                Intent intent = new Intent(MainActivity.this, DayEvent.class);
+                Intent intent = new Intent(MainActivity.this, DayEventActivity.class);
                 startActivity(intent);
             }
         });
@@ -92,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                Intent eventsIntent = new Intent(MainActivity.this, RecordActivity.class);
-//                startActivity(eventsIntent);
+                Intent eventsIntent = new Intent(MainActivity.this, RecordActivity.class);
+                startActivity(eventsIntent);
 
             }
         });

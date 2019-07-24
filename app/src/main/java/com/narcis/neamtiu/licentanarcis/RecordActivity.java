@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,17 +19,20 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.UUID;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class RecordActivity extends AppCompatActivity {
 
-    Button record_button, stop_record_button, play_button, stop_play_button, save_record_button, delete_record_button;
+    private Button record_button, stop_record_button, play_button, stop_play_button, save_record_button, delete_record_button;
     ImageView recording, not_recording;
 
-    private MediaRecorder mediaRecorder;
-    private MediaPlayer mediaPlayer;
+    private MediaRecorder mRecorder;
+    private MediaPlayer mPlayer;
 
-    private String pathSave = "";
-
-    private final int REQUEST_PERMISSIOON_CODE = 1000;
+    private static final String LOG_TAG = "AudioRecording";
+    private static String mFileName = null;
+    private final int REQUEST_PERMISSIOON_CODE = 1;
 
 
     @Override
@@ -59,25 +63,27 @@ public class RecordActivity extends AppCompatActivity {
 
                     if(checkPermissionFromDevice()){
 
-                    pathSave = Environment.getExternalStorageDirectory()
-                            .getAbsolutePath()+ "/"
-                            + UUID.randomUUID().toString()+ "_audio_record.3gp";
+                        record_button.setEnabled(false);
+                        stop_record_button.setEnabled(true);
+                        play_button.setEnabled(false);
+                        stop_play_button.setEnabled(false);
 
-                    setupMediaRecorder();
+                        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+                        mFileName += UUID.randomUUID().toString()+ "_audio_record.3gp";
 
-                    try{
+                        setupMediaRecorder();
 
-                        mediaRecorder.prepare();
-                        mediaRecorder.start();
+                        try{
 
-                    }catch (IOException e) {
+                            mRecorder.prepare();
 
-                        e.printStackTrace();
+                        }catch (IOException e) {
 
-                    }
+                            Log.e(LOG_TAG, "prepare() failed");
 
-                    play_button.setEnabled(false);
-                    stop_play_button.setEnabled(false);
+                        }
+                            mRecorder.start();
+
 
                     }else{
 
@@ -93,13 +99,16 @@ public class RecordActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    mediaRecorder.stop();
-
-                    play_button.setEnabled(true);
-                    stop_play_button.setEnabled(false);
-
-                    record_button.setEnabled(true);
                     stop_record_button.setEnabled(false);
+                    play_button.setEnabled(true);
+                    stop_play_button.setEnabled(true);
+                    record_button.setEnabled(true);
+
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
+
+                    Toast.makeText(getApplicationContext(),"Recording Stopped", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -110,25 +119,26 @@ public class RecordActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
+                    play_button.setEnabled(false);
                     stop_play_button.setEnabled(true);
                     stop_record_button.setEnabled(false);
-                    record_button.setEnabled(false);
+                    record_button.setEnabled(true);
 
-                    mediaPlayer = new MediaPlayer();
+                    mPlayer = new MediaPlayer();
 
                     try {
 
-                        mediaPlayer.setDataSource(pathSave);
-                        mediaPlayer.prepare();
+                        mPlayer.setDataSource(mFileName);
+                        mPlayer.prepare();
+                        mPlayer.start();
+
+                        Toast.makeText(getApplicationContext(),"Recording Started Playing", Toast.LENGTH_LONG).show();
 
                     } catch (IOException e) {
 
-                        e.printStackTrace();
+                        Log.e(LOG_TAG, "prepare() failed");
 
                     }
-
-                    mediaPlayer.start();
-
                 }
 
             });
@@ -143,38 +153,25 @@ public class RecordActivity extends AppCompatActivity {
                     stop_play_button.setEnabled(false);
                     play_button.setEnabled(true);
 
-                    if(mediaPlayer != null){
+                    if(mPlayer != null){
 
-                        mediaPlayer.stop();
-                        mediaPlayer.release();
-                        setupMediaRecorder();
+                        mPlayer.release();
+                        mPlayer = null;
+
+                        Toast.makeText(getApplicationContext(),"Playing Audio Stopped", Toast.LENGTH_LONG).show();
 
                     }
-
                 }
-
             });
-
     }
 
     private void setupMediaRecorder() {
 
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(pathSave);
-
-    }
-
-    private void requestPermission() {
-
-        ActivityCompat.requestPermissions(RecordActivity.this, new String[]{
-
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO
-
-        }, REQUEST_PERMISSIOON_CODE);
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mRecorder.setOutputFile(mFileName);
 
     }
 
@@ -199,10 +196,21 @@ public class RecordActivity extends AppCompatActivity {
 
     private boolean checkPermissionFromDevice(){
 
-        int write_external_storage_result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int record_audio_result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        int write_external_storage_result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int record_audio_result = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
         return  write_external_storage_result == PackageManager.PERMISSION_GRANTED &&
                 record_audio_result == PackageManager.PERMISSION_GRANTED;
+
+    }
+
+    private void requestPermission() {
+
+        ActivityCompat.requestPermissions(RecordActivity.this, new String[]{
+
+                WRITE_EXTERNAL_STORAGE,
+                RECORD_AUDIO
+
+        }, REQUEST_PERMISSIOON_CODE);
 
     }
 

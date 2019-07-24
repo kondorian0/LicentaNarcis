@@ -12,9 +12,9 @@
         android:layout_alignParentTop="true"
         android:layout_margin="16dp"
         android:textAlignment="center"
-        android:textSize="48dp"
+        android:textSize="48sp"
         android:textColor="#5D3EFF"
-        android:text="Record Audio"/>
+        android:text="@string/record_audio"/>
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/recording_image"
