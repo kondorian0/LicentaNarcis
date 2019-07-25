@@ -1,6 +1,7 @@
 package com.narcis.neamtiu.licentanarcis;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -10,6 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +27,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity {
 
-    private Button record_button, stop_record_button, play_button, stop_play_button, save_record_button, delete_record_button;
-    ImageView recording, not_recording;
+    private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
+    private AppCompatButton save_record_button, delete_record_button;
+    private AppCompatImageView recording, not_recording;
 
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
@@ -37,6 +41,7 @@ public class RecordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
@@ -49,6 +54,8 @@ public class RecordActivity extends AppCompatActivity {
         recording = findViewById(R.id.recording_image);
         not_recording = findViewById(R.id.no_recording_image);
 
+
+
         //Request RunTime permission
         if(!checkPermissionFromDevice()){
 
@@ -56,113 +63,113 @@ public class RecordActivity extends AppCompatActivity {
 
         }
 
-            record_button.setOnClickListener(new View.OnClickListener() {
+        record_button.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                    if(checkPermissionFromDevice()){
+                if(checkPermissionFromDevice()){
 
-                        record_button.setEnabled(false);
-                        stop_record_button.setEnabled(true);
-                        play_button.setEnabled(false);
-                        stop_play_button.setEnabled(false);
+                    record_button.setEnabled(false);
+                    stop_record_button.setEnabled(true);
+                    play_button.setEnabled(false);
+                    stop_play_button.setEnabled(false);
 
-                        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-                        mFileName += UUID.randomUUID().toString()+ "_audio_record.3gp";
+                    mFileName = getExternalCacheDir().getAbsolutePath();
+                    mFileName += "/" + UUID.randomUUID().toString() + "_audiorecordtest.3gp";
+
+                    try{
 
                         setupMediaRecorder();
+                        mRecorder.prepare();
+                        mRecorder.start();
 
-                        try{
+                        Toast.makeText(getApplicationContext(),"Recording Started", Toast.LENGTH_LONG).show();
 
-                            mRecorder.prepare();
+                    }catch (IOException e) {
 
-                        }catch (IOException e) {
-
-                            Log.e(LOG_TAG, "prepare() failed");
-
-                        }
-                            mRecorder.start();
-
-
-                    }else{
-
-                        requestPermission();
+                        e.printStackTrace();
 
                     }
-                }
 
-            });
+                }else{
 
-            stop_record_button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-
-                    stop_record_button.setEnabled(false);
-                    play_button.setEnabled(true);
-                    stop_play_button.setEnabled(true);
-                    record_button.setEnabled(true);
-
-                    mRecorder.stop();
-                    mRecorder.release();
-                    mRecorder = null;
-
-                    Toast.makeText(getApplicationContext(),"Recording Stopped", Toast.LENGTH_LONG).show();
+                    requestPermission();
 
                 }
+            }
 
-            });
+        });
 
-            play_button.setOnClickListener(new View.OnClickListener() {
+        stop_record_button.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                    play_button.setEnabled(false);
-                    stop_play_button.setEnabled(true);
-                    stop_record_button.setEnabled(false);
-                    record_button.setEnabled(true);
+                stop_record_button.setEnabled(false);
+                play_button.setEnabled(true);
+                stop_play_button.setEnabled(true);
+                record_button.setEnabled(true);
 
-                    mPlayer = new MediaPlayer();
+                mRecorder.stop();
+                mRecorder.release();
+                mRecorder = null;
 
-                    try {
+                Toast.makeText(getApplicationContext(),"Recording Stopped", Toast.LENGTH_LONG).show();
 
-                        mPlayer.setDataSource(mFileName);
-                        mPlayer.prepare();
-                        mPlayer.start();
+            }
 
-                        Toast.makeText(getApplicationContext(),"Recording Started Playing", Toast.LENGTH_LONG).show();
+        });
 
-                    } catch (IOException e) {
+        play_button.setOnClickListener(new View.OnClickListener() {
 
-                        Log.e(LOG_TAG, "prepare() failed");
+            @Override
+            public void onClick(View view) {
 
-                    }
+                play_button.setEnabled(false);
+                stop_play_button.setEnabled(true);
+                stop_record_button.setEnabled(false);
+                record_button.setEnabled(true);
+
+                mPlayer = new MediaPlayer();
+
+                try {
+
+                    mPlayer.setDataSource(mFileName);
+                    mPlayer.prepare();
+                    mPlayer.start();
+
+                    Toast.makeText(getApplicationContext(),"Recording Started Playing", Toast.LENGTH_LONG).show();
+
+                } catch (IOException e) {
+
+                    Log.e(LOG_TAG, "prepare() failed");
+
                 }
+            }
 
-            });
+        });
 
-            stop_play_button.setOnClickListener(new View.OnClickListener() {
+        stop_play_button.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                    stop_record_button.setEnabled(false);
-                    record_button.setEnabled(true);
-                    stop_play_button.setEnabled(false);
-                    play_button.setEnabled(true);
+                stop_record_button.setEnabled(false);
+                record_button.setEnabled(true);
+                stop_play_button.setEnabled(false);
+                play_button.setEnabled(true);
 
-                    if(mPlayer != null){
+                if(mPlayer != null){
 
-                        mPlayer.release();
-                        mPlayer = null;
+                    mPlayer.release();
+                    mPlayer = null;
 
-                        Toast.makeText(getApplicationContext(),"Playing Audio Stopped", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Playing Audio Stopped", Toast.LENGTH_LONG).show();
 
-                    }
                 }
-            });
+            }
+        });
     }
 
     private void setupMediaRecorder() {
@@ -183,10 +190,10 @@ public class RecordActivity extends AppCompatActivity {
             case REQUEST_PERMISSIOON_CODE:{
 
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
 
                 else
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
 
             }break;
 
@@ -205,7 +212,7 @@ public class RecordActivity extends AppCompatActivity {
 
     private void requestPermission() {
 
-        ActivityCompat.requestPermissions(RecordActivity.this, new String[]{
+        ActivityCompat.requestPermissions(this, new String[]{
 
                 WRITE_EXTERNAL_STORAGE,
                 RECORD_AUDIO

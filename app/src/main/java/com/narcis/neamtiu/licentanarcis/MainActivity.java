@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
     public MaterialCalendarView mCalendarView;
-    public LocalDate calendar = LocalDate.getInstance();
+    public Calendar calendar = Calendar.getInstance();
 
 
     public void selectTodayDateCalendar() {
