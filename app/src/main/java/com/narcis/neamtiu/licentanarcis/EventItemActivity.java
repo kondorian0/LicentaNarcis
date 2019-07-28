@@ -17,9 +17,9 @@ import java.util.Calendar;
 
 import static java.util.Calendar.*;
 
-public class EventItem extends AppCompatActivity  {
+public class EventItemActivity extends AppCompatActivity  {
 
-    private static final String TAG = "EventItem";
+    private static final String TAG = "EventItemActivity";
 
     private static AppCompatTextView mEventDateStart;
     private static AppCompatTextView mEventDateEnd;

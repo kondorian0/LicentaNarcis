@@ -44,5 +44,6 @@
     <string name="change_color">Change color</string>
     <string name="pen_size">Pen size:</string>
     <string name="todo">TODO</string>
+    <string name="enter_text">Enter text</string>
 
 </resources>

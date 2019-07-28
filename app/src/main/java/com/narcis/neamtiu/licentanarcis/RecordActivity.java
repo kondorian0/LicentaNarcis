@@ -2,6 +2,8 @@ package com.narcis.neamtiu.licentanarcis;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -15,10 +17,9 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -54,6 +55,8 @@ public class RecordActivity extends AppCompatActivity {
         recording = findViewById(R.id.recording_image);
         not_recording = findViewById(R.id.no_recording_image);
 
+        recording.setVisibility(View.INVISIBLE);
+        not_recording.setVisibility(View.VISIBLE);
 
 
         //Request RunTime permission
@@ -74,6 +77,8 @@ public class RecordActivity extends AppCompatActivity {
                     stop_record_button.setEnabled(true);
                     play_button.setEnabled(false);
                     stop_play_button.setEnabled(false);
+                    not_recording.setVisibility(View.INVISIBLE);
+                    recording.setVisibility(View.VISIBLE);
 
                     mFileName = getExternalCacheDir().getAbsolutePath();
                     mFileName += "/" + UUID.randomUUID().toString() + "_audiorecordtest.3gp";
@@ -115,6 +120,9 @@ public class RecordActivity extends AppCompatActivity {
                 mRecorder.release();
                 mRecorder = null;
 
+                recording.setVisibility(View.INVISIBLE);
+                not_recording.setVisibility(View.VISIBLE);
+
                 Toast.makeText(getApplicationContext(),"Recording Stopped", Toast.LENGTH_LONG).show();
 
             }
@@ -125,6 +133,13 @@ public class RecordActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+
+                if (mFileName==null){
+
+                    Toast.makeText(getApplicationContext(),"No audio to play", Toast.LENGTH_LONG).show();
+                    return;
+
+                }
 
                 play_button.setEnabled(false);
                 stop_play_button.setEnabled(true);
@@ -168,6 +183,35 @@ public class RecordActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Playing Audio Stopped", Toast.LENGTH_LONG).show();
 
                 }
+            }
+        });
+
+        delete_record_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final File forDelete = new File(mFileName);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
+
+                builder.setMessage("Do you want to delete the recorded audio?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                                if(forDelete.exists()) {
+
+                                    forDelete.delete();
+
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }

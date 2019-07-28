@@ -13,7 +13,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 String currentHour = hourTime.format(ldt);
 
 
-                Intent intent = new Intent(MainActivity.this, EventItem.class);
+                Intent intent = new Intent(MainActivity.this, EventItemActivity.class);
                 intent.putExtra("Start Date",currentDate);
                 intent.putExtra("Start Hour", currentHour);
                 startActivity(intent);
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
 
-                Intent eventsIntent = new Intent(MainActivity.this, EventItem.class);
+                Intent eventsIntent = new Intent(MainActivity.this, NoteActivity.class);
                 startActivity(eventsIntent);
 
             }
