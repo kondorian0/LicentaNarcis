@@ -1,4 +1,4 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.util;
 
 import android.graphics.Path;
 

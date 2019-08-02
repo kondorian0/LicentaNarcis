@@ -1,4 +1,4 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.util;
 
 
 import android.content.Context;
@@ -13,8 +13,9 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.narcis.neamtiu.licentanarcis.util.Draw;
 
 import java.io.File;
 import java.io.FileNotFoundException;

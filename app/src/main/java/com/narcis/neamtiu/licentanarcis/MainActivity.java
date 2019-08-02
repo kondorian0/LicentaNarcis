@@ -1,5 +1,4 @@
 package com.narcis.neamtiu.licentanarcis;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,10 +12,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+
                 Intent intent = new Intent(MainActivity.this, DayEventActivity.class);
                 startActivity(intent);
             }
@@ -54,23 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         mEventItem = findViewById(R.id.menu_item_event);
         mEventItem.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.O)
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
             public void onClick(View v) {
 
-                LocalDateTime ldt = LocalDateTime.now();
-
-                DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("dd MMM. yyyy", Locale.ENGLISH);
-                String currentDate = dateTime.format(ldt);
-
-                DateTimeFormatter hourTime = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
-                String currentHour = hourTime.format(ldt);
-
-
                 Intent intent = new Intent(MainActivity.this, EventItemActivity.class);
-                intent.putExtra("Start Date",currentDate);
-                intent.putExtra("Start Hour", currentHour);
                 startActivity(intent);
             }
         });
