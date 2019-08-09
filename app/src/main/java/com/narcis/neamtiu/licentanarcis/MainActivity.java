@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -18,6 +19,8 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
+    DatabaseHelper myDb;
 
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myDb = new DatabaseHelper(this);
 
         mCalendarView = findViewById(R.id.calendarView);
 
