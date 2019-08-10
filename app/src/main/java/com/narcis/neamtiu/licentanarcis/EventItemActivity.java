@@ -29,38 +29,28 @@ public class EventItemActivity extends AppCompatActivity  {
         AddData();
 
     }
-
-    public EventItemActivity(){
-    }
-
-    public EventItemActivity(String title, String description, String location){
-
-//        this.mTitle.getText().toString() = title;
-    }
-
     public void AddData(){
         save_event_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String title = mTitle.getText().toString();
-                String description = mTitle.getText().toString();
-                String location = mTitle.getText().toString();
-                String event_type = "Normal Event";
+                String description = mDescription.getText().toString();
+                String location = mLocation.getText().toString();
 
-                boolean isInserted = myDb.insertDataEvent(title,description,location, event_type);
+                //tests
+                String event_type = "Event";
+                String date_from = "xx/xx/xxxx";
+                String date_to = "xx/xx/xxxx";
+                String time_from = "xx:xx:xx";
+                String time_to = "xx:xx:xx";
 
-                if(isInserted == true) {
+                myDb.insertDataEvent(title, description, location);
+                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
 
-                    Toast.makeText(getApplicationContext(), "Data Inserted", Toast.LENGTH_LONG).show();
-
-                }else {
-
-                    Toast.makeText(getApplicationContext(), "Data Not Inserted", Toast.LENGTH_LONG).show();
-
-                }
-
-
+                mTitle.getText().clear();
+                mDescription.getText().clear();
+                mLocation.getText().clear();
 
             }
         });

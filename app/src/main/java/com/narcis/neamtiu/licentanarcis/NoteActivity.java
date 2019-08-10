@@ -13,10 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+
 public class NoteActivity extends AppCompatActivity {
 
     private AppCompatButton save_note_button, delete_note_button;
-    private EditText editText;
+    private EditText mNote;
+    DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +27,14 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
+        myDb = new DatabaseHelper(getApplicationContext());
+
         save_note_button = findViewById(R.id.save_note_button);
         delete_note_button = findViewById(R.id.delete_note_button);
-        editText = findViewById(R.id.editText);
+        mNote = findViewById(R.id.editText);
 
-        save_note_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        AddData();
 
-                //save to list items respective day
-
-            }
-        });
 
         delete_note_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +62,32 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    public void AddData(){
+        save_note_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String note = mNote.getText().toString();
+
+                //tests
+                String event_type = "Note";
+                String date_from = "yy/yy/yy";
+                String date_to = "yy/yy/yyyy";
+                String time_from = "zz:zz:zz";
+                String time_to = "zz:zz:zz";
+
+                myDb.insertDataNote(note);
+                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
+
+                mNote.getText().clear();
+
+            }
+        });
+    }
+
     public void delete(){
 
-        editText.getText().clear();
+        mNote.getText().clear();
 
         Toast.makeText(getApplicationContext(),"Text deleted", Toast.LENGTH_LONG).show();
 

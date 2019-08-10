@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -19,9 +20,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -36,8 +39,12 @@ public class RecordActivity extends AppCompatActivity {
     private MediaPlayer mPlayer;
 
     private static final String LOG_TAG = "AudioRecording";
-    private static String mFileName = null;
+//    private static String mFileName = null;
     private final int REQUEST_PERMISSIOON_CODE = 1;
+
+    private String path;
+
+    DatabaseHelper myDb;
 
 
     @Override
@@ -45,6 +52,8 @@ public class RecordActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        myDb = new DatabaseHelper(getApplicationContext());
 
         record_button = findViewById(R.id.record_button);
         stop_record_button = findViewById(R.id.stop_record_button);
@@ -57,6 +66,8 @@ public class RecordActivity extends AppCompatActivity {
 
         recording.setVisibility(View.INVISIBLE);
         not_recording.setVisibility(View.VISIBLE);
+
+        AddData();
 
 
         //Request RunTime permission
@@ -80,8 +91,7 @@ public class RecordActivity extends AppCompatActivity {
                     not_recording.setVisibility(View.INVISIBLE);
                     recording.setVisibility(View.VISIBLE);
 
-                    mFileName = getExternalCacheDir().getAbsolutePath();
-                    mFileName += "/" + UUID.randomUUID().toString() + "_audiorecordtest.3gp";
+                    path = AudioFileHelper.saveAudio();
 
                     try{
 
@@ -134,7 +144,7 @@ public class RecordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mFileName==null){
+                if (path==null){
 
                     Toast.makeText(getApplicationContext(),"No audio to play", Toast.LENGTH_LONG).show();
                     return;
@@ -150,7 +160,7 @@ public class RecordActivity extends AppCompatActivity {
 
                 try {
 
-                    mPlayer.setDataSource(mFileName);
+                    mPlayer.setDataSource(path);
                     mPlayer.prepare();
                     mPlayer.start();
 
@@ -190,7 +200,7 @@ public class RecordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final File forDelete = new File(mFileName);
+                final File forDelete = new File(path);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
 
@@ -222,7 +232,7 @@ public class RecordActivity extends AppCompatActivity {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mRecorder.setOutputFile(mFileName);
+        mRecorder.setOutputFile(path);
 
     }
 
@@ -263,6 +273,25 @@ public class RecordActivity extends AppCompatActivity {
 
         }, REQUEST_PERMISSIOON_CODE);
 
+    }
+
+    public void AddData(){
+        save_record_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //tests
+                String event_type = "Audio";
+                String date_from = "yy/yy/yy";
+                String date_to = "yy/yy/yyyy";
+                String time_from = "zz:zz:zz";
+                String time_to = "zz:zz:zz";
+
+                myDb.insertDataAudio(path);
+                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
+
+            }
+        });
     }
 
 }

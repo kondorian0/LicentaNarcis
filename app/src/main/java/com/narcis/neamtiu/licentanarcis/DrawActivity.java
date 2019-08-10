@@ -16,15 +16,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.narcis.neamtiu.licentanarcis.util.PaintView;
+import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity {
 
-    private PaintView paintView;
+    private PaintFileHelper paintHelper;
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
+
+    DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,9 @@ public class DrawActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
 
-        paintView = findViewById(R.id.paintView);
+        myDb = new DatabaseHelper(getApplicationContext());
+
+        paintHelper = findViewById(R.id.paintView);
         change_color_button = findViewById(R.id.change_color_button);
         redo_button = findViewById(R.id.redo_button);
         undo_button = findViewById(R.id.undo_button);
@@ -46,7 +51,7 @@ public class DrawActivity extends AppCompatActivity {
 
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        paintView.initialise(displayMetrics);
+        paintHelper.initialise(displayMetrics);
 
         textView.setText("Pen size: " + seekBar.getProgress());
 
@@ -65,7 +70,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                paintView.clear();
+                paintHelper.clear();
 
             }
         });
@@ -74,7 +79,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                paintView.undo();
+                paintHelper.undo();
 
             }
         });
@@ -83,7 +88,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                paintView.redo();
+                paintHelper.redo();
 
             }
         });
@@ -97,7 +102,18 @@ public class DrawActivity extends AppCompatActivity {
                     requestStoragePermission();
 
                 }
-                paintView.saveImage();
+
+                String path = paintHelper.saveImage();
+                Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
+
+                String event_type = "Image";
+                String date_from = "yy/yy/yy";
+                String date_to = "yy/yy/yyyy";
+                String time_from = "zz:zz:zz";
+                String time_to = "zz:zz:zz";
+
+                myDb.insertDataImage(path);
+                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
 
             }
         });
@@ -107,7 +123,7 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
-                paintView.setStrokeWidth(seekBar.getProgress());
+                paintHelper.setStrokeWidth(seekBar.getProgress());
                 textView.setText("Pen size: " + seekBar.getProgress());
 
             }
@@ -226,7 +242,7 @@ public class DrawActivity extends AppCompatActivity {
 
                 defaultColor = color;
 
-                paintView.setColor(color);
+                paintHelper.setColor(color);
 
             }
 

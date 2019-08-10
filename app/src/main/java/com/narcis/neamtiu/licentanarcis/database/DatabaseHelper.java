@@ -41,8 +41,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_DESCRIPTION = "DESCRIPTION";
     public static final String KEY_LOCATION = "LOCATION";
 
-    // TAGS Table - column names
-    private static final String KEY_TAG_NAME = "tag_name";
 
     // Table Create Statements
     // Todo table create statement
@@ -59,25 +57,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_IMAGE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_IMAGE + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
-            + KEY_EVENT_TYPE + " TEXT,"
             + KEY_PATH + " TEXT" + ")";
 
     private static final String CREATE_TABLE_AUDIO = "CREATE TABLE IF NOT EXISTS "
             + TABLE_AUDIO + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
-            + KEY_EVENT_TYPE + " TEXT,"
             + KEY_PATH + " TEXT" + ")";
 
     private static final String CREATE_TABLE_NOTE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NOTE + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
-            + KEY_EVENT_TYPE + " TEXT,"
             + KEY_NOTE + " TEXT" + ")";
 
     private static final String CREATE_TABLE_EVENT = "CREATE TABLE IF NOT EXISTS "
             + TABLE_EVENT + "("
             + KEY_ID + " INTEGER PRIMARY KEY,"
-            + KEY_EVENT_TYPE + " TEXT,"
             + KEY_TITLE + " TEXT,"
             + KEY_DESCRIPTION + " TEXT,"
             + KEY_LOCATION + " TEXT" + ")";
@@ -97,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_IMAGE);
         db.execSQL(CREATE_TABLE_AUDIO);
         db.execSQL(CREATE_TABLE_NOTE);
+        db.execSQL(CREATE_TABLE_EVENT);
 
     }
 
@@ -114,12 +109,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-//    public void insertDataTodoEvent
+    // -----------------------ALL EVENTS table methods--------------------------- //
 
+    public long insertDataTodoEvent(String event_Type, String date_from, String date_to, String time_from, String time_to) {
 
-    // -----------------------Event table methods--------------------------- //
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    public boolean insertDataEvent(String title, String description, String location, String event_Type){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_EVENT_TYPE, event_Type);
+        contentValues.put(KEY_DATE_FROM, date_from);
+        contentValues.put(KEY_DATE_TO, date_to);
+        contentValues.put(KEY_TIME_FROM, time_from);
+        contentValues.put(KEY_TIME_TO, time_to);
+
+        long id = db.insert(TABLE_TODO_EVENTS, null, contentValues);
+
+        return id;
+    }
+
+    // -----------------------EVENT table methods--------------------------- //
+
+    public long insertDataEvent(String title, String description, String location){
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -127,19 +137,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_TITLE, title);
         contentValues.put(KEY_DESCRIPTION, description);
         contentValues.put(KEY_LOCATION, location);
-        contentValues.put(KEY_EVENT_TYPE, event_Type);
 
-        long result = db.insert(TABLE_EVENT, null, contentValues);
+        long id = db.insert(TABLE_EVENT, null, contentValues);
 
-        if(result == -1){
+        return  id;
 
-            return false;
+    }
 
-        }else{
+    // -----------------------NOTE table methods--------------------------- //
 
-            return true;
+    public long insertDataNote(String note){
 
-        }
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_NOTE, note);
+
+        long id = db.insert(TABLE_NOTE, null, contentValues);
+
+        return  id;
+
+    }
+
+    // -----------------------AUDIO table methods--------------------------- //
+
+    public long insertDataAudio(String path){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_PATH, path);
+
+        long id = db.insert(TABLE_AUDIO, null, contentValues);
+
+        return  id;
+
+    }
+
+    // -----------------------AUDIO table methods--------------------------- //
+
+    public long insertDataImage(String path){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_PATH, path);
+
+        long id = db.insert(TABLE_IMAGE, null, contentValues);
+
+        return  id;
 
     }
 

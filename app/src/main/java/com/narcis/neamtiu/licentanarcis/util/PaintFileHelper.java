@@ -23,7 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PaintView extends View {
+public class PaintFileHelper extends View {
 
     //constant values
     public static int BRUSH_SIZE = 10;
@@ -45,13 +45,13 @@ public class PaintView extends View {
     private ArrayList<Draw> paths = new ArrayList<>();
     private ArrayList<Draw> undo = new ArrayList<>();
 
-    public PaintView(Context context) {
+    public PaintFileHelper(Context context) {
 
         super(context, null);
 
     }
 
-    public PaintView(Context context, @Nullable AttributeSet attrs) {
+    public PaintFileHelper(Context context, @Nullable AttributeSet attrs) {
 
         super(context, attrs);
 
@@ -209,8 +209,9 @@ public class PaintView extends View {
 
     }
 
-    public void saveImage(){
+    public String saveImage(){
 
+        String getPath = null;
         int count = 0;
         File sdDirectory = Environment.getExternalStorageDirectory();
         File subDirectory = new File(sdDirectory.toString() + "/Pictures/Paint");
@@ -239,6 +240,9 @@ public class PaintView extends View {
             File image =  new File(subDirectory, "/drawing_" + (count + 1) + ".png" );
             FileOutputStream fileOutputStream;
 
+
+            getPath = image.getPath();
+
             try{
 
                 fileOutputStream = new FileOutputStream(image);
@@ -257,6 +261,8 @@ public class PaintView extends View {
             }
 
         }
+
+        return getPath;
 
     }
 

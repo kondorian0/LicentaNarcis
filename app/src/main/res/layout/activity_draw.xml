@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".DrawActivity">
 
-    <com.narcis.neamtiu.licentanarcis.util.PaintView
+    <com.narcis.neamtiu.licentanarcis.util.PaintFileHelper
         android:id="@+id/paintView"
         android:layout_width="395dp"
         android:layout_height="500dp"
