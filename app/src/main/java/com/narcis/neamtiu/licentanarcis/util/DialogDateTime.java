@@ -27,6 +27,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DialogDateTime extends AppCompatActivity {
 
@@ -39,6 +41,20 @@ public class DialogDateTime extends AppCompatActivity {
 
     public static String timeHourMinute;
     public static String startDate;
+
+    public interface Listener {
+        public void onDatePicked(int year, int month, int day);
+    }
+
+    static private List<Listener> mListeners = new LinkedList();
+
+    static public void registerListener(Listener listener) {
+        mListeners.add(listener);
+    }
+
+    static public void unregisterListener(Listener listener) {
+        mListeners.remove(listener);
+    }
 
     public static void showDatePickerDialog(Context context, CalendarDay day,
                                             DatePickerDialog.OnDateSetListener callback) {
@@ -60,16 +76,13 @@ public class DialogDateTime extends AppCompatActivity {
 
     public static void onDateSelectedClick(final Context context) {
 
-        showDatePickerDialog(context, widget.getSelectedDate(), new DatePickerDialog.OnDateSetListener() {
+        showDatePickerDialog(context, widget.getSelectedDate(), new DatePickerDialog.OnDateSetListener(){
 
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                startDate = dayOfMonth+"/"+monthOfYear+"/"+year;
-
-                Toast.makeText(context,dayOfMonth+"/"+monthOfYear+"/"+year, Toast.LENGTH_LONG).show();
-//                widget.setSelectedDate(CalendarDay.from(year, monthOfYear, dayOfMonth));
-
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                for (Listener l : mListeners) {
+                    l.onDatePicked(i, i1, i2);
+                }
             }
         });
     }
@@ -86,6 +99,7 @@ public class DialogDateTime extends AppCompatActivity {
 
     }
     public static void onTimeSelectedClick(final Context context){
+
         showTimePickerDialog(context, mTime, new TimePickerDialog.OnTimeSetListener() {
 
             @Override

@@ -1,6 +1,7 @@
 package com.narcis.neamtiu.licentanarcis;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,9 +18,33 @@ import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 
 public class NoteActivity extends AppCompatActivity {
 
+    class DialogDateTimeListener implements DialogDateTime.Listener {
+
+        @Override
+        public void onDatePicked(int year, int month, int day) {
+            String startDate = day + "/" + month + "/" + year;
+
+            String note = mNote.getText().toString();
+
+            String date_from = startDate;
+            DialogDateTime.startDate = startDate;
+
+            String event_type = "Note";
+            String date_to = "yy/yy/yyyy";
+            String time_from = "zz:zz:zz";
+            String time_to = "zz:zz:zz";
+
+            myDb.insertDataNote(note);
+            myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
+
+            mNote.getText().clear();
+        }
+    }
+
     private AppCompatButton save_note_button, delete_note_button;
     private EditText mNote;
-    DatabaseHelper myDb;
+    private DatabaseHelper myDb;
+    private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +59,6 @@ public class NoteActivity extends AppCompatActivity {
         mNote = findViewById(R.id.editText);
 
         AddData();
-
 
         delete_note_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,32 +84,24 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+        DialogDateTime.registerListener(mDialogDateTimeListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        DialogDateTime.unregisterListener(mDialogDateTimeListener);
+
+        super.onDestroy();
     }
 
     public void AddData(){
+
         save_note_button.setOnClickListener(new View.OnClickListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-
                 DialogDateTime.onDateSelectedClick(NoteActivity.this);
-
-                String note = mNote.getText().toString();
-
-                String date_from = DialogDateTime.getStartDate();
-//
-//                //tests
-                String event_type = "Note";
-                String date_to = "yy/yy/yyyy";
-                String time_from = "zz:zz:zz";
-                String time_to = "zz:zz:zz";
-//
-                myDb.insertDataNote(note);
-                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
-//
-                mNote.getText().clear();
-
             }
         });
     }
