@@ -50,9 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_EVENT_TYPE + " TEXT,"
             + KEY_DATE_FROM + " DATETIME,"
-            + KEY_DATE_TO + " DATETIME,"
-            + KEY_TIME_FROM + " DATETIME,"
-            + KEY_TIME_TO + " DATETIME" + ")";
+            + KEY_TIME_FROM + " DATETIME" + ")";
 
     private static final String CREATE_TABLE_IMAGE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_IMAGE + "("
@@ -111,16 +109,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // -----------------------ALL EVENTS table methods--------------------------- //
 
-    public long insertDataTodoEvent(String event_Type, String date_from, String date_to, String time_from, String time_to) {
+    public long insertDataTodoEvent(String event_Type, String date_from, String time_from) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_EVENT_TYPE, event_Type);
         contentValues.put(KEY_DATE_FROM, date_from);
-        contentValues.put(KEY_DATE_TO, date_to);
         contentValues.put(KEY_TIME_FROM, time_from);
-        contentValues.put(KEY_TIME_TO, time_to);
 
         long id = db.insert(TABLE_TODO_EVENTS, null, contentValues);
 

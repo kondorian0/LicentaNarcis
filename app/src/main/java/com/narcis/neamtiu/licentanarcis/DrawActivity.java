@@ -17,22 +17,91 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.narcis.neamtiu.licentanarcis.util.Draw;
 import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity {
 
+    class DialogDateTimeListener implements DialogDateTime.Listener {
+
+        String date_from = "";
+        String time_from = "";
+
+        @Override
+        public void onTimePicked(int hourOfDay, int minute) {
+
+            if(hourOfDay < 10 && minute < 10){
+
+                String startTime = "0" + hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay < 10 && minute >= 10){
+
+                String startTime =  "0" + hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute < 10){
+
+                String startTime = hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute >= 10) {
+
+                String startTime = hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }
+//            time_from = startTime;
+
+            commitData();
+        }
+
+        @Override
+        public void onDatePicked(int year, int month, int day) {
+            String startDate = day + "/" + month + "/" + year;
+
+            date_from = startDate;
+
+            commitData();
+        }
+
+        void commitData() {
+
+            if (date_from.isEmpty() || time_from.isEmpty()){
+
+                return;
+
+            }
+
+            String event_type = "Note";
+
+            mPath = paintHelper.saveImage();
+
+            myDb.insertDataImage(mPath);
+            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+
+            date_from = "";
+            time_from = "";
+
+        }
+    }
+
     private PaintFileHelper paintHelper;
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
+    private Button change_color_button, redo_button, undo_button, clear_button, save_button;
+    private String mPath;
 
-    DatabaseHelper myDb;
+    private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
+
+    private DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Button change_color_button, redo_button, undo_button, clear_button, save_button;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
@@ -52,6 +121,8 @@ public class DrawActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         paintHelper.initialise(displayMetrics);
+
+        DialogDateTime.registerListener(mDialogDateTimeListener);
 
         textView.setText("Pen size: " + seekBar.getProgress());
 
@@ -103,18 +174,10 @@ public class DrawActivity extends AppCompatActivity {
 
                 }
 
-                String path = paintHelper.saveImage();
-                Toast.makeText(getApplicationContext(), path, Toast.LENGTH_LONG).show();
+                DialogDateTime.onTimeSelectedClick(DrawActivity.this);
+                DialogDateTime.onDateSelectedClick(DrawActivity.this);
 
-                String event_type = "Image";
-                String date_from = "yy/yy/yy";
-                String date_to = "yy/yy/yyyy";
-                String time_from = "zz:zz:zz";
-                String time_to = "zz:zz:zz";
-
-                myDb.insertDataImage(path);
-                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
-
+                paintHelper.clear();
             }
         });
 
@@ -138,6 +201,14 @@ public class DrawActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        DialogDateTime.unregisterListener(mDialogDateTimeListener);
+
+        super.onDestroy();
     }
 
 
@@ -194,37 +265,6 @@ public class DrawActivity extends AppCompatActivity {
         }
 
     }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        switch (item.getItemId()){
-//
-//            case R.id.clear_button:
-//                paintView.clear();
-//                return true;
-//            case R.id.undo_button:
-//                paintView.undo();
-//                return true;
-//            case R.id.redo_button:
-//                paintView.redo();
-//                return true;
-//            case R.id.save_button:
-//
-//                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//
-//                    requestStoragePermission();
-//
-//                }
-//                paintView.saveImage();
-//                return true;
-//
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//
-//    }
 
     private void openColourPicker(){
 

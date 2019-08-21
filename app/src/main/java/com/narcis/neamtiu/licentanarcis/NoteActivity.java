@@ -1,7 +1,6 @@
 package com.narcis.neamtiu.licentanarcis;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -9,35 +8,77 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 public class NoteActivity extends AppCompatActivity {
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
+        String date_from = "";
+        String time_from = "";
+
+        @Override
+        public void onTimePicked(int hourOfDay, int minute) {
+
+            if(hourOfDay < 10 && minute < 10){
+
+                String startTime = "0" + hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay < 10 && minute >= 10){
+
+                String startTime =  "0" + hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute < 10){
+
+                String startTime = hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute >= 10) {
+
+                String startTime = hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }
+//            time_from = startTime;
+
+            commitData();
+        }
+
         @Override
         public void onDatePicked(int year, int month, int day) {
             String startDate = day + "/" + month + "/" + year;
 
+            date_from = startDate;
+
+            commitData();
+        }
+
+        void commitData() {
+
+            if (date_from.isEmpty() || time_from.isEmpty()){
+
+                return;
+
+            }
+
             String note = mNote.getText().toString();
 
-            String date_from = startDate;
-            DialogDateTime.startDate = startDate;
-
             String event_type = "Note";
-            String date_to = "yy/yy/yyyy";
-            String time_from = "zz:zz:zz";
-            String time_to = "zz:zz:zz";
 
             myDb.insertDataNote(note);
-            myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
+            myDb.insertDataTodoEvent(event_type, date_from, time_from);
 
             mNote.getText().clear();
+
+            date_from = "";
+            time_from = "";
         }
     }
 
@@ -55,7 +96,7 @@ public class NoteActivity extends AppCompatActivity {
         myDb = new DatabaseHelper(getApplicationContext());
 
         save_note_button = findViewById(R.id.save_note_button);
-        delete_note_button = findViewById(R.id.delete_note_button);
+        delete_note_button = findViewById(R.id.delete_event_button);
         mNote = findViewById(R.id.editText);
 
         AddData();
@@ -89,6 +130,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         DialogDateTime.unregisterListener(mDialogDateTimeListener);
 
         super.onDestroy();
@@ -101,7 +143,10 @@ public class NoteActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
+                DialogDateTime.onTimeSelectedClick(NoteActivity.this);
                 DialogDateTime.onDateSelectedClick(NoteActivity.this);
+
             }
         });
     }
@@ -109,8 +154,6 @@ public class NoteActivity extends AppCompatActivity {
     public void delete(){
 
         mNote.getText().clear();
-
-        Toast.makeText(getApplicationContext(),"Text deleted", Toast.LENGTH_LONG).show();
 
     }
 

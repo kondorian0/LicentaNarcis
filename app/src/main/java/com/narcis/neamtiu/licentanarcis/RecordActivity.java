@@ -1,14 +1,10 @@
 package com.narcis.neamtiu.licentanarcis;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +18,8 @@ import android.widget.Toast;
 
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
+import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +29,67 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity {
 
+    class DialogDateTimeListener implements DialogDateTime.Listener {
+
+        String date_from = "";
+        String time_from = "";
+
+        @Override
+        public void onTimePicked(int hourOfDay, int minute) {
+
+            if(hourOfDay < 10 && minute < 10){
+
+                String startTime = "0" + hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay < 10 && minute >= 10){
+
+                String startTime =  "0" + hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute < 10){
+
+                String startTime = hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute >= 10) {
+
+                String startTime = hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }
+//            time_from = startTime;
+
+            commitData();
+        }
+
+        @Override
+        public void onDatePicked(int year, int month, int day) {
+            String startDate = day + "/" + month + "/" + year;
+
+            date_from = startDate;
+
+            commitData();
+        }
+
+        void commitData() {
+
+            if (date_from.isEmpty() || time_from.isEmpty()){
+
+                return;
+
+            }
+
+            String event_type = "Record";
+
+            myDb.insertDataAudio(path);
+            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+
+            date_from = "";
+            time_from = "";
+        }
+    }
+
     private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
     private AppCompatButton save_record_button, delete_record_button;
     private AppCompatImageView recording, not_recording;
@@ -39,13 +98,14 @@ public class RecordActivity extends AppCompatActivity {
     private MediaPlayer mPlayer;
 
     private static final String LOG_TAG = "AudioRecording";
-//    private static String mFileName = null;
+    //    private static String mFileName = null;
     private final int REQUEST_PERMISSIOON_CODE = 1;
 
     private String path;
 
-    DatabaseHelper myDb;
+    private DatabaseHelper myDb;
 
+    private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +129,7 @@ public class RecordActivity extends AppCompatActivity {
 
         AddData();
 
+        DialogDateTime.registerListener(mDialogDateTimeListener);
 
         //Request RunTime permission
         if(!checkPermissionFromDevice()){
@@ -280,18 +341,19 @@ public class RecordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //tests
-                String event_type = "Audio";
-                String date_from = "yy/yy/yy";
-                String date_to = "yy/yy/yyyy";
-                String time_from = "zz:zz:zz";
-                String time_to = "zz:zz:zz";
-
-                myDb.insertDataAudio(path);
-                myDb.insertDataTodoEvent(event_type, date_from, date_to, time_from, time_to);
+                DialogDateTime.onTimeSelectedClick(RecordActivity.this);
+                DialogDateTime.onDateSelectedClick(RecordActivity.this);
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        DialogDateTime.unregisterListener(mDialogDateTimeListener);
+
+        super.onDestroy();
     }
 
 }
