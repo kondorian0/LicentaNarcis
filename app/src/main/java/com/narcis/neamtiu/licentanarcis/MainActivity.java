@@ -1,4 +1,5 @@
 package com.narcis.neamtiu.licentanarcis;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -6,18 +7,30 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
+
+    private final int EVENT_ITEM = 1;
+    private final int NOTE_ITEM = 2;
+    private final int AUDIO_ITEM = 3;
+    private final int DRAW_ITEM = 4;
+
+    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
 
     private static final String TAG = "MainActivity";
 
@@ -70,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent eventsIntent = new Intent(MainActivity.this, NoteActivity.class);
-                startActivity(eventsIntent);
+                startActivityForResult(eventsIntent, NOTE_ITEM);
+
+                // Cumva il dai mai departe
 
             }
         });
@@ -98,6 +113,50 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private static CalendarDay calendarDayFromString(String dayAsString) {
+        String[] dayMonthYear = dayAsString.split("/");
+
+        // TODO: Validate & improve
+        String day = dayMonthYear[0];
+        String month = dayMonthYear[1];
+        String year = dayMonthYear[2];
+
+        CalendarDay calendarDay = CalendarDay.from(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+
+        return calendarDay;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode == NOTE_ITEM) {
+
+            if (resultCode == NoteActivity.RESULT_SUCCESS) {
+
+                String selectedDate = data.getStringExtra(NoteActivity.SELECTED_DATE);
+
+                CalendarDay selectedDay = calendarDayFromString(selectedDate);
+
+                mDecorators.get(selectedDay);
+                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
+                if (selectedDayDecorator == null) {
+                    selectedDayDecorator = new EventDecorator(selectedDay);
+                } else {
+                    mCalendarView.removeDecorator(selectedDayDecorator);
+                }
+
+                selectedDayDecorator.decorateNoteDot = true;
+
+                mCalendarView.addDecorator(selectedDayDecorator);
+            }
+
+        }
 
     }
 

@@ -291,4 +291,9 @@ public class DrawActivity extends AppCompatActivity {
         ambilWarnaDialog.show();
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

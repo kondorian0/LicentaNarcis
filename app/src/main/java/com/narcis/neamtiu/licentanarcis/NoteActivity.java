@@ -2,6 +2,7 @@ package com.narcis.neamtiu.licentanarcis;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 public class NoteActivity extends AppCompatActivity {
+
+    public final static int RESULT_SUCCESS = 0;
+    public final static String SELECTED_DATE = "SelectedDate";
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
@@ -77,8 +81,14 @@ public class NoteActivity extends AppCompatActivity {
 
             mNote.getText().clear();
 
+            Intent intent = new Intent();
+            intent.putExtra(SELECTED_DATE, date_from);
+            setResult(RESULT_SUCCESS, intent);
+
             date_from = "";
             time_from = "";
+
+            finish();
         }
     }
 
@@ -157,4 +167,8 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

@@ -162,4 +162,8 @@ public class EventItemActivity extends AppCompatActivity  {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }
