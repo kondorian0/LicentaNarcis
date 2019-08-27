@@ -10,11 +10,13 @@ import android.view.View;
 import com.github.clans.fab.FloatingActionButton;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.Calendar;
+import java.util.HashSet;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +35,71 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView.setSelectedDate(calendar);
     }
 
+    class NoteDateTimeListener implements DialogDateTime.Listener {
+
+        String date_from = "";
+        String time_from = "";
+
+        @Override
+        public void onTimePicked(int hourOfDay, int minute) {
+
+            if(hourOfDay < 10 && minute < 10){
+
+                String startTime = "0" + hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay < 10 && minute >= 10){
+
+                String startTime =  "0" + hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute < 10){
+
+                String startTime = hourOfDay + ":" + "0" + minute;
+                time_from = startTime;
+
+            }else if(hourOfDay >= 10 && minute >= 10) {
+
+                String startTime = hourOfDay + ":" + minute;
+                time_from = startTime;
+
+            }
+//            time_from = startTime;
+
+            commitData();
+        }
+
+        @Override
+        public void onDatePicked(int year, int month, int day) {
+            String startDate = day + "/" + month + "/" + year;
+
+            date_from = startDate;
+
+            commitData();
+        }
+
+        void commitData() {
+
+            if (date_from.isEmpty() || time_from.isEmpty()){
+
+                return;
+
+            }
+
+            date_from = "";
+            time_from = "";
+
+            EventDecorator eventDecorator = mCalendarView.decorator
+            HashSet<CalendarDay> dates = new HashSet<>();
+            dates.add(date_from);
+
+            mCalendarView.removeDecorators();
+            mCalendarView.addDecorator(new EventDecorator(dates));
+        }
+    }
+
+    private NoteDateTimeListener mNoteDateTimeListener = new NoteDateTimeListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
         myDb = new DatabaseHelper(this);
 
         mCalendarView = findViewById(R.id.calendarView);
+
+
+
 
         DialogDateTime.widget = mCalendarView;
 
@@ -71,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent eventsIntent = new Intent(MainActivity.this, NoteActivity.class);
                 startActivity(eventsIntent);
+
+                // Cumva il dai mai departe
 
             }
         });
