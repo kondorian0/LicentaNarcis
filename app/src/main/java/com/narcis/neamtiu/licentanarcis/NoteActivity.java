@@ -32,23 +32,19 @@ public class NoteActivity extends AppCompatActivity {
 
             if(hourOfDay < 10 && minute < 10){
 
-                String startTime = "0" + hourOfDay + ":" + "0" + minute;
-                time_from = startTime;
+                time_from = "0" + hourOfDay + ":" + "0" + minute;
 
             }else if(hourOfDay < 10 && minute >= 10){
 
-                String startTime =  "0" + hourOfDay + ":" + minute;
-                time_from = startTime;
+                time_from = "0" + hourOfDay + ":" + minute;
 
             }else if(hourOfDay >= 10 && minute < 10){
 
-                String startTime = hourOfDay + ":" + "0" + minute;
-                time_from = startTime;
+                time_from = hourOfDay + ":" + "0" + minute;
 
             }else if(hourOfDay >= 10 && minute >= 10) {
 
-                String startTime = hourOfDay + ":" + minute;
-                time_from = startTime;
+                time_from = hourOfDay + ":" + minute;
 
             }
 //            time_from = startTime;
@@ -58,9 +54,8 @@ public class NoteActivity extends AppCompatActivity {
 
         @Override
         public void onDatePicked(int year, int month, int day) {
-            String startDate = day + "/" + month + "/" + year;
 
-            date_from = startDate;
+            date_from = day + "/" + month + "/" + year;
 
             commitData();
         }

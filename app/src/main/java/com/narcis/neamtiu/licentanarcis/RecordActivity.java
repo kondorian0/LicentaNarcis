@@ -44,23 +44,19 @@ public class RecordActivity extends AppCompatActivity {
 
             if(hourOfDay < 10 && minute < 10){
 
-                String startTime = "0" + hourOfDay + ":" + "0" + minute;
-                time_from = startTime;
+                time_from = "0" + hourOfDay + ":" + "0" + minute;
 
             }else if(hourOfDay < 10 && minute >= 10){
 
-                String startTime =  "0" + hourOfDay + ":" + minute;
-                time_from = startTime;
+                time_from = "0" + hourOfDay + ":" + minute;
 
             }else if(hourOfDay >= 10 && minute < 10){
 
-                String startTime = hourOfDay + ":" + "0" + minute;
-                time_from = startTime;
+                time_from = hourOfDay + ":" + "0" + minute;
 
             }else if(hourOfDay >= 10 && minute >= 10) {
 
-                String startTime = hourOfDay + ":" + minute;
-                time_from = startTime;
+                time_from = hourOfDay + ":" + minute;
 
             }
 //            time_from = startTime;
@@ -70,9 +66,8 @@ public class RecordActivity extends AppCompatActivity {
 
         @Override
         public void onDatePicked(int year, int month, int day) {
-            String startDate = day + "/" + month + "/" + year;
 
-            date_from = startDate;
+            date_from = day + "/" + month + "/" + year;
 
             commitData();
         }
@@ -105,6 +100,8 @@ public class RecordActivity extends AppCompatActivity {
 
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
+
+    private boolean isRecording = false;
 
     private static final String LOG_TAG = "AudioRecording";
     //    private static String mFileName = null;
@@ -169,7 +166,9 @@ public class RecordActivity extends AppCompatActivity {
                         mRecorder.prepare();
                         mRecorder.start();
 
-                        Toast.makeText(getApplicationContext(),"Recording Started", Toast.LENGTH_LONG).show();
+                        isRecording = true;
+
+                        Toast.makeText(getApplicationContext(),"Recording", Toast.LENGTH_LONG).show();
 
                     }catch (IOException e) {
 
@@ -200,10 +199,10 @@ public class RecordActivity extends AppCompatActivity {
                 mRecorder.release();
                 mRecorder = null;
 
+                isRecording = false;
+
                 recording.setVisibility(View.INVISIBLE);
                 not_recording.setVisibility(View.VISIBLE);
-
-                Toast.makeText(getApplicationContext(),"Recording Stopped", Toast.LENGTH_LONG).show();
 
             }
 
@@ -216,7 +215,7 @@ public class RecordActivity extends AppCompatActivity {
 
                 if (path==null){
 
-                    Toast.makeText(getApplicationContext(),"No audio to play", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"No Record", Toast.LENGTH_LONG).show();
                     return;
 
                 }
@@ -234,7 +233,7 @@ public class RecordActivity extends AppCompatActivity {
                     mPlayer.prepare();
                     mPlayer.start();
 
-                    Toast.makeText(getApplicationContext(),"Recording Started Playing", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Playing", Toast.LENGTH_LONG).show();
 
                 } catch (IOException e) {
 
@@ -259,8 +258,6 @@ public class RecordActivity extends AppCompatActivity {
 
                     mPlayer.release();
                     mPlayer = null;
-
-                    Toast.makeText(getApplicationContext(),"Playing Audio Stopped", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -349,6 +346,16 @@ public class RecordActivity extends AppCompatActivity {
         save_record_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(isRecording){
+
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
+
+                    isRecording = false;
+
+                }
 
                 DialogDateTime.onTimeSelectedClick(RecordActivity.this);
                 DialogDateTime.onDateSelectedClick(RecordActivity.this);
