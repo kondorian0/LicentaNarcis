@@ -20,6 +20,7 @@ public class NoteActivity extends AppCompatActivity {
 
     public final static int RESULT_SUCCESS = 0;
     public final static String SELECTED_DATE = "SelectedDate";
+    public final static String EVENT_TYPE = "Note";
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
@@ -74,10 +75,8 @@ public class NoteActivity extends AppCompatActivity {
 
             String note = mNote.getText().toString();
 
-            String event_type = "Note";
-
             myDb.insertDataNote(note);
-            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
 
             mNote.getText().clear();
 

@@ -2,6 +2,7 @@ package com.narcis.neamtiu.licentanarcis;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +13,12 @@ import android.widget.*;
 
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-public class EventItemActivity extends AppCompatActivity  {
+public class EventActivity extends AppCompatActivity  {
+
+    public final static int RESULT_SUCCESS = 0;
+    public final static String SELECTED_DATE = "SelectedDate";
+    public final static String EVENT_TYPE = "Event";
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
@@ -71,17 +75,22 @@ public class EventItemActivity extends AppCompatActivity  {
             String description = mDescription.getText().toString();
             String location = mLocation.getText().toString();
 
-            String event_type = "Event";
-
             myDb.insertDataEvent(title,description,location);
-            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
 
             mTitle.getText().clear();
             mDescription.getText().clear();
             mLocation.getText().clear();
 
+            Intent intent = new Intent();
+            intent.putExtra(SELECTED_DATE, date_from);
+            setResult(RESULT_SUCCESS, intent);
+
             date_from = "";
             time_from = "";
+
+            finish();
+
         }
     }
 
@@ -104,11 +113,12 @@ public class EventItemActivity extends AppCompatActivity  {
         delete_event_button = findViewById(R.id.delete_event_button);
 
         AddData();
+
         delete_event_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(EventItemActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
 
                 builder.setMessage("Do you want to delete the text?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -147,8 +157,8 @@ public class EventItemActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                DialogDateTime.onTimeSelectedClick(EventItemActivity.this);
-                DialogDateTime.onDateSelectedClick(EventItemActivity.this);
+                DialogDateTime.onTimeSelectedClick(EventActivity.this);
+                DialogDateTime.onDateSelectedClick(EventActivity.this);
 
             }
         });

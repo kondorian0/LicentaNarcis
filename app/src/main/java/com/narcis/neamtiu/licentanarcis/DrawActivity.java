@@ -2,6 +2,7 @@ package com.narcis.neamtiu.licentanarcis;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +26,10 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity {
+
+    public final static int RESULT_SUCCESS = 0;
+    public final static String SELECTED_DATE = "SelectedDate";
+    public final static String EVENT_TYPE = "Image";
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
@@ -77,15 +82,19 @@ public class DrawActivity extends AppCompatActivity {
 
             }
 
-            String event_type = "Note";
-
             mPath = paintHelper.saveImage();
 
             myDb.insertDataImage(mPath);
-            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+
+            Intent intent = new Intent();
+            intent.putExtra(SELECTED_DATE, date_from);
+            setResult(RESULT_SUCCESS, intent);
 
             date_from = "";
             time_from = "";
+
+            finish();
 
         }
     }

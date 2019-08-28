@@ -2,6 +2,7 @@ package com.narcis.neamtiu.licentanarcis;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -28,6 +29,10 @@ import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity {
+
+    public final static int RESULT_SUCCESS = 0;
+    public final static String SELECTED_DATE = "SelectedDate";
+    public final static String EVENT_TYPE = "Audio";
 
     class DialogDateTimeListener implements DialogDateTime.Listener {
 
@@ -80,13 +85,17 @@ public class RecordActivity extends AppCompatActivity {
 
             }
 
-            String event_type = "Record";
-
             myDb.insertDataAudio(path);
-            myDb.insertDataTodoEvent(event_type, date_from, time_from);
+            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+
+            Intent intent = new Intent();
+            intent.putExtra(SELECTED_DATE, date_from);
+            setResult(RESULT_SUCCESS, intent);
 
             date_from = "";
             time_from = "";
+
+            finish();
         }
     }
 

@@ -4,13 +4,13 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
-public class EventDecorator implements DayViewDecorator {
+public class EventDecorator implements DayViewDecorator{
 
     private CalendarDay mDay;
 
     public boolean decorateNoteDot = false;
+    public boolean decorateEventDot = false;
     public boolean decorateImageDot = false;
-    public boolean decorateTextDot = false;
     public boolean decorateAudioDot = false;
 
     public EventDecorator(CalendarDay day) {
@@ -24,13 +24,15 @@ public class EventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
+
         MyDotSpan dotSpan = new MyDotSpan();
 
         dotSpan.drawNoteDot = this.decorateNoteDot;
+        dotSpan.drawEventDot = this.decorateEventDot;
         dotSpan.drawImageDot = this.decorateImageDot;
-        dotSpan.drawTextDot = this.decorateTextDot;
         dotSpan.drawAudioDot = this.decorateAudioDot;
 
         view.addSpan(dotSpan);
+
     }
 }
