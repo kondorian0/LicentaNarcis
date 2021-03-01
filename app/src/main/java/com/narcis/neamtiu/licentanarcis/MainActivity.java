@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -15,7 +16,9 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,9 +61,16 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+                SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/YYYY");
 
                 CalendarDay mDaySelected = mCalendarView.getSelectedDate();
                 Intent intent = new Intent(MainActivity.this, DayEventActivity.class);
+                Date date = mDaySelected.getDate();
+
+                String dateString = sdfr.format(date);
+                Log.d(TAG, dateString);
+                intent.putExtra("selectedDay", dateString);
+                Log.d(TAG, String.valueOf(intent));
                 startActivity(intent);
             }
         });
