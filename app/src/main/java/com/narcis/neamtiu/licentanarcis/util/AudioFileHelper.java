@@ -14,7 +14,7 @@ public class AudioFileHelper {
         int count = 0;
         String getPath = null;
 
-        File sdDirectory = Environment.getExternalStorageDirectory();
+        File sdDirectory = Environment.getStorageDirectory();
         File subDirectory = new File(sdDirectory.toString() + "/Music/Record");
 
         if(subDirectory.exists()){

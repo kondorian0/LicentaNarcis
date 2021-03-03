@@ -123,7 +123,7 @@ public class DrawActivity extends AppCompatActivity {
         SeekBar seekBar = findViewById(R.id.seekBar);
         final TextView textView = findViewById(R.id.current_pen_size);
 
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getWindowManager().getCurrentWindowMetrics();
 
         paintHelper.initialise(displayMetrics);
 
