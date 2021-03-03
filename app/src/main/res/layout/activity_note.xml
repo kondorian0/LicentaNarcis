@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/activity_margin"
         android:autofillHints=""
         android:ems="10"
-        android:gravity="top|left"
+        android:gravity="start"
         android:hint="@string/enter_text"
         android:inputType="textMultiLine"
         android:textSize="24sp"
