@@ -17,8 +17,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DialogDateTime extends AppCompatActivity {
-
+public class DialogDateTime extends AppCompatActivity
+{
     public static MaterialCalendarView widget;
 
     public static Calendar mTime= Calendar.getInstance();
@@ -26,12 +26,10 @@ public class DialogDateTime extends AppCompatActivity {
     public static int hour1 = mTime.get(Calendar.HOUR_OF_DAY);
     public static int minute1 =  mTime.get(Calendar.MINUTE);
 
-
-    public interface Listener {
-
+    public interface Listener
+    {
         void onTimePicked(int hourOfDay, int minute);
         void onDatePicked(int year, int month, int day);
-
     }
 
     static private List<Listener> mListeners = new LinkedList();
@@ -45,29 +43,26 @@ public class DialogDateTime extends AppCompatActivity {
     }
 
     public static void showDatePickerDialog(Context context, CalendarDay day,
-                                            DatePickerDialog.OnDateSetListener callback) {
-
-        if (day == null) {
-
+                                            DatePickerDialog.OnDateSetListener callback)
+    {
+        if (day == null)
+        {
             day = CalendarDay.today();
-
         }
-        DatePickerDialog dialog = new DatePickerDialog(
 
-                context, callback, day.getYear(), day.getMonth(), day.getDay()
-
-        );
+        DatePickerDialog dialog = new DatePickerDialog(context, callback, day.getYear(),
+                day.getMonth(), day.getDay());
 
         dialog.show();
-
     }
 
-    public static void onDateSelectedClick(final Context context) {
-
-        showDatePickerDialog(context, widget.getSelectedDate(), new DatePickerDialog.OnDateSetListener(){
-
+    public static void onDateSelectedClick(final Context context)
+    {
+        showDatePickerDialog(context, widget.getSelectedDate(), new DatePickerDialog.OnDateSetListener()
+        {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2)
+            {
                 for (Listener l : mListeners) {
                     l.onDatePicked(i, i1, i2);
                 }
@@ -75,36 +70,32 @@ public class DialogDateTime extends AppCompatActivity {
         });
     }
 
-    public static void showTimePickerDialog(final Context context, Calendar calendar, TimePickerDialog.OnTimeSetListener callback){
+    public static void showTimePickerDialog(final Context context, Calendar calendar, TimePickerDialog.OnTimeSetListener callback)
+    {
+        TimePickerDialog dialog = new TimePickerDialog(context, 0,
+                callback, hour1, minute1, true);
 
-        TimePickerDialog dialog = new TimePickerDialog(
-
-                context, 0, callback, hour1, minute1, true
-
-        );
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-
-
+            public void onDismiss(DialogInterface dialog)
+            {
 
             }
         });
 
         dialog.show();
-
-
     }
 
-    public static void onTimeSelectedClick(final Context context){
-
-        showTimePickerDialog(context, mTime, new TimePickerDialog.OnTimeSetListener() {
-
+    public static void onTimeSelectedClick(final Context context)
+    {
+        showTimePickerDialog(context, mTime, new TimePickerDialog.OnTimeSetListener()
+        {
             @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                for (Listener l : mListeners) {
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+            {
+                for (Listener l : mListeners)
+                {
                     l.onTimePicked(hourOfDay, minute);
                 }
             }

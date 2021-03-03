@@ -25,7 +25,8 @@ public class DayEventActivity  extends AppCompatActivity {
     /** Called when the activity is first created. */
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_events_list);
 
@@ -36,23 +37,25 @@ public class DayEventActivity  extends AppCompatActivity {
 //        openAndQueryDatabase();
 
         displayEventsList();
-
     }
 
-    private String dateSelected(){
-
+    private String dateSelected()
+    {
         Bundle extras = getIntent().getExtras();
 
-        if(extras != null){
+        if(extras != null)
+        {
             String value = extras.getString("selectedDay");
             return value;
-        }else {
+        }
+        else
+        {
             return null;
         }
-
     };
 
-    private void displayEventsList() {
+    private void displayEventsList()
+    {
 
 //        ArrayList<String> events = new ArrayList<>();
 //        events.add("Audio 1");
@@ -70,7 +73,6 @@ public class DayEventActivity  extends AppCompatActivity {
 
         EventListAdapter adapter = new EventListAdapter(this, R.layout.row_item, eventsList, this);
         mListView.setAdapter(adapter);
-
     }
 //    private void openAndQueryDatabase() {
 //        try {

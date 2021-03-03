@@ -24,7 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PaintFileHelper extends View {
+public class PaintFileHelper extends View
+{
 
     //constant values
     public static int BRUSH_SIZE = 10;
@@ -46,14 +47,13 @@ public class PaintFileHelper extends View {
     private ArrayList<Draw> paths = new ArrayList<>();
     private ArrayList<Draw> undo = new ArrayList<>();
 
-    public PaintFileHelper(Context context) {
-
+    public PaintFileHelper(Context context)
+    {
         super(context, null);
-
     }
 
-    public PaintFileHelper(Context context, @Nullable AttributeSet attrs) {
-
+    public PaintFileHelper(Context context, @Nullable AttributeSet attrs)
+    {
         super(context, attrs);
 
         mPaint = new Paint();
@@ -67,8 +67,8 @@ public class PaintFileHelper extends View {
         mPaint.setAlpha(0xff);
     }
 
-    public void initialise (DisplayMetrics displayMetrics) {
-
+    public void initialise (DisplayMetrics displayMetrics)
+    {
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
 
@@ -77,32 +77,29 @@ public class PaintFileHelper extends View {
 
         currentColor = DEFAULT_COLOR;
         strokeWidth = BRUSH_SIZE;
-
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-
+    protected void onDraw(Canvas canvas)
+    {
        canvas.save();
        mCanvas.drawColor(backgroundColor);
 
-       for(Draw draw : paths){
-
+       for(Draw draw : paths)
+       {
            mPaint.setColor(draw.color);
            mPaint.setStrokeWidth(strokeWidth);
            mPaint.setMaskFilter(null);
 
            mCanvas.drawPath(draw.path, mPaint);
-
        }
 
        canvas.drawBitmap(mBitmap,0,0,mBitmapPaint);
        canvas.restore();
-
     }
 
-    private void touchStart(float x, float y){
-
+    private void touchStart(float x, float y)
+    {
         mPath = new Path();
 
         Draw draw = new Draw(currentColor, strokeWidth, mPath);
@@ -113,37 +110,34 @@ public class PaintFileHelper extends View {
 
         mX = x;
         mY = y;
-
     }
 
-    private void touchMove(float x, float y){
-
+    private void touchMove(float x, float y)
+    {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mX);
 
-        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE){
-
+        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE)
+        {
             mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
             mX = x;
             mY = y;
-
         }
     }
 
-    private void touchUp(){
-
+    private void touchUp()
+    {
         mPath.lineTo(mX, mY);
-
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
+    public boolean onTouchEvent(MotionEvent event)
+    {
         float x = event.getX();
         float y = event.getY();
 
-        switch (event.getAction()){
-
+        switch (event.getAction())
+        {
             case MotionEvent.ACTION_DOWN:
                 touchStart(x, y);
                 invalidate();
@@ -156,96 +150,86 @@ public class PaintFileHelper extends View {
                 touchMove(x, y);
                 invalidate();
                 break;
-
         }
-
         return true;
     }
 
-    public void clear(){
-
+    public void clear()
+    {
         backgroundColor = DEFAULT_BG_COLOR;
-
         paths.clear();
         invalidate();
     }
 
-    public void undo(){
-
-        if(paths.size() > 0){
-
+    public void undo()
+    {
+        if(paths.size() > 0)
+        {
             undo.add(paths.remove(paths.size()-1));
             invalidate();
-
-        }else{
-
+        }
+        else
+        {
             Toast.makeText(getContext(), "Nimic pentru a anula", Toast.LENGTH_LONG).show();
-
         }
     }
 
-    public void redo(){
-
-        if(undo.size() > 0){
-
+    public void redo()
+    {
+        if(undo.size() > 0)
+        {
             paths.add(undo.remove(undo.size()-1));
             invalidate();
-
-        }else{
-
+        }
+        else
+        {
             Toast.makeText(getContext(), "Nimic pentru a reface", Toast.LENGTH_LONG).show();
-
         }
     }
 
-    public void setStrokeWidth(int width){
-
+    public void setStrokeWidth(int width)
+    {
         strokeWidth = width;
-
     }
 
-    public void setColor(int color){
-
+    public void setColor(int color)
+    {
         currentColor = color;
-
     }
 
-    public String saveImage(){
-
+    public String saveImage()
+    {
         String getPath = null;
         int count = 0;
         File sdDirectory = Environment.getExternalStorageDirectory();
         File subDirectory = new File(sdDirectory.toString() + "/Pictures/Paint");
 
-        if(subDirectory.exists()){
-
+        if(subDirectory.exists())
+        {
             File[] existing = subDirectory.listFiles();
 
-            for(File file : existing){
-
-                if(file.getName().endsWith(".jpg") || file.getName().endsWith(".png")){
-
+            for(File file : existing)
+            {
+                if(file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))
+                {
                     count++;
-
                 }
             }
-
-        }else {
-
+        }
+        else
+        {
             subDirectory.mkdir();
-
         }
 
-        if(subDirectory.exists()){
-
+        if(subDirectory.exists())
+        {
             File image =  new File(subDirectory, "/drawing_" + (count + 1) + ".png" );
             FileOutputStream fileOutputStream;
 
-
             getPath = image.getPath();
 
-            try{
-
+            try
+            {
                 fileOutputStream = new FileOutputStream(image);
 
                 mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
@@ -255,16 +239,16 @@ public class PaintFileHelper extends View {
 
                 Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
 
-            }catch (FileNotFoundException e){
-
-            }catch (IOException e){
+            }
+            catch (FileNotFoundException e)
+            {
 
             }
+            catch (IOException e)
+            {
 
+            }
         }
-
         return getPath;
-
     }
-
 }

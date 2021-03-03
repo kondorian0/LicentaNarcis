@@ -26,56 +26,52 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-public class DrawActivity extends AppCompatActivity {
-
+public class DrawActivity extends AppCompatActivity
+{
     public final static int RESULT_SUCCESS = 0;
     public final static String SELECTED_DATE = "SelectedDate";
     public final static String EVENT_TYPE = "Image";
 
-    class DialogDateTimeListener implements DialogDateTime.Listener {
-
+    class DialogDateTimeListener implements DialogDateTime.Listener
+    {
         String date_from = "";
         String time_from = "";
 
         @Override
-        public void onTimePicked(int hourOfDay, int minute) {
-
-            if(hourOfDay < 10 && minute < 10){
-
+        public void onTimePicked(int hourOfDay, int minute)
+        {
+            if(hourOfDay < 10 && minute < 10)
+            {
                 time_from = "0" + hourOfDay + ":" + "0" + minute;
-
-            }else if(hourOfDay < 10 && minute >= 10){
-
+            }
+            else if(hourOfDay < 10 && minute >= 10)
+            {
                 time_from = "0" + hourOfDay + ":" + minute;
-
-            }else if(hourOfDay >= 10 && minute < 10){
-
+            }
+            else if(hourOfDay >= 10 && minute < 10)
+            {
                 time_from = hourOfDay + ":" + "0" + minute;
-
-            }else if(hourOfDay >= 10 && minute >= 10) {
-
+            }
+            else if(hourOfDay >= 10 && minute >= 10)
+            {
                 time_from = hourOfDay + ":" + minute;
-
             }
 //            time_from = startTime;
-
             commitData();
         }
 
         @Override
-        public void onDatePicked(int year, int month, int day) {
-
+        public void onDatePicked(int year, int month, int day)
+        {
             date_from = day + "/" + month + "/" + year;
-
             commitData();
         }
 
-        void commitData() {
-
-            if (date_from.isEmpty() || time_from.isEmpty()){
-
+        void commitData()
+        {
+            if (date_from.isEmpty() || time_from.isEmpty())
+            {
                 return;
-
             }
 
             mPath = paintHelper.saveImage();
@@ -91,7 +87,6 @@ public class DrawActivity extends AppCompatActivity {
             time_from = "";
 
             finish();
-
         }
     }
 
@@ -106,8 +101,8 @@ public class DrawActivity extends AppCompatActivity {
     private DatabaseHelper myDb;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
 
@@ -131,52 +126,50 @@ public class DrawActivity extends AppCompatActivity {
 
         textView.setText("Pen size: " + seekBar.getProgress());
 
-        change_color_button.setOnClickListener(new View.OnClickListener() {
-
+        change_color_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 openColourPicker();
-
             }
-
         });
 
-        clear_button.setOnClickListener(new View.OnClickListener() {
+        clear_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 paintHelper.clear();
-
             }
         });
 
-        undo_button.setOnClickListener(new View.OnClickListener() {
+        undo_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 paintHelper.undo();
-
             }
         });
 
-        redo_button.setOnClickListener(new View.OnClickListener() {
+        redo_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 paintHelper.redo();
-
             }
         });
 
-        save_button.setOnClickListener(new View.OnClickListener() {
+        save_button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
-                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-
+            public void onClick(View view)
+            {
+                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                {
                     requestStoragePermission();
-
                 }
 
                 DialogDateTime.onTimeSelectedClick(DrawActivity.this);
@@ -186,66 +179,64 @@ public class DrawActivity extends AppCompatActivity {
             }
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
                 paintHelper.setStrokeWidth(seekBar.getProgress());
                 textView.setText("Pen size: " + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
 
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
 
             }
         });
     }
 
     @Override
-    protected void onDestroy() {
-
+    protected void onDestroy()
+    {
         DialogDateTime.unregisterListener(mDialogDateTimeListener);
-
         super.onDestroy();
     }
 
 
-    private void requestStoragePermission(){
-
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
+    private void requestStoragePermission()
+    {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("Needed to save image")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
                             ActivityCompat.requestPermissions(DrawActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
                             dialogInterface.dismiss();
-
                         }
                     })
                     .create().show();
-
-        }else{
-
+        }
+        else
+        {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
 
         }
@@ -253,48 +244,40 @@ public class DrawActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if(requestCode == STORAGE_PERMISSION_CODE){
-
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if(requestCode == STORAGE_PERMISSION_CODE)
+        {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 Toast.makeText(this, "Access granted", Toast.LENGTH_LONG).show();
-
-            }else{
-
-                Toast.makeText(this, "Acces denied", Toast.LENGTH_LONG).show();
-
             }
-
+            else
+            {
+                Toast.makeText(this, "Acces denied", Toast.LENGTH_LONG).show();
+            }
         }
-
     }
 
-    private void openColourPicker(){
-
-        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-
+    private void openColourPicker()
+    {
+        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener()
+        {
             @Override
-            public void onCancel(AmbilWarnaDialog dialog) {
-
+            public void onCancel(AmbilWarnaDialog dialog)
+            {
                 Toast.makeText(DrawActivity.this, "Unavailable", Toast.LENGTH_LONG).show();
-
             }
 
             @Override
-            public void onOk(AmbilWarnaDialog dialog, int color) {
-
+            public void onOk(AmbilWarnaDialog dialog, int color)
+            {
                 defaultColor = color;
-
                 paintHelper.setColor(color);
-
             }
-
         });
 
         ambilWarnaDialog.show();
-
     }
 
     @Override

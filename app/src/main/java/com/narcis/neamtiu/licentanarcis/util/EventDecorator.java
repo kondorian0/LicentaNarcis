@@ -4,8 +4,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
-public class EventDecorator implements DayViewDecorator{
-
+public class EventDecorator implements DayViewDecorator
+{
     private CalendarDay mDay;
 
     public boolean decorateNoteDot = false;
@@ -23,8 +23,8 @@ public class EventDecorator implements DayViewDecorator{
     }
 
     @Override
-    public void decorate(DayViewFacade view) {
-
+    public void decorate(DayViewFacade view)
+    {
         MyDotSpan dotSpan = new MyDotSpan();
 
         dotSpan.drawNoteDot = this.decorateNoteDot;
@@ -33,6 +33,5 @@ public class EventDecorator implements DayViewDecorator{
         dotSpan.drawAudioDot = this.decorateAudioDot;
 
         view.addSpan(dotSpan);
-
     }
 }

@@ -5,7 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper
+{
 
     // Logcat tag
     private static final String LOG = "DatabaseHelper";
@@ -74,28 +75,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + KEY_DESCRIPTION + " TEXT,"
             + KEY_LOCATION + " TEXT" + ")";
 
-
-    public DatabaseHelper(Context context) {
-
+    public DatabaseHelper(Context context)
+    {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-
+    public void onCreate(SQLiteDatabase db)
+    {
         // creating required tables
         db.execSQL(CREATE_TABLE_TODO_EVENTS);
         db.execSQL(CREATE_TABLE_IMAGE);
         db.execSQL(CREATE_TABLE_AUDIO);
         db.execSQL(CREATE_TABLE_NOTE);
         db.execSQL(CREATE_TABLE_EVENT);
-
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODO_EVENTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGE);
@@ -104,13 +102,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT);
         // create new tables
         onCreate(db);
-
     }
 
     // -----------------------ALL EVENTS table methods--------------------------- //
 
-    public long insertDataTodoEvent(String event_Type, String date_from, String time_from) {
-
+    public long insertDataTodoEvent(String event_Type, String date_from, String time_from)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -125,8 +122,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // -----------------------EVENT table methods--------------------------- //
 
-    public long insertDataEvent(String title, String description, String location){
-
+    public long insertDataEvent(String title, String description, String location)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -137,13 +134,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE_EVENT, null, contentValues);
 
         return  id;
-
     }
 
     // -----------------------NOTE table methods--------------------------- //
 
-    public long insertDataNote(String note){
-
+    public long insertDataNote(String note)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -152,13 +148,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE_NOTE, null, contentValues);
 
         return  id;
-
     }
 
     // -----------------------AUDIO table methods--------------------------- //
 
-    public long insertDataAudio(String path){
-
+    public long insertDataAudio(String path)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -167,13 +162,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE_AUDIO, null, contentValues);
 
         return  id;
-
     }
 
     // -----------------------AUDIO table methods--------------------------- //
 
-    public long insertDataImage(String path){
-
+    public long insertDataImage(String path)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -182,7 +176,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE_IMAGE, null, contentValues);
 
         return  id;
-
     }
-
 }
