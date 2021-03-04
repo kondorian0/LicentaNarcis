@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     compileSdkVersion 30
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -26,15 +30,19 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
-    testImplementation 'junit:junit:4.12'
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
+
+    testImplementation 'junit:junit:4.12'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     //Floating Action Button dependency
     implementation 'com.github.clans:fab:1.6.4'
     //Calendar dependency
-    implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
+//    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+
     // PlayServices dependency
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
