@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -114,17 +115,16 @@ public class DrawActivity extends AppCompatActivity
         undo_button = findViewById(R.id.undo_button);
         clear_button = findViewById(R.id.clear_button);
         save_button = findViewById(R.id.save_button);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
         SeekBar seekBar = findViewById(R.id.seekBar);
         final TextView textView = findViewById(R.id.current_pen_size);
 
-        getWindowManager().getCurrentWindowMetrics();
+        WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
 
         paintHelper.initialise(displayMetrics);
 
         DialogDateTime.registerListener(mDialogDateTimeListener);
-
-        textView.setText("Pen size: " + seekBar.getProgress());
+        String penSize = "Pen size: " + seekBar.getProgress();
+        textView.setText(penSize);
 
         change_color_button.setOnClickListener(new View.OnClickListener()
         {
@@ -185,7 +185,8 @@ public class DrawActivity extends AppCompatActivity
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
                 paintHelper.setStrokeWidth(seekBar.getProgress());
-                textView.setText("Pen size: " + seekBar.getProgress());
+                String penSize = "Pen size: " + seekBar.getProgress();
+                textView.setText(penSize);
             }
 
             @Override

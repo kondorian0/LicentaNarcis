@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowMetrics;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -67,10 +68,10 @@ public class PaintFileHelper extends View
         mPaint.setAlpha(0xff);
     }
 
-    public void initialise (DisplayMetrics displayMetrics)
+    public void initialise (WindowMetrics displayMetrics)
     {
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.getBounds().height();
+        int width = displayMetrics.getBounds().width();
 
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
@@ -154,6 +155,11 @@ public class PaintFileHelper extends View
         return true;
     }
 
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
     public void clear()
     {
         backgroundColor = DEFAULT_BG_COLOR;
@@ -201,7 +207,7 @@ public class PaintFileHelper extends View
     {
         String getPath = null;
         int count = 0;
-        File sdDirectory = Environment.getExternalStorageDirectory();
+        File sdDirectory = Environment.getStorageDirectory();
         File subDirectory = new File(sdDirectory.toString() + "/Pictures/Paint");
 
         if(subDirectory.exists())
@@ -242,11 +248,11 @@ public class PaintFileHelper extends View
             }
             catch (FileNotFoundException e)
             {
-
+                e.printStackTrace();
             }
             catch (IOException e)
             {
-
+                e.printStackTrace();
             }
         }
         return getPath;
