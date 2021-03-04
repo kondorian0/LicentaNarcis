@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b)
             {
-                SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/YYYY");
+                SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
 
                 CalendarDay mDaySelected = mCalendarView.getSelectedDate();
                 Intent intent = new Intent(MainActivity.this, DayEventActivity.class);
