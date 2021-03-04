@@ -15,6 +15,6 @@
         app:mcv_showOtherDates="all"
         app:mcv_firstDayOfWeek="monday"/>
 
-    <include layout="@layout/fab_submenu"/>
-
+    <include
+        layout="@layout/fab_submenu"/>
 </RelativeLayout>

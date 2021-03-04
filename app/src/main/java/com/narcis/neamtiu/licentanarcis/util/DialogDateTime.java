@@ -32,7 +32,7 @@ public class DialogDateTime extends AppCompatActivity
         void onDatePicked(int year, int month, int day);
     }
 
-    static private List<Listener> mListeners = new LinkedList();
+    static private List<Listener> mListeners = new LinkedList<>();
 
     static public void registerListener(Listener listener) {
         mListeners.add(listener);

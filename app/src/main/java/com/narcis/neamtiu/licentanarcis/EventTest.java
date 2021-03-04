@@ -1,12 +1,13 @@
 package com.narcis.neamtiu.licentanarcis;
 
-public class EventTest {
-
+public class EventTest
+{
     private String title;
     private String details;
     private String date;
 
-    public EventTest(String title, String details, String date) {
+    public EventTest(String title, String details, String date)
+    {
         this.title = title;
         this.details = details;
         this.date = date;

@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity
+{
     private final int EVENT_ITEM = 1;
     private final int NOTE_ITEM = 2;
     private final int AUDIO_ITEM = 3;
@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -59,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
         DialogDateTime.widget = mCalendarView;
 
         this.selectTodayDateCalendar();
-        mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        mCalendarView.setOnDateChangedListener(new OnDateSelectedListener()
+        {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b)
+            {
                 SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/YYYY");
 
                 CalendarDay mDaySelected = mCalendarView.getSelectedDate();
@@ -77,55 +80,52 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mEventItem = findViewById(R.id.menu_item_event);
-        mEventItem.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
+        mEventItem.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(MainActivity.this, EventActivity.class);
                 startActivityForResult(intent, EVENT_ITEM);
             }
         });
 
         mNoteItem = findViewById(R.id.menu_item_note);
-        mNoteItem.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-
+        mNoteItem.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
                 startActivityForResult(intent, NOTE_ITEM);
 
                 // Cumva il dai mai departe
-
             }
         });
 
         mAudioItem = findViewById(R.id.menu_item_audio);
-        mAudioItem.setOnClickListener(new View.OnClickListener() {
-
+        mAudioItem.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(MainActivity.this, RecordActivity.class);
                 startActivityForResult(intent, AUDIO_ITEM);
-
             }
         });
 
         mDrawItem = findViewById(R.id.menu_item_draw);
-        mDrawItem.setOnClickListener(new View.OnClickListener() {
-
+        mDrawItem.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
                 startActivityForResult(intent, IMAGE_ITEM);
-
             }
         });
-
     }
 
-    private static CalendarDay calendarDayFromString(String dayAsString) {
-
+    private static CalendarDay calendarDayFromString(String dayAsString)
+    {
         String[] dayMonthYear = dayAsString.split("/");
 
         // TODO: Validate & improve
@@ -136,123 +136,114 @@ public class MainActivity extends AppCompatActivity {
         CalendarDay calendarDay = CalendarDay.from(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
 
         return calendarDay;
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-
         super.onActivityResult(requestCode, resultCode, data);
 
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode == NOTE_ITEM) {
-
-            if (resultCode == NoteActivity.RESULT_SUCCESS) {
-
+        if(requestCode == NOTE_ITEM)
+        {
+            if (resultCode == NoteActivity.RESULT_SUCCESS)
+            {
                 String selectedDate = data.getStringExtra(NoteActivity.SELECTED_DATE);
                 CalendarDay selectedDay = calendarDayFromString(selectedDate);
                 mDecorators.get(selectedDay);
                 EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
 
-                if (selectedDayDecorator == null) {
-
+                if (selectedDayDecorator == null)
+                {
                     selectedDayDecorator = new EventDecorator(selectedDay);
-
-                } else {
-
+                }
+                else
+                {
                     mCalendarView.removeDecorator(selectedDayDecorator);
-
                 }
 
                 selectedDayDecorator.decorateNoteDot = true;
 
                 mCalendarView.addDecorator(selectedDayDecorator);
-
             }
 
-        } else if (requestCode == EVENT_ITEM){
-
-            if (resultCode == EventActivity.RESULT_SUCCESS) {
-
+        }
+        else if (requestCode == EVENT_ITEM)
+        {
+            if (resultCode == EventActivity.RESULT_SUCCESS)
+            {
                 String selectedDate = data.getStringExtra(EventActivity.SELECTED_DATE);
                 CalendarDay selectedDay = calendarDayFromString(selectedDate);
                 mDecorators.get(selectedDay);
                 EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
 
-                if (selectedDayDecorator == null) {
-
+                if (selectedDayDecorator == null)
+                {
                     selectedDayDecorator = new EventDecorator(selectedDay);
-
-                } else {
-
+                }
+                else
+                {
                     mCalendarView.removeDecorator(selectedDayDecorator);
-
                 }
 
                 selectedDayDecorator.decorateEventDot = true;
 
                 mCalendarView.addDecorator(selectedDayDecorator);
-
             }
-
-        } else if (requestCode == AUDIO_ITEM){
-
-            if (resultCode == RecordActivity.RESULT_SUCCESS) {
-
+        }
+        else if (requestCode == AUDIO_ITEM)
+        {
+            if (resultCode == RecordActivity.RESULT_SUCCESS)
+            {
                 String selectedDate = data.getStringExtra(RecordActivity.SELECTED_DATE);
                 CalendarDay selectedDay = calendarDayFromString(selectedDate);
                 mDecorators.get(selectedDay);
                 EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
 
-                if (selectedDayDecorator == null) {
-
+                if (selectedDayDecorator == null)
+                {
                     selectedDayDecorator = new EventDecorator(selectedDay);
-
-                } else {
-
+                }
+                else
+                {
                     mCalendarView.removeDecorator(selectedDayDecorator);
-
                 }
 
                 selectedDayDecorator.decorateAudioDot = true;
 
                 mCalendarView.addDecorator(selectedDayDecorator);
-
             }
 
-        } else if (requestCode == IMAGE_ITEM){
-
-            if (resultCode == DrawActivity.RESULT_SUCCESS) {
-
+        }
+        else if (requestCode == IMAGE_ITEM)
+        {
+            if (resultCode == DrawActivity.RESULT_SUCCESS)
+            {
                 String selectedDate = data.getStringExtra(DrawActivity.SELECTED_DATE);
                 CalendarDay selectedDay = calendarDayFromString(selectedDate);
                 mDecorators.get(selectedDay);
                 EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
 
-                if (selectedDayDecorator == null) {
-
+                if (selectedDayDecorator == null)
+                {
                     selectedDayDecorator = new EventDecorator(selectedDay);
-
-                } else {
-
+                }
+                else
+                {
                     mCalendarView.removeDecorator(selectedDayDecorator);
-
                 }
 
                 selectedDayDecorator.decorateImageDot = true;
 
                 mCalendarView.addDecorator(selectedDayDecorator);
-
             }
         }
     }
 
     @Override
-    protected void onStop() {
-
+    protected void onStop()
+    {
         super.onStop();
         this.selectTodayDateCalendar();
-
     }
 }

@@ -13,23 +13,23 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventListAdapter extends ArrayAdapter<EventTest> {
-
+public class EventListAdapter extends ArrayAdapter<EventTest>
+{
     private static final String TAG = "EventListAdapter";
     private Context mContext;
     private int mResource;
 
-    public EventListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<EventTest> objects, Context mContext) {
+    public EventListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<EventTest> objects, Context mContext)
+    {
         super(context, resource, objects);
         this.mContext = mContext;
         this.mResource = resource;
-
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
+    {
         // get event information
         String title = getItem(position).getTitle();
         String details = getItem(position).getDetails();
@@ -50,6 +50,5 @@ public class EventListAdapter extends ArrayAdapter<EventTest> {
         tvDate.setText(date);
 
         return convertView;
-
     }
 }

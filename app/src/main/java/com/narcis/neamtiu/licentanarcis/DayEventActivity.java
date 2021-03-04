@@ -14,8 +14,8 @@ import static com.narcis.neamtiu.licentanarcis.database.DatabaseHelper.KEY_DATE_
 import static com.narcis.neamtiu.licentanarcis.database.DatabaseHelper.TABLE_TODO_EVENTS;
 
 
-public class DayEventActivity  extends AppCompatActivity {
-
+public class DayEventActivity  extends AppCompatActivity
+{
     private ArrayList<String> events = new ArrayList<String>();
     private String tableName = TABLE_TODO_EVENTS;
     private String columnName = KEY_DATE_FROM;
