@@ -7,15 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.narcis.neamtiu.licentanarcis.MainActivity">
 
-    <com.applandeo.materialcalendarview.CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:headerColor="@color/primary_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:mcv_firstDayOfWeek="monday"
+        app:mcv_showOtherDates="all"/>
 
     <include
         layout="@layout/fab_submenu"/>

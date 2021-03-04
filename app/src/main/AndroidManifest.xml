@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EventActivity" />
-        <activity android:name=".DayEventActivity" />
+        <activity android:name=".DayEventsActivity" />
     </application>
 
 </manifest>
