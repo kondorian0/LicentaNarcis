@@ -175,7 +175,7 @@ public class DrawActivity extends AppCompatActivity
                 }
 
                 DialogDateTime.onTimeSelectedClick(DrawActivity.this);
-                DialogDateTime.onDateSelectedClick(DrawActivity.this);
+//                DialogDateTime.onDateSelectedClick(DrawActivity.this);
 
                 paintHelper.clear();
             }

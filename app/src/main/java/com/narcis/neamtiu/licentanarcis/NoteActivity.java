@@ -148,7 +148,7 @@ public class NoteActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 DialogDateTime.onTimeSelectedClick(NoteActivity.this);
-                DialogDateTime.onDateSelectedClick(NoteActivity.this);
+//                DialogDateTime.onDateSelectedClick(NoteActivity.this);
             }
         });
     }

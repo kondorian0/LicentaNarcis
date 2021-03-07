@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
 import java.util.Calendar;
@@ -24,6 +25,7 @@ public class DialogDateTime extends AppCompatActivity
     public static MaterialCalendarView widget;
 
     public static LocalTime mTime = LocalTime.now();
+    public static LocalDate mDate = LocalDate.now();
 
     public static int hour1 = mTime.getHour();
     public static int minute1 =  mTime.getMinute();
@@ -44,23 +46,20 @@ public class DialogDateTime extends AppCompatActivity
         mListeners.remove(listener);
     }
 
-    public static void showDatePickerDialog(Context context, CalendarDay day,
-                                            DatePickerDialog.OnDateSetListener callback)
+    public static void showDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callback)
     {
-        if (day == null)
-        {
-            day = CalendarDay.today();
-        }
+        int startYear =  mDate.getYear();
+        int startMonth = mDate.getMonthValue();
+        int startDay = mDate.getDayOfMonth();
 
-        DatePickerDialog dialog = new DatePickerDialog(context, callback, day.getYear(),
-                day.getMonth(), day.getDay());
+        DatePickerDialog dialog = new DatePickerDialog(context, callback, startYear, startMonth, startDay);
 
         dialog.show();
     }
 
-    public static void onDateSelectedClick(Context context, CalendarDay selectedDay)
+    public static void onDateSelectedClick(Context context)
     {
-        showDatePickerDialog(context, selectedDay, new DatePickerDialog.OnDateSetListener()
+        showDatePickerDialog(context, new DatePickerDialog.OnDateSetListener()
         {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2)
@@ -74,8 +73,7 @@ public class DialogDateTime extends AppCompatActivity
 
     public static void showTimePickerDialog(final Context context, LocalTime calendar, TimePickerDialog.OnTimeSetListener callback)
     {
-        TimePickerDialog dialog = new TimePickerDialog(context, 0,
-                callback, hour1, minute1, true);
+        TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, hour1, minute1, true);
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
         {
@@ -85,7 +83,6 @@ public class DialogDateTime extends AppCompatActivity
 
             }
         });
-
         dialog.show();
     }
 

@@ -342,7 +342,7 @@ public class RecordActivity extends AppCompatActivity
                     isRecording = false;
                 }
                 DialogDateTime.onTimeSelectedClick(RecordActivity.this);
-                DialogDateTime.onDateSelectedClick(RecordActivity.this);
+//                DialogDateTime.onDateSelectedClick(RecordActivity.this);
             }
         });
     }
