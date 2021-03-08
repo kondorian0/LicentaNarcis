@@ -22,6 +22,7 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
+import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +31,12 @@ import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity
-{
+        implements DialogDateTime.Listener {
+
     private String EVENT_TYPE = "Record";
+
+
+    private DialogDateTimeHelper mDateTimeHelper;
 
     private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
     private AppCompatButton save_record_button, delete_record_button;
@@ -46,11 +51,7 @@ public class RecordActivity extends AppCompatActivity
     //    private static String mFileName = null;
     private final int REQUEST_PERMISSIOON_CODE = 1;
 
-    private String path;
-
-    private DatabaseHelper myDb;
-
-    private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
+    private String mRecordPath;
 
 //    class DialogDateTimeListener implements DialogDateTime.Listener
 //    {
@@ -108,15 +109,11 @@ public class RecordActivity extends AppCompatActivity
 //        }
 //    }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-
-        myDb = new DatabaseHelper(getApplicationContext());
 
         record_button = findViewById(R.id.record_button);
         stop_record_button = findViewById(R.id.stop_record_button);
@@ -130,9 +127,10 @@ public class RecordActivity extends AppCompatActivity
         recording.setVisibility(View.INVISIBLE);
         not_recording.setVisibility(View.VISIBLE);
 
-        AddData();
+        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
+        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
 
-        DialogDateTime.registerListener(mDialogDateTimeListener);
+        DialogDateTime.registerListener(this);
 
         //Request RunTime permission
         if(!checkPermissionFromDevice())
@@ -154,7 +152,7 @@ public class RecordActivity extends AppCompatActivity
                     not_recording.setVisibility(View.INVISIBLE);
                     recording.setVisibility(View.VISIBLE);
 
-                    path = AudioFileHelper.saveAudio();
+                    mRecordPath = AudioFileHelper.saveAudio();
 
                     try
                     {
@@ -204,7 +202,7 @@ public class RecordActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if (path==null)
+                if (mRecordPath==null)
                 {
                     Toast.makeText(getApplicationContext(),"No Record", Toast.LENGTH_LONG).show();
                     return;
@@ -219,7 +217,7 @@ public class RecordActivity extends AppCompatActivity
 
                 try
                 {
-                    mPlayer.setDataSource(path);
+                    mPlayer.setDataSource(mRecordPath);
                     mPlayer.prepare();
                     mPlayer.start();
 
@@ -250,12 +248,30 @@ public class RecordActivity extends AppCompatActivity
             }
         });
 
+        save_record_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(isRecording)
+                {
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
+
+                    isRecording = false;
+                }
+                DialogDateTime.onTimeSelectedClick(RecordActivity.this);
+                DialogDateTime.onDateSelectedClick(RecordActivity.this);
+            }
+        });
+
         delete_record_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                final File forDelete = new File(path);
+                final File forDelete = new File(mRecordPath);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
 
@@ -290,7 +306,7 @@ public class RecordActivity extends AppCompatActivity
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mRecorder.setOutputFile(path);
+        mRecorder.setOutputFile(mRecordPath);
     }
 
     @Override
@@ -326,31 +342,10 @@ public class RecordActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, REQUEST_PERMISSIOON_CODE);
     }
 
-    public void AddData()
-    {
-        save_record_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if(isRecording)
-                {
-                    mRecorder.stop();
-                    mRecorder.release();
-                    mRecorder = null;
-
-                    isRecording = false;
-                }
-                DialogDateTime.onTimeSelectedClick(RecordActivity.this);
-//                DialogDateTime.onDateSelectedClick(RecordActivity.this);
-            }
-        });
-    }
-
     @Override
     protected void onDestroy()
     {
-        DialogDateTime.unregisterListener(mDialogDateTimeListener);
+        DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }
 
@@ -358,5 +353,15 @@ public class RecordActivity extends AppCompatActivity
     protected void onStop()
     {
         super.onStop();
+    }
+
+    @Override
+    public void onTimePicked(int hourOfDay, int minute) {
+        mDateTimeHelper.onTimePicked(hourOfDay, minute);
+    }
+
+    @Override
+    public void onDatePicked(int year, int month, int day) {
+        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

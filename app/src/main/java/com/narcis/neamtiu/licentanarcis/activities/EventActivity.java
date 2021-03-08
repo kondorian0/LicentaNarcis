@@ -15,22 +15,13 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 
-public class EventActivity extends AppCompatActivity implements DialogDateTime.Listener {
+public class EventActivity extends AppCompatActivity
+        implements DialogDateTime.Listener {
 
     private String EVENT_TYPE = "Event";
     private DialogDateTimeHelper mDateTimeHelper;
     private EditText mTitle, mLocation, mDescription;
     private AppCompatButton save_event_button, delete_event_button;
-
-    @Override
-    public void onTimePicked(int hourOfDay, int minute) {
-        mDateTimeHelper.onTimePicked(hourOfDay, minute);
-    }
-
-    @Override
-    public void onDatePicked(int year, int month, int day) {
-        mDateTimeHelper.onDatePicked(year, month, day);
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,11 +34,11 @@ public class EventActivity extends AppCompatActivity implements DialogDateTime.L
         save_event_button = findViewById(R.id.save_event_button);
         delete_event_button = findViewById(R.id.delete_event_button);
 
+        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
         mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
         mDateTimeHelper.setTitle(mLocation);
         mDateTimeHelper.setDescription(mDescription);
         mDateTimeHelper.setLocation(mLocation);
-        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
 
         DialogDateTime.registerListener(this);
 
@@ -101,5 +92,15 @@ public class EventActivity extends AppCompatActivity implements DialogDateTime.L
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onTimePicked(int hourOfDay, int minute) {
+        mDateTimeHelper.onTimePicked(hourOfDay, minute);
+    }
+
+    @Override
+    public void onDatePicked(int year, int month, int day) {
+        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

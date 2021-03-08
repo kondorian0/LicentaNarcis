@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 
+//////////////////// SINGLETON CLASS ////////////////////
+
 public class DialogDateTimeHelper extends AppCompatActivity {
 
     private static DialogDateTimeHelper mInstance = null;
@@ -21,6 +23,10 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     private EditText mTitle;
     private EditText mLocation;
     private EditText mDescription;
+    private EditText mNote;
+
+    private String mImagePath;
+    private String mRecordPath;
 
     private DatabaseHelper myDb;
 
@@ -31,6 +37,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         this.EVENT_TYPE = EVENT_TYPE;
     }
 
+    /////////////////////Event/////////////////////
     public void setTitle(EditText mTitle) {
         this.mTitle = mTitle;
     }
@@ -39,6 +46,21 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     }
     public void setLocation(EditText mLocation) {
         this.mLocation = mLocation;
+    }
+
+    ////////////////////Note///////////////////////
+    public void setNote(EditText mNote) {
+        this.mNote = mNote;
+    }
+
+    ////////////////////DRAW///////////////////////
+    public void setmImagePath(String mImagePath) {
+        this.mImagePath = mImagePath;
+    }
+
+    ////////////////////RECORD/////////////////////
+    public void setmRecordPath(String mRecordPath) {
+        this.mRecordPath = mRecordPath;
     }
 
     private DialogDateTimeHelper(Context context) {
@@ -78,28 +100,42 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         if (date_from.isEmpty() || time_from.isEmpty()) {
             return;
         }
-        String title = mTitle.getText().toString();
-        String description = mDescription.getText().toString();
-        String location = mLocation.getText().toString();
-
-        myDb.insertDataEvent(title,description,location);
 
         switch (EVENT_TYPE) {
             case "Event":
+                String title = mTitle.getText().toString();
+                String description = mDescription.getText().toString();
+                String location = mLocation.getText().toString();
+
+                myDb.insertDataEvent(title,description,location);
+
+                mTitle.getText().clear();
+                mDescription.getText().clear();
+                mLocation.getText().clear();
+                break;
             case "Note":
+                String note = mNote.getText().toString();
+
+                myDb.insertDataNote(note);
+                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+
+                mNote.getText().clear();
+                break;
             case "Image":
+                myDb.insertDataImage(mImagePath);
+                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+                break;
             case "Record":
+                myDb.insertDataAudio(mRecordPath);
+                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+                break;
         }
-
-        myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-
-        mTitle.getText().clear();
-        mDescription.getText().clear();
-        mLocation.getText().clear();
 
         Intent intent = new Intent();
         intent.putExtra(SELECTED_DATE, date_from);
         setResult(RESULT_SUCCESS, intent);
+
+        myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
 
         date_from = "";
         time_from = "";

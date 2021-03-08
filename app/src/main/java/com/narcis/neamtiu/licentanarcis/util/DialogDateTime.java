@@ -20,13 +20,17 @@ import java.util.List;
 
 public class DialogDateTime extends AppCompatActivity
 {
-    public static MaterialCalendarView widget;
+    static MaterialCalendarView widget;
 
-    public static LocalTime mTime = LocalTime.now();
-    public static LocalDate mDate = LocalDate.now();
+    static LocalTime mTime = LocalTime.now();
+    static LocalDate mDate = LocalDate.now();
 
-    public static int hour1 = mTime.getHour();
-    public static int minute1 =  mTime.getMinute();
+    static int startYear =  mDate.getYear();
+    static int startMonth = mDate.getMonthValue();
+    static int startDay = mDate.getDayOfMonth();
+
+    static int hour1 = mTime.getHour();
+    static int minute1 =  mTime.getMinute();
 
     public interface Listener
     {
@@ -36,66 +40,62 @@ public class DialogDateTime extends AppCompatActivity
 
     static private List<Listener> mListeners = new LinkedList<>();
 
-    static public void registerListener(Listener listener) {
+    public static void registerListener(Listener listener) {
         mListeners.add(listener);
     }
 
-    static public void unregisterListener(Listener listener) {
+    public static void unregisterListener(Listener listener) {
         mListeners.remove(listener);
     }
 
     public static void showDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callback)
     {
-        int startYear =  mDate.getYear();
-        int startMonth = mDate.getMonthValue();
-        int startDay = mDate.getDayOfMonth();
-
         DatePickerDialog dialog = new DatePickerDialog(context, callback, startYear, startMonth, startDay);
-
         dialog.show();
     }
 
-    public static void onDateSelectedClick(Context context)
-    {
-        showDatePickerDialog(context, new DatePickerDialog.OnDateSetListener()
-        {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2)
-            {
-                for (Listener l : mListeners) {
-                    l.onDatePicked(i, i1, i2);
-                }
-            }
-        });
-    }
-
-    public static void showTimePickerDialog(final Context context, LocalTime calendar, TimePickerDialog.OnTimeSetListener callback)
+    public static void showTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callback)
     {
         TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, hour1, minute1, true);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                Toast.makeText(context, "Data saved", Toast.LENGTH_LONG).show();
-            }
-        });
         dialog.show();
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+//        {
+//            @Override
+//            public void onDismiss(DialogInterface dialog)
+//            {
+//                Toast.makeText(context, "Data saved", Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
-    public static void onTimeSelectedClick(final Context context)
-    {
-        showTimePickerDialog(context, mTime, new TimePickerDialog.OnTimeSetListener()
-        {
+    public static void onDateSelectedClick(Context context) {
+        DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-            {
-                for (Listener l : mListeners)
-                {
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                for (Listener l : mListeners) {
+                    l.onDatePicked(year, month, dayOfMonth);
+                }
+            }
+        };
+        showDatePickerDialog(context, mDateSetListener);
+    }
+
+
+    public static void onTimeSelectedClick(final Context context) {
+        TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                for (Listener l : mListeners) {
                     l.onTimePicked(hourOfDay, minute);
                 }
             }
-        });
+        };
+//        TimePickerDialog myTPDialog = new TimePickerDialog(context, mTimeSetListener,0,0,false);
+//        myTPDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                Toast.makeText(context, "No time selected", Toast.LENGTH_LONG);
+//            }
+//        });
+        showTimePickerDialog(context, mTimeSetListener);
     }
 }
