@@ -28,9 +28,13 @@ import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
+@RequiresApi(api = Build.VERSION_CODES.R)
 public class DrawActivity extends AppCompatActivity
-{
+        implements DialogDateTime.Listener {
+
     private String EVENT_TYPE = "Image";
+
+
 
     private DialogDateTimeHelper mDateTimeHelper;
 
@@ -38,13 +42,7 @@ public class DrawActivity extends AppCompatActivity
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
     private Button change_color_button, redo_button, undo_button, clear_button, save_button;
-    private String mPath;
-
-    private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
-
-    private DatabaseHelper myDb;
-
-
+    private String mImagePath;
 
 //    class DialogDateTimeListener implements DialogDateTime.Listener
 //    {
@@ -104,7 +102,6 @@ public class DrawActivity extends AppCompatActivity
 //        }
 //    }
 
-
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -112,9 +109,9 @@ public class DrawActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
 
+        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
         mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-
-        myDb = new DatabaseHelper(getApplicationContext());
+        mDateTimeHelper.setmImagePath(mImagePath);
 
         paintHelper = findViewById(R.id.paintView);
         change_color_button = findViewById(R.id.change_color_button);
@@ -122,16 +119,30 @@ public class DrawActivity extends AppCompatActivity
         undo_button = findViewById(R.id.undo_button);
         clear_button = findViewById(R.id.clear_button);
         save_button = findViewById(R.id.save_button);
-        SeekBar seekBar = findViewById(R.id.seekBar);
-        final TextView textView = findViewById(R.id.current_pen_size);
 
         WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
 
         paintHelper.initialise(displayMetrics);
 
-        DialogDateTime.registerListener(mDialogDateTimeListener);
-        String penSize = "Pen size: " + seekBar.getProgress();
-        textView.setText(penSize);
+        DialogDateTime.registerListener(this);
+
+        save_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    requestStoragePermission();
+                }
+
+                mDateTimeHelper.setmImagePath(paintHelper.saveImage());
+
+                DialogDateTime.onTimeSelectedClick(DrawActivity.this);
+                DialogDateTime.onDateSelectedClick(DrawActivity.this);
+                paintHelper.clear();
+            }
+        });
 
         change_color_button.setOnClickListener(new View.OnClickListener()
         {
@@ -168,52 +179,12 @@ public class DrawActivity extends AppCompatActivity
                 paintHelper.redo();
             }
         });
-
-        save_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestStoragePermission();
-                }
-
-                DialogDateTime.onTimeSelectedClick(DrawActivity.this);
-//                DialogDateTime.onDateSelectedClick(DrawActivity.this);
-
-                paintHelper.clear();
-            }
-        });
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
-            {
-                paintHelper.setStrokeWidth(seekBar.getProgress());
-                String penSize = "Pen size: " + seekBar.getProgress();
-                textView.setText(penSize);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-        });
     }
 
     @Override
     protected void onDestroy()
     {
-        DialogDateTime.unregisterListener(mDialogDateTimeListener);
+        DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }
 
@@ -291,5 +262,15 @@ public class DrawActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onTimePicked(int hourOfDay, int minute) {
+        mDateTimeHelper.onTimePicked(hourOfDay, minute);
+    }
+
+    @Override
+    public void onDatePicked(int year, int month, int day) {
+        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

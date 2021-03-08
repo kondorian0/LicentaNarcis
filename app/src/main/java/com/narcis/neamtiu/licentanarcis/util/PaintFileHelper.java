@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Build;
 import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -16,6 +17,7 @@ import android.view.WindowMetrics;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.narcis.neamtiu.licentanarcis.util.Draw;
 
@@ -68,6 +70,7 @@ public class PaintFileHelper extends View
         mPaint.setAlpha(0xff);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void initialise (WindowMetrics displayMetrics)
     {
         int height = displayMetrics.getBounds().height();
@@ -203,6 +206,7 @@ public class PaintFileHelper extends View
         currentColor = color;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public String saveImage()
     {
         String getPath = null;
