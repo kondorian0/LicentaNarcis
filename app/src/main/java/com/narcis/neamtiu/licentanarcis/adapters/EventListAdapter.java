@@ -1,4 +1,4 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.narcis.neamtiu.licentanarcis.EventTest;
+import com.narcis.neamtiu.licentanarcis.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,9 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NoteActivity" />
-        <activity android:name=".RecordActivity" />
-        <activity android:name=".DrawActivity" />
+        <activity android:name=".activities.NoteActivity" />
+        <activity android:name=".activities.RecordActivity" />
+        <activity android:name=".activities.DrawActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventActivity" />
-        <activity android:name=".DayEventsActivity" />
+        <activity android:name=".activities.EventActivity" />
+        <activity android:name=".activities.DayEventsActivity" />
     </application>
 
 </manifest>

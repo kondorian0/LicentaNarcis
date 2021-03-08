@@ -10,13 +10,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,7 +78,7 @@ public class DialogDateTime extends AppCompatActivity
             @Override
             public void onDismiss(DialogInterface dialog)
             {
-
+                Toast.makeText(context, "Data saved", Toast.LENGTH_LONG).show();
             }
         });
         dialog.show();

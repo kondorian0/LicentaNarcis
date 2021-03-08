@@ -1,4 +1,4 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,10 +18,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,65 +31,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity
 {
-    public final static int RESULT_SUCCESS = 0;
-    public final static String SELECTED_DATE = "SelectedDate";
-    public final static String EVENT_TYPE = "Audio";
-
-    class DialogDateTimeListener implements DialogDateTime.Listener
-    {
-        String date_from = "";
-        String time_from = "";
-
-        @Override
-        public void onTimePicked(int hourOfDay, int minute)
-        {
-            if(hourOfDay < 10 && minute < 10)
-            {
-                time_from = "0" + hourOfDay + ":" + "0" + minute;
-            }
-            else if(hourOfDay < 10 && minute >= 10)
-            {
-                time_from = "0" + hourOfDay + ":" + minute;
-            }
-            else if(hourOfDay >= 10 && minute < 10)
-            {
-                time_from = hourOfDay + ":" + "0" + minute;
-            }
-            else if(hourOfDay >= 10 && minute >= 10)
-            {
-                time_from = hourOfDay + ":" + minute;
-            }
-//            time_from = startTime;
-            commitData();
-        }
-
-        @Override
-        public void onDatePicked(int year, int month, int day)
-        {
-            date_from = day + "/" + month + "/" + year;
-            commitData();
-        }
-
-        void commitData()
-        {
-            if (date_from.isEmpty() || time_from.isEmpty())
-            {
-                return;
-            }
-
-            myDb.insertDataAudio(path);
-            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-
-            Intent intent = new Intent();
-            intent.putExtra(SELECTED_DATE, date_from);
-            setResult(RESULT_SUCCESS, intent);
-
-            date_from = "";
-            time_from = "";
-
-            finish();
-        }
-    }
+    private String EVENT_TYPE = "Record";
 
     private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
     private AppCompatButton save_record_button, delete_record_button;
@@ -109,6 +51,64 @@ public class RecordActivity extends AppCompatActivity
     private DatabaseHelper myDb;
 
     private DialogDateTimeListener mDialogDateTimeListener = new DialogDateTimeListener();
+
+//    class DialogDateTimeListener implements DialogDateTime.Listener
+//    {
+//        String date_from = "";
+//        String time_from = "";
+//
+//        @Override
+//        public void onTimePicked(int hourOfDay, int minute)
+//        {
+//            if(hourOfDay < 10 && minute < 10)
+//            {
+//                time_from = "0" + hourOfDay + ":" + "0" + minute;
+//            }
+//            else if(hourOfDay < 10 && minute >= 10)
+//            {
+//                time_from = "0" + hourOfDay + ":" + minute;
+//            }
+//            else if(hourOfDay >= 10 && minute < 10)
+//            {
+//                time_from = hourOfDay + ":" + "0" + minute;
+//            }
+//            else if(hourOfDay >= 10 && minute >= 10)
+//            {
+//                time_from = hourOfDay + ":" + minute;
+//            }
+////            time_from = startTime;
+//            commitData();
+//        }
+//
+//        @Override
+//        public void onDatePicked(int year, int month, int day)
+//        {
+//            date_from = day + "/" + month + "/" + year;
+//            commitData();
+//        }
+//
+//        void commitData()
+//        {
+//            if (date_from.isEmpty() || time_from.isEmpty())
+//            {
+//                return;
+//            }
+//
+//            myDb.insertDataAudio(path);
+//            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+//
+//            Intent intent = new Intent();
+//            intent.putExtra(SELECTED_DATE, date_from);
+//            setResult(RESULT_SUCCESS, intent);
+//
+//            date_from = "";
+//            time_from = "";
+//
+//            finish();
+//        }
+//    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

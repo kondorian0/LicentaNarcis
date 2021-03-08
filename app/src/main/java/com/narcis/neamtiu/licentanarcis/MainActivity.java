@@ -11,6 +11,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.narcis.neamtiu.licentanarcis.activities.DayEventsActivity;
+import com.narcis.neamtiu.licentanarcis.activities.DrawActivity;
+import com.narcis.neamtiu.licentanarcis.activities.EventActivity;
+import com.narcis.neamtiu.licentanarcis.activities.NoteActivity;
+import com.narcis.neamtiu.licentanarcis.activities.RecordActivity;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;

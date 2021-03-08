@@ -1,12 +1,14 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.narcis.neamtiu.licentanarcis.EventTest;
+import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.adapters.EventListAdapter;
 
 import java.util.ArrayList;
 

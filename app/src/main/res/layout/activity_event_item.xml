@@ -42,17 +42,35 @@
         android:textCursorDrawable="@null"
         android:textSize="@dimen/day_text_size" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <EditText
         android:id="@+id/event_location"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_description"
         android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:text="@string/location"
-        android:textColor="@android:color/white"
-        app:backgroundTint="@color/primary_color"/>
+        android:gravity="top"
+        android:autoLink="all"
+        android:autofillHints=""
+        android:hint="@string/description"
+        android:inputType="textCapSentences|textMultiLine"
+        android:linksClickable="true"
+        android:minEms="20"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/day_text_size" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/event_location"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/event_description"-->
+<!--        android:layout_marginLeft="@dimen/activity_margin"-->
+<!--        android:layout_marginRight="@dimen/activity_margin"-->
+<!--        android:layout_marginTop="@dimen/activity_margin"-->
+<!--        android:text="@string/location"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        app:backgroundTint="@color/primary_color"/>-->
 
     <LinearLayout
         android:id="@+id/linearLayout"

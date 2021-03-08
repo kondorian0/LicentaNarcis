@@ -1,4 +1,4 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.Button;
@@ -21,76 +20,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.narcis.neamtiu.licentanarcis.util.Draw;
+import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity
 {
-    public final static int RESULT_SUCCESS = 0;
-    public final static String SELECTED_DATE = "SelectedDate";
-    public final static String EVENT_TYPE = "Image";
+    private String EVENT_TYPE = "Image";
 
-    class DialogDateTimeListener implements DialogDateTime.Listener
-    {
-        String date_from = "";
-        String time_from = "";
-
-        @Override
-        public void onTimePicked(int hourOfDay, int minute)
-        {
-            if(hourOfDay < 10 && minute < 10)
-            {
-                time_from = "0" + hourOfDay + ":" + "0" + minute;
-            }
-            else if(hourOfDay < 10 && minute >= 10)
-            {
-                time_from = "0" + hourOfDay + ":" + minute;
-            }
-            else if(hourOfDay >= 10 && minute < 10)
-            {
-                time_from = hourOfDay + ":" + "0" + minute;
-            }
-            else if(hourOfDay >= 10 && minute >= 10)
-            {
-                time_from = hourOfDay + ":" + minute;
-            }
-//            time_from = startTime;
-            commitData();
-        }
-
-        @Override
-        public void onDatePicked(int year, int month, int day)
-        {
-            date_from = day + "/" + month + "/" + year;
-            commitData();
-        }
-
-        void commitData()
-        {
-            if (date_from.isEmpty() || time_from.isEmpty())
-            {
-                return;
-            }
-
-            mPath = paintHelper.saveImage();
-
-            myDb.insertDataImage(mPath);
-            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-
-            Intent intent = new Intent();
-            intent.putExtra(SELECTED_DATE, date_from);
-            setResult(RESULT_SUCCESS, intent);
-
-            date_from = "";
-            time_from = "";
-
-            finish();
-        }
-    }
+    private DialogDateTimeHelper mDateTimeHelper;
 
     private PaintFileHelper paintHelper;
     private int defaultColor;
@@ -102,12 +44,75 @@ public class DrawActivity extends AppCompatActivity
 
     private DatabaseHelper myDb;
 
+
+
+//    class DialogDateTimeListener implements DialogDateTime.Listener
+//    {
+//        String date_from = "";
+//        String time_from = "";
+//
+//        @Override
+//        public void onTimePicked(int hourOfDay, int minute)
+//        {
+//            if(hourOfDay < 10 && minute < 10)
+//            {
+//                time_from = "0" + hourOfDay + ":" + "0" + minute;
+//            }
+//            else if(hourOfDay < 10 && minute >= 10)
+//            {
+//                time_from = "0" + hourOfDay + ":" + minute;
+//            }
+//            else if(hourOfDay >= 10 && minute < 10)
+//            {
+//                time_from = hourOfDay + ":" + "0" + minute;
+//            }
+//            else if(hourOfDay >= 10 && minute >= 10)
+//            {
+//                time_from = hourOfDay + ":" + minute;
+//            }
+////            time_from = startTime;
+//            commitData();
+//        }
+//
+//        @Override
+//        public void onDatePicked(int year, int month, int day)
+//        {
+//            date_from = day + "/" + month + "/" + year;
+//            commitData();
+//        }
+//
+//        void commitData()
+//        {
+//            if (date_from.isEmpty() || time_from.isEmpty())
+//            {
+//                return;
+//            }
+//
+//            mPath = paintHelper.saveImage();
+//
+//            myDb.insertDataImage(mPath);
+//            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+//
+//            Intent intent = new Intent();
+//            intent.putExtra(SELECTED_DATE, date_from);
+//            setResult(RESULT_SUCCESS, intent);
+//
+//            date_from = "";
+//            time_from = "";
+//
+//            finish();
+//        }
+//    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
+
+        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
 
         myDb = new DatabaseHelper(getApplicationContext());
 
