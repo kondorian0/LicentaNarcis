@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.narcis.neamtiu.licentanarcis"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -27,24 +28,23 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
-
-    testImplementation 'junit:junit:4.12'
-
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    //Floating Action Button dependency
-    implementation 'com.github.clans:fab:1.6.4'
-    //Calendar dependency
     implementation 'com.jakewharton.threetenabp:threetenabp:1.3.0'
+    //Import Floating Action Button
+    implementation 'com.github.clans:fab:1.6.4'
+    //Import Calendar
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
-//    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
-//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
-//    implementation 'com.github.kizitonwose:CalendarView:1.0.3'
-
-    // PlayServices dependency
+    // Import playservices for google maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-    // Map services dependency
+    // Import Google maps services
     implementation 'com.google.maps:google-maps-services:0.2.4'
+    //Import the Firebase BoM (Bill of Materials)
+    implementation platform('com.google.firebase:firebase-bom:26.6.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "175251305993",
+    "project_id": "calendar-narcis-licenta",
+    "storage_bucket": "calendar-narcis-licenta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175251305993:android:200a9f781adcca83806ad8",
+        "android_client_info": {
+          "package_name": "com.narcis.neamtiu.licentanarcis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175251305993-c47uu2t3jt4fc50hmf6biiuqgu1ol53f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM9PhjfwzRNYzTRCB1MayCxzFKnHzu7rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175251305993-c47uu2t3jt4fc50hmf6biiuqgu1ol53f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
