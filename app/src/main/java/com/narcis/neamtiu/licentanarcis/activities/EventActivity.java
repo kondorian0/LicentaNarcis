@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,10 @@ public class EventActivity extends AppCompatActivity
 
     private String EVENT_TYPE = "Event";
     private DialogDateTimeHelper mDateTimeHelper;
-    private EditText mTitle, mLocation, mDescription;
-    private AppCompatButton save_event_button, delete_event_button;
+    private EditText mTitle, mDescription;
+    private TextView mLocation;
+
+    private AppCompatButton add_location_button, save_event_button, delete_event_button;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -29,14 +32,15 @@ public class EventActivity extends AppCompatActivity
         setContentView(R.layout.activity_event_item);
 
         mTitle = findViewById(R.id.event_title);
-        mLocation = findViewById(R.id.event_location);
         mDescription = findViewById(R.id.event_description);
+        mLocation = findViewById(R.id.event_location);
+        add_location_button = findViewById(R.id.add_location_button);
         save_event_button = findViewById(R.id.save_event_button);
         delete_event_button = findViewById(R.id.delete_event_button);
 
         mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
         mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-        mDateTimeHelper.setTitle(mLocation);
+        mDateTimeHelper.setTitle(mTitle);
         mDateTimeHelper.setDescription(mDescription);
         mDateTimeHelper.setLocation(mLocation);
 
@@ -86,7 +90,6 @@ public class EventActivity extends AppCompatActivity
     public void delete(){
         mTitle.getText().clear();
         mDescription.getText().clear();
-        mLocation.getText().clear();
     }
 
     @Override

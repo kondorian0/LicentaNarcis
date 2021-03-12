@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,9 +22,10 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     private String EVENT_TYPE;
 
     private EditText mTitle;
-    private EditText mLocation;
     private EditText mDescription;
     private EditText mNote;
+
+    private TextView mLocation;
 
     private String mImagePath;
     private String mRecordPath;
@@ -44,7 +46,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     public void setDescription(EditText mDescription) {
         this.mDescription = mDescription;
     }
-    public void setLocation(EditText mLocation) {
+    public void setLocation(TextView mLocation) {
         this.mLocation = mLocation;
     }
 
@@ -111,7 +113,6 @@ public class DialogDateTimeHelper extends AppCompatActivity {
 
                 mTitle.getText().clear();
                 mDescription.getText().clear();
-                mLocation.getText().clear();
                 break;
             case "Note":
                 String note = mNote.getText().toString();

@@ -42,50 +42,49 @@
         android:textCursorDrawable="@null"
         android:textSize="@dimen/day_text_size" />
 
-    <EditText
-        android:id="@+id/event_location"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_description"
-        android:layout_marginLeft="@dimen/activity_margin"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:gravity="top"
-        android:autoLink="all"
-        android:autofillHints=""
-        android:hint="@string/description"
-        android:inputType="textCapSentences|textMultiLine"
-        android:linksClickable="true"
-        android:minEms="20"
-        android:textCursorDrawable="@null"
-        android:textSize="@dimen/day_text_size" />
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/activity_margin">
 
-<!--    <EditText-->
-<!--        android:id="@+id/event_location"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/event_description"-->
-<!--        android:layout_marginLeft="@dimen/activity_margin"-->
-<!--        android:layout_marginRight="@dimen/activity_margin"-->
-<!--        android:layout_marginTop="@dimen/activity_margin"-->
-<!--        android:text="@string/location"-->
-<!--        android:textColor="@android:color/white"-->
-<!--        app:backgroundTint="@color/primary_color"/>-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:text="Add Location"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color" />
+
+        <TextView
+            android:id="@+id/event_location"
+            android:layout_toRightOf="@id/add_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/small_margin"
+            android:hint="@string/location"
+            android:gravity="center"
+            android:textSize="@dimen/day_text_size" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_margin"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save_event_button"
-            android:layout_width="250dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
+            android:layout_margin="@dimen/small_margin"
             android:text="@string/save"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/primary_color" />
@@ -94,7 +93,7 @@
             android:id="@+id/delete_event_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
+            android:layout_margin="@dimen/small_margin"
             android:text="@string/delete"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/primary_color" />

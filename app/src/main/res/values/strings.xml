@@ -19,7 +19,7 @@
 
     <!-- Event details -->
     <string name="title">Title</string>
-    <string name="location">Add Location</string>
+    <string name="location">Location</string>
     <string name="description">Description</string>
     <string name="all_day">All-day</string>
     <string name="save">Save</string>
