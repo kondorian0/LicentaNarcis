@@ -1,8 +1,11 @@
-package com.narcis.neamtiu.licentanarcis;
+package com.narcis.neamtiu.licentanarcis.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 //import android.widget.CalendarView;
 
@@ -11,11 +14,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.narcis.neamtiu.licentanarcis.activities.DayEventsActivity;
-import com.narcis.neamtiu.licentanarcis.activities.DrawActivity;
-import com.narcis.neamtiu.licentanarcis.activities.EventActivity;
-import com.narcis.neamtiu.licentanarcis.activities.NoteActivity;
-import com.narcis.neamtiu.licentanarcis.activities.RecordActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -44,7 +44,26 @@ public class MainActivity extends AppCompatActivity{
 
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
-    public MaterialCalendarView mCalendarView;
+    private MaterialCalendarView mCalendarView;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout_menu:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginUserActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -19,16 +19,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.NoteActivity" />
-        <activity android:name=".activities.RecordActivity" />
-        <activity android:name=".activities.DrawActivity" />
-        <activity android:name=".MainActivity">
+
+        <!--Set login layout as launcher activity-->
+        <activity android:name=".activities.LoginUserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activities.RegisterUserActivity" />
+        <activity android:name=".activities.NoteActivity" />
+        <activity android:name=".activities.RecordActivity" />
+        <activity android:name=".activities.DrawActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.DayEventsActivity" />
     </application>
