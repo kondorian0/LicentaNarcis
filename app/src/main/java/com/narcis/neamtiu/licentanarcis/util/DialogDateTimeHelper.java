@@ -5,10 +5,26 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.narcis.neamtiu.licentanarcis.activities.NoteActivity;
+import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 //////////////////// SINGLETON CLASS ////////////////////
 
@@ -25,12 +41,20 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     private EditText mDescription;
     private EditText mNote;
 
+    private String userID;
+
     private TextView mLocation;
 
     private String mImagePath;
     private String mRecordPath;
 
     private DatabaseHelper myDb;
+
+    private FirebaseAuth mAuth;
+    private Task<Void> reference;
+
+    private String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
     String date_from = "";
     String time_from = "";
@@ -109,13 +133,62 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 String description = mDescription.getText().toString();
                 String location = mLocation.getText().toString();
 
-                myDb.insertDataEvent(title,description,location);
+                mAuth = FirebaseAuth.getInstance();
+//                mRef.child("Name").child("Somehitng");
 
                 mTitle.getText().clear();
                 mDescription.getText().clear();
                 break;
             case "Note":
                 String note = mNote.getText().toString();
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID).child("events");
+                DatabaseReference refContent = ref.child("content");
+//                ref.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        ArrayList<String> youNameArray = new ArrayList<>();
+//
+//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                            String data = snapshot.getKey();
+//                            youNameArray.add(data);
+//                        }
+//
+//                        Log.v("asdf", "First data : " + youNameArray.get(0));
+//                        Log.v("asdsf", "Second data : " + youNameArray.get(1));
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+                ArrayList<Object> eventJS = new ArrayList<>();
+                eventJS.add("typeofEvent","Image");
+                eventJS.put("date","15/12/2013");
+                eventJS.put("time","10:30");
+                ref.setValue(eventJS);
+
+                HashMap<String,String> contentJS = new HashMap<>();
+                contentJS.put("note", "merge sigur si aici");
+                refContent.setValue(contentJS);
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot!=null && snapshot.exists()){
+                            HashMap<String,String> studentData=snapshot.getValue(HashMap.class);
+                            Log.d("Student Roll Num "," : "+studentData.get("RollNo"));
+                            Log.d("Student Name "," : "+studentData.get("Name"));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 myDb.insertDataNote(note);
                 myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);

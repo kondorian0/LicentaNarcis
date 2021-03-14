@@ -22,8 +22,7 @@ import com.narcis.neamtiu.licentanarcis.util.User;
 public class RegisterUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
-    private TextView mRegisterTitle;
-    private EditText mFullName, mAge, mEmail, mPassword;
+    private EditText mFullName, mEmail, mPassword;
     private AppCompatButton mRegisterBtn;
 
     @Override
@@ -33,9 +32,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
         mAuth = FirebaseAuth.getInstance();
 
-        mRegisterTitle = findViewById(R.id.register_title);
         mFullName = findViewById(R.id.full_name);
-        mAge = findViewById(R.id.age);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mRegisterBtn = findViewById(R.id.registerButton);
@@ -49,25 +46,14 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void registerUser() {
-        final String fullName = mFullName.getText().toString();
-        final String age = mAge.getText().toString();
+        final String name = mFullName.getText().toString();
         final String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
 
 
-        if(fullName.isEmpty()){
+        if(name.isEmpty()){
             mFullName.setError("Full name is required");
             mFullName.requestFocus();
-            return;
-        }
-
-        if(age.isEmpty()){
-            mAge.setError("Age is required");
-            mAge.requestFocus();
-            return;
-        }else if(!(age.matches("\\d+(?:\\.\\d+)?"))){
-            mAge.setError("Enter age in number format");
-            mAge.requestFocus();
             return;
         }
 
@@ -101,7 +87,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            User user = new User(fullName, age, email);
+                            User user = new User(name, email);
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -115,6 +101,15 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                                     }else {
                                         Toast.makeText(RegisterUserActivity.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
                                     }
+                                }
+                            });
+
+                            FirebaseDatabase.getInstance().getReference("name")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
                                 }
                             });
                         }else {

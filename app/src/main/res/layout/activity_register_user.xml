@@ -48,23 +48,6 @@
             android:textCursorDrawable="@null"
             android:textSize="@dimen/day_text_size" />
 
-
-        <EditText
-            android:id="@+id/age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_margin"
-            android:autoLink="all"
-            android:autofillHints=""
-            android:gravity="top"
-            android:hint="Type an age"
-            android:inputType="text"
-            android:maxLines="1"
-            android:linksClickable="true"
-            android:minEms="20"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/day_text_size" />
-
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"

@@ -40,36 +40,20 @@ public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "MainActivity";
 
-    DatabaseHelper myDb;
+    DatabaseHelper myDb = new DatabaseHelper(this);
 
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
     private MaterialCalendarView mCalendarView;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.logout_menu:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginUserActivity.class));
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myDb.doStaf();
 
         myDb = new DatabaseHelper(this);
 
@@ -255,6 +239,25 @@ public class MainActivity extends AppCompatActivity{
 
     private void selectCurrentDate(){
         mCalendarView.setSelectedDate(CalendarDay.today());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout_menu:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginUserActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

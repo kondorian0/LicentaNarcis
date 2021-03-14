@@ -21,7 +21,7 @@ import com.narcis.neamtiu.licentanarcis.R;
 
 public class LoginUserActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView mRegister, mForgotPassword;
+    private TextView mRegister;
     private EditText mEmail, mPassword;
     private AppCompatButton mSignIn;
 
@@ -35,13 +35,11 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
 
         mRegister = findViewById(R.id.register);
-        mForgotPassword = findViewById(R.id.forgot_password);
         mEmail = findViewById(R.id.editTextEmail);
         mPassword = findViewById(R.id.editTextPassword);
         mSignIn = findViewById(R.id.signInButton);
 
         mRegister.setOnClickListener(this);
-        mForgotPassword.setOnClickListener(this);
         mSignIn.setOnClickListener(this);
     }
 
@@ -50,9 +48,6 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.register:
                 startActivity(new Intent(this, RegisterUserActivity.class));
-                break;
-
-            case R.id.forgot_password:
                 break;
 
             case R.id.signInButton:

@@ -2,15 +2,14 @@ package com.narcis.neamtiu.licentanarcis.util;
 
 public class User {
 
-    public String fullName, age, email;
+    public String name, email;
 
     public User(){
 
     }
 
-    public User(String fullName, String age, String email){
-        this.fullName = fullName;
-        this.age = age;
+    public User(String name, String email){
+        this.name = name;
         this.email = email;
     }
 
