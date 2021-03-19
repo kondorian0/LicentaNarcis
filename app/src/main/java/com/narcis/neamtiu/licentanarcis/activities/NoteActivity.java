@@ -27,67 +27,6 @@ public class NoteActivity extends AppCompatActivity
     private AppCompatButton save_note_button, delete_note_button;
     private EditText mNote;
 
-//    class DialogDateTimeListener implements DialogDateTime.Listener
-//    {
-//        String date_from = "";
-//        String time_from = "";
-//
-//        @Override
-//        public void onTimePicked(int hourOfDay, int minute)
-//        {
-//            if(hourOfDay < 10 && minute < 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay < 10 && minute >= 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute < 10)
-//            {
-//                time_from = hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute >= 10)
-//            {
-//                time_from = hourOfDay + ":" + minute;
-//            }
-//
-////            time_from = startTime;
-//            commitData();
-//        }
-//
-//        @Override
-//        public void onDatePicked(int year, int month, int day)
-//        {
-//            date_from = day + "/" + month + "/" + year;
-//            commitData();
-//        }
-//
-//        void commitData()
-//        {
-//            if (date_from.isEmpty() || time_from.isEmpty())
-//            {
-//                return;
-//            }
-//
-//            String note = mNote.getText().toString();
-//
-//            myDb.insertDataNote(note);
-//            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-//
-//            mNote.getText().clear();
-//
-//            Intent intent = new Intent();
-//            intent.putExtra(SELECTED_DATE, date_from);
-//            setResult(RESULT_SUCCESS, intent);
-//
-//            date_from = "";
-//            time_from = "";
-//
-//            finish();
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,7 +10,6 @@ import android.graphics.Path;
 import android.os.Build;
 import android.os.Environment;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowMetrics;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.narcis.neamtiu.licentanarcis.util.Draw;
+import com.narcis.neamtiu.licentanarcis.models.Draw;
 
 import java.io.File;
 import java.io.FileNotFoundException;

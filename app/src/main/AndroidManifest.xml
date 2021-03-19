@@ -21,14 +21,18 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!--Set login layout as launcher activity-->
-        <activity android:name=".activities.LoginUserActivity">
+        <activity android:name=".activities.LoginUserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.RegisterUserActivity" />
+        <activity android:name=".activities.RegisterUserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activities.NoteActivity" />
         <activity android:name=".activities.RecordActivity" />
         <activity android:name=".activities.DrawActivity" />

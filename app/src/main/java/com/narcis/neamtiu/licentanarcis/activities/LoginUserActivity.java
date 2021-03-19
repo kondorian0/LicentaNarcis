@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -17,7 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.models.User;
 
 public class LoginUserActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -51,12 +55,12 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.signInButton:
-                userlogin();
+                userLogin();
                 break;
         }
     }
 
-    private void userlogin() {
+    private void userLogin() {
         String email = mEmail.getText().toString().trim();
         String password = mPassword.getText().toString().trim();
 
@@ -72,12 +76,6 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
-        if(password.isEmpty()){
-            mPassword.setError("Age is required");
-            mPassword.requestFocus();
-            return;
-        }
-
         //Firebase does not accept password less than 5 characters
         if(password.length() < 6){
             mPassword.setError("Min password length should contain at lest 6 characters");
@@ -85,18 +83,28 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(LoginUserActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-
                     //redirect to calendar
-                    startActivity(new Intent(LoginUserActivity.this, MainActivity.class));
+                    new FirestoreClass().getUserDetails(LoginUserActivity.this);
+
+//                    startActivity(new Intent(LoginUserActivity.this, MainActivity.class));
+//                    finish();
                 }else {
                     Toast.makeText(LoginUserActivity.this, "Failed to login!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public void userLoggedInSucces(){
+
+        startActivity(new Intent(LoginUserActivity.this, MainActivity.class));
+        finish();
+
     }
 }

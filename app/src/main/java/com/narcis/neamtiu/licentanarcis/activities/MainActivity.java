@@ -1,5 +1,7 @@
 package com.narcis.neamtiu.licentanarcis.activities;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 //import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -32,9 +36,7 @@ public class MainActivity extends AppCompatActivity{
     private final int AUDIO_ITEM = 3;
     private final int IMAGE_ITEM = 4;
 
-    public static final String RESULT = "result";
-    public static final String EVENT = "event";
-    private static final int ADD_NOTE = 44;
+    private TextView mTextView;
 
 //    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
 
@@ -53,9 +55,18 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myDb.doStaf();
+//        myDb.doStaf();
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(
+                        Constants.EVENTS,
+                        Context.MODE_PRIVATE);
+
+        String userName = sharedPreferences.getString(Constants.TYPE_OF_EVENT, "");
 
         myDb = new DatabaseHelper(this);
+
+        mTextView = findViewById(R.id.testTestView);
+        mTextView.setText(userName);
 
         mCalendarView = findViewById(R.id.calendarView);
         mEventItem = findViewById(R.id.menu_item_event);
@@ -254,6 +265,7 @@ public class MainActivity extends AppCompatActivity{
             case R.id.logout_menu:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginUserActivity.class));
+                finish();
                 break;
         }
 

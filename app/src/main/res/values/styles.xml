@@ -8,10 +8,8 @@
         <item name="colorAccent">@color/primary_color</item>
     </style>
 
-    <style name="DayView">
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/day_text_size</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
-
 </resources>

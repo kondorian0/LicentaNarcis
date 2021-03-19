@@ -8,6 +8,7 @@ android {
         applicationId "com.narcis.neamtiu.licentanarcis"
         minSdkVersion 19
         targetSdkVersion 30
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,6 +30,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.3.0'
+    implementation "androidx.multidex:multidex:2.0.1"
     //Import Floating Action Button
     implementation 'com.github.clans:fab:1.6.4'
     //Import Calendar
@@ -39,10 +41,9 @@ dependencies {
     // Import Google maps services
     implementation 'com.google.maps:google-maps-services:0.2.4'
     //Import the Firebase BoM (Bill of Materials)
-    implementation platform('com.google.firebase:firebase-bom:26.6.0')
-    implementation 'com.google.firebase:firebase-storage'
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-firestore'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
