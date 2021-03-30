@@ -29,7 +29,6 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
     private FirebaseAuth mAuth;
     private EditText mFullName, mEmail, mPassword;
     private AppCompatButton mRegisterBtn;
-    private ArrayList<HashMap<String, Any>> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +54,6 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
         final String name = mFullName.getText().toString();
         final String email = mEmail.getText().toString().trim();
         String password = mPassword.getText().toString().trim();
-        events = new ArrayList<HashMap<String, Any>>();
-
-//        HashMap<String, String> something = new HashMap<>();
-//        something.put(Constants.TYPE_OF_EVENT, "Somehting to see");
-//
-//        events.add(something);
 
 
         if(name.isEmpty()){
@@ -101,39 +94,20 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             //Registered user
-                            FirebaseUser firebaseUser = task.getResult().getUser();
-                            User user = new User(name, email, events);
+                            User user = new User(name, email);
 
                             new FirestoreClass().registerUser(RegisterUserActivity.this, user);
 
                         }else {
-                            Toast.makeText(RegisterUserActivity.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterUserActivity.this,
+                                    "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
                         }
-//                            User user = new User(name, email);
-
-//                            FirebaseDatabase.getInstance().getReference("Users")
-//                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful()){
-//                                        Toast.makeText(RegisterUserActivity.this, "User has been registered succesfully!", Toast.LENGTH_SHORT).show();
-//
-//                                        FirebaseAuth.getInstance().signOut();
-//                                        finish();
-//                                    }else {
-//                                        Toast.makeText(RegisterUserActivity.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            });
-//                        }else {
-//                            Toast.makeText(RegisterUserActivity.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
-//                        }
                     }
                 });
     }
     public void userRegistrationSuccess() {
-        Toast.makeText(RegisterUserActivity.this, "User has been registered succesfully!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(RegisterUserActivity.this,
+                "User has been registered succesfully!", Toast.LENGTH_SHORT).show();
 
         FirebaseAuth.getInstance().signOut();
         finish();

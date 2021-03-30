@@ -208,10 +208,11 @@ public class PaintFileHelper extends View
     @RequiresApi(api = Build.VERSION_CODES.R)
     public String saveImage()
     {
-        String getPath = null;
+        String path = " ";
         int count = 0;
-        File sdDirectory = Environment.getStorageDirectory();
-        File subDirectory = new File(sdDirectory.toString() + "/Pictures/Paint");
+
+        File sdDirectory = new File(Environment.getStorageDirectory().getAbsolutePath());
+        File subDirectory = new File(sdDirectory.toString() + "/Images");
 
         if(subDirectory.exists())
         {
@@ -230,12 +231,12 @@ public class PaintFileHelper extends View
             subDirectory.mkdir();
         }
 
-        if(subDirectory.exists())
+        if(subDirectory.isDirectory())
         {
             File image =  new File(subDirectory, "/drawing_" + (count + 1) + ".png" );
             FileOutputStream fileOutputStream;
 
-            getPath = image.getPath();
+            path = image.getPath();
 
             try
             {
@@ -258,6 +259,11 @@ public class PaintFileHelper extends View
                 e.printStackTrace();
             }
         }
-        return getPath;
+
+
+        System.out.println(path);
+
+        return path;
+
     }
 }

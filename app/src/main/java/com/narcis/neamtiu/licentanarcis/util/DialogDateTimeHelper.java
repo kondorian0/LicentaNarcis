@@ -2,28 +2,23 @@ package com.narcis.neamtiu.licentanarcis.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
-import com.narcis.neamtiu.licentanarcis.activities.NoteActivity;
-import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
-import com.narcis.neamtiu.licentanarcis.models.EventContent;
-import com.narcis.neamtiu.licentanarcis.models.User;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
+import com.narcis.neamtiu.licentanarcis.models.MyDotSpan;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 //////////////////// SINGLETON CLASS ////////////////////
 
@@ -31,32 +26,24 @@ public class DialogDateTimeHelper extends AppCompatActivity {
 
     private static DialogDateTimeHelper mInstance = null;
 
-    private final static int RESULT_SUCCESS = 0;
-    private final static String SELECTED_DATE = "SelectedDate";
-
     private String EVENT_TYPE;
 
     private EditText mTitle;
     private EditText mDescription;
     private EditText mNote;
 
-    private String userID;
-
     private TextView mLocation;
 
     private String mImagePath;
     private String mRecordPath;
 
-    private DatabaseHelper myDb;
+    private FirestoreClass firestoreClass = new FirestoreClass();
+    private String userID = firestoreClass.getCurrentUserID();
 
-    private FirebaseAuth mAuth;
-    private Task<Void> reference;
+    private String dateEvent = "";
+    private String timeEvent = "";
 
-    private String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
-    String date_from = "";
-    String time_from = "";
+    private MyDotSpan dotSpan = new MyDotSpan();
 
     public void setEVENT_TYPE(String EVENT_TYPE) {
         this.EVENT_TYPE = EVENT_TYPE;
@@ -89,7 +76,6 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     }
 
     private DialogDateTimeHelper(Context context) {
-         myDb = new DatabaseHelper(context);
     }
 
     public static DialogDateTimeHelper getInstance(Context context) {
@@ -101,28 +87,28 @@ public class DialogDateTimeHelper extends AppCompatActivity {
 
     public void onTimePicked(int hourOfDay, int minute) {
         if(hourOfDay < 10 && minute < 10) {
-            time_from = "0" + hourOfDay + ":" + "0" + minute;
+            timeEvent = "0" + hourOfDay + ":" + "0" + minute;
         }
         else if(hourOfDay < 10 && minute >= 10) {
-            time_from = "0" + hourOfDay + ":" + minute;
+            timeEvent = "0" + hourOfDay + ":" + minute;
         }
         else if(hourOfDay >= 10 && minute < 10) {
-            time_from = hourOfDay + ":" + "0" + minute;
+            timeEvent = hourOfDay + ":" + "0" + minute;
         }
         else if(hourOfDay >= 10 && minute >= 10) {
-            time_from = hourOfDay + ":" + minute;
+            timeEvent = hourOfDay + ":" + minute;
         }
 //            time_from = startTime;
         commitDataEvent();
     }
 
     public void onDatePicked(int year, int month, int day) {
-        date_from = day + "/" + month + "/" + year;
+        dateEvent = day + "/" + month + "/" + year;
         commitDataEvent();
     }
 
     void commitDataEvent() {
-        if (date_from.isEmpty() || time_from.isEmpty()) {
+        if (dateEvent.isEmpty() || timeEvent.isEmpty()) {
             return;
         }
 
@@ -132,77 +118,57 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 String description = mDescription.getText().toString();
                 String location = mLocation.getText().toString();
 
-                mAuth = FirebaseAuth.getInstance();
-//                mRef.child("Name").child("Somehitng");
+                EventData locationEvent = new EventData(userID,"Location Event",
+                        dateEvent, timeEvent, title, description, location);
+
+                firestoreClass.registerDataEvent(this, locationEvent);
 
                 mTitle.getText().clear();
                 mDescription.getText().clear();
+
                 break;
+
             case "Note":
                 String note = mNote.getText().toString();
-                ArrayList<HashMap<String, String>> contentArray = new ArrayList<HashMap<String, String>>();
 
-                EventContent eventContent = new EventContent(
-                        "Note",
-                        "21/12/2010",
-                        "10:23",
-                        contentArray);
-                new FirestoreClass().setEventContent(DialogDateTimeHelper.this, eventContent);
+                EventData noteEvent = new EventData(userID,"Note",
+                        dateEvent, timeEvent, note);
 
-
-//                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID).child("events");
-//                DatabaseReference refContent = ref.child("content");
-//                ref.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        ArrayList<String> youNameArray = new ArrayList<>();
-//
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                            String data = snapshot.getKey();
-//                            youNameArray.add(data);
-//                        }
-//
-//                        Log.v("asdf", "First data : " + youNameArray.get(0));
-//                        Log.v("asdsf", "Second data : " + youNameArray.get(1));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
-                myDb.insertDataNote(note);
-                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+                firestoreClass.registerDataEvent(this, noteEvent);
 
                 mNote.getText().clear();
+
                 break;
+
             case "Image":
-                myDb.insertDataImage(mImagePath);
-                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+//                myDb.insertDataImage(mImagePath);
+//                myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
+
+//                mImagePath = new PaintFileHelper().saveImage();
+
+                EventData imageEvent = new EventData(userID,"Image",
+                        dateEvent, timeEvent, mImagePath);
+
+                firestoreClass.registerDataEvent(this, imageEvent);
+
                 break;
+
             case "Record":
-                myDb.insertDataAudio(mRecordPath);
-                myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+//                myDb.insertDataAudio(mRecordPath);
+//                myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
+
                 break;
         }
 
         Intent intent = new Intent();
-        intent.putExtra(SELECTED_DATE, date_from);
-        setResult(RESULT_SUCCESS, intent);
+        intent.putExtra(Constants.SELECTED_DATE, dateEvent);
+        setResult(Constants.RESULT_SUCCESS, intent);
 
-        myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
+//        myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
 
-        date_from = "";
-        time_from = "";
+        dateEvent = "";
+        timeEvent = "";
 
         finish();
-
-        Log.i("DATASAVED", "/////////////---------------Data saved---------------/////////////");
-    }
-
-
-    public void sendNoteData() {
-        Toast.makeText(DialogDateTimeHelper.this, "Data sent succesfully to Firebase", Toast.LENGTH_SHORT).show();
     }
 }

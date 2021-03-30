@@ -1,9 +1,5 @@
 package com.narcis.neamtiu.licentanarcis.firestore;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,15 +10,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
-import com.narcis.neamtiu.licentanarcis.activities.MainActivity;
-import com.narcis.neamtiu.licentanarcis.activities.NoteActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
-import com.narcis.neamtiu.licentanarcis.models.EventContent;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+
+import java.util.ArrayList;
 
 public class FirestoreClass {
 
@@ -51,15 +49,15 @@ public class FirestoreClass {
 
     }
 
-    public void setEventContent(final DialogDateTimeHelper activity, EventContent eventContent){
+    public void registerDataEvent(final DialogDateTimeHelper activity, EventData eventData){
 
-        mFireStore.collection(Constants.USERS)
-                .document(getCurrentUserID())
-                .set(eventContent, SetOptions.merge())
+        mFireStore.collection(Constants.EVENTS)
+                .document()
+                .set(eventData, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        activity.sendNoteData();
+                        Log.i("SUCCESS", "Data added successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -70,35 +68,31 @@ public class FirestoreClass {
                 });
     }
 
-    public void updateUserProfileData(final DialogDateTimeHelper activity, EventContent eventContent){
+    public void getUserData(){
 
-        mFireStore.collection(Constants.USERS)
-                .document(getCurrentUserID())
-                .set(eventContent, SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        mFireStore.collection(Constants.EVENTS)
+                .whereEqualTo("userId", getCurrentUserID())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        activity.sendNoteData();
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Log.e("List", queryDocumentSnapshots.toString());
+                        ArrayList<EventData> eventDataArrayList = new ArrayList();
+                        for (QueryDocumentSnapshot i : queryDocumentSnapshots){
+
+                            EventData eventData = i.toObject(new EventData().getClass());
+                            eventData.eventType = (String) i.get("eventType");
+                            eventDataArrayList.add(eventData);
+
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("error", "Error while registering the user", e);
+
                     }
                 });
-    }
-
-    public String getCurrentUserID(){
-        //get currentUser using FirebaseAuth
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        String currentUserID = "";
-        if(currentUser != null){
-            currentUserID = currentUser.getUid();
-        }
-
-        return currentUserID;
     }
 
     public void getUserDetails(final LoginUserActivity activity){
@@ -134,5 +128,16 @@ public class FirestoreClass {
 
                     }
                 });
+    }
+
+    public String getCurrentUserID(){
+        //get currentUser using FirebaseAuth
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String currentUserID = "";
+        if(currentUser != null){
+            currentUserID = currentUser.getUid();
+        }
+        return currentUserID;
     }
 }
