@@ -19,8 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
+import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -28,6 +31,10 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 //import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 
 import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity{
@@ -38,15 +45,17 @@ public class MainActivity extends AppCompatActivity{
 
     private TextView mTextView;
 
-//    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
+    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
 
     private static final String TAG = "MainActivity";
 
-    DatabaseHelper myDb = new DatabaseHelper(this);
+//    DatabaseHelper myDb = new DatabaseHelper(this);
 
     private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
 
     private MaterialCalendarView mCalendarView;
+
+    private FirestoreClass firestoreClass;
 
 
     @Override
@@ -54,6 +63,10 @@ public class MainActivity extends AppCompatActivity{
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firestoreClass = new FirestoreClass();
+        firestoreClass.getUserData();
+
 
 //        myDb.doStaf();
         SharedPreferences sharedPreferences =
@@ -63,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
         String userName = sharedPreferences.getString(Constants.TYPE_OF_EVENT, "");
 
-        myDb = new DatabaseHelper(this);
+//        myDb = new DatabaseHelper(this);
 
         mTextView = findViewById(R.id.testTestView);
         mTextView.setText(userName);
@@ -146,36 +159,36 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-//    {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        // check if the request code is same as what is passed  here it is 2
-//        if(requestCode == NOTE_ITEM)
-//        {
-//            if (resultCode == NoteActivity.RESULT_SUCCESS)
-//            {
-//                String selectedDate = data.getStringExtra(NoteActivity.SELECTED_DATE);
-//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-//                mDecorators.get(selectedDay);
-//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
-//
-//                if (selectedDayDecorator == null)
-//                {
-//                    selectedDayDecorator = new EventDecorator(selectedDay);
-//                }
-//                else
-//                {
-//                    mCalendarView.removeDecorator(selectedDayDecorator);
-//                }
-//
-//                selectedDayDecorator.decorateNoteDot = true;
-//
-//                mCalendarView.addDecorator(selectedDayDecorator);
-//            }
-//
-//        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode == NOTE_ITEM)
+        {
+            if (resultCode == Constants.RESULT_SUCCESS)
+            {
+                String selectedDate = data.getStringExtra(Constants.SELECTED_DATE);
+                CalendarDay selectedDay = calendarDayFromString(selectedDate);
+                mDecorators.get(selectedDay);
+                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
+
+                if (selectedDayDecorator == null)
+                {
+                    selectedDayDecorator = new EventDecorator(selectedDay);
+                }
+                else
+                {
+                    mCalendarView.removeDecorator(selectedDayDecorator);
+                }
+
+                selectedDayDecorator.decorateNoteDot = true;
+
+                mCalendarView.addDecorator(selectedDayDecorator);
+            }
+
+        }
 //        else if (requestCode == EVENT_ITEM)
 //        {
 //            if (resultCode == EventActivity.RESULT_SUCCESS)
@@ -246,7 +259,9 @@ public class MainActivity extends AppCompatActivity{
 //                mCalendarView.addDecorator(selectedDayDecorator);
 //            }
 //        }
-//    }
+    }
+
+
 
     private void selectCurrentDate(){
         mCalendarView.setSelectedDate(CalendarDay.today());

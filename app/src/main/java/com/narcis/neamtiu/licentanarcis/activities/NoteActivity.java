@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 

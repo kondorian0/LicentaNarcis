@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.MyDotSpan;
@@ -40,7 +39,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     private FirestoreClass firestoreClass = new FirestoreClass();
     private String userID = firestoreClass.getCurrentUserID();
 
-    private String dateEvent = "";
+    public  String dateEvent = "";
     private String timeEvent = "";
 
     private MyDotSpan dotSpan = new MyDotSpan();
@@ -139,7 +138,6 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 mNote.getText().clear();
 
                 break;
-
             case "Image":
 //                myDb.insertDataImage(mImagePath);
 //                myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
@@ -169,6 +167,6 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         dateEvent = "";
         timeEvent = "";
 
-        finish();
+//        finish();
     }
 }

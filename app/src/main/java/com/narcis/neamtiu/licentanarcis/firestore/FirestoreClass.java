@@ -78,13 +78,14 @@ public class FirestoreClass {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         Log.e("List", queryDocumentSnapshots.toString());
                         ArrayList<EventData> eventDataArrayList = new ArrayList();
-                        for (QueryDocumentSnapshot i : queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
 
-                            EventData eventData = i.toObject(new EventData().getClass());
-                            eventData.eventType = (String) i.get("eventType");
+                            EventData eventData = doc.toObject(new EventData().getClass());
+                            eventData.eventType = (String) doc.get("eventType");
+
                             eventDataArrayList.add(eventData);
-
                         }
+                        new FirestoreClass().succesEventsListFromFirestore(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -128,6 +129,16 @@ public class FirestoreClass {
 
                     }
                 });
+    }
+
+    private void succesEventsListFromFirestore(ArrayList<EventData> eventsList){
+        for(EventData i : eventsList){
+            Log.i("Event type", i.eventType);
+        }
+    }
+
+    private void getEventsListFromFirestore(){
+        new FirestoreClass().getUserData();
     }
 
     public String getCurrentUserID(){

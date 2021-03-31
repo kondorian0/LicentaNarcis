@@ -21,7 +21,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.database.DatabaseHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
