@@ -6,7 +6,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.narcis.neamtiu.licentanarcis"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 30
         multiDexEnabled true
         versionCode 1

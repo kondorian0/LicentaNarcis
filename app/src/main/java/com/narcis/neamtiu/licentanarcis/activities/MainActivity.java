@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firestoreClass = new FirestoreClass();
-        firestoreClass.getUserData();
+//        firestoreClass = new FirestoreClass();
+//        firestoreClass.getUserData();
 
 
 //        myDb.doStaf();

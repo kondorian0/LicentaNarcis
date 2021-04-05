@@ -13,12 +13,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
 import java.util.ArrayList;
 
@@ -82,6 +84,10 @@ public class FirestoreClass {
 
                             EventData eventData = doc.toObject(new EventData().getClass());
                             eventData.eventType = (String) doc.get("eventType");
+                            eventData.eventTitle = (String) doc.get("eventTitle");
+                            eventData.eventDate = (String) doc.get("eventDate");
+                            eventData.eventContent = (String) doc.get("eventContent");
+                            eventData.eventDescription = (String) doc.get("eventDescription");
 
                             eventDataArrayList.add(eventData);
                         }
@@ -132,9 +138,48 @@ public class FirestoreClass {
     }
 
     private void succesEventsListFromFirestore(ArrayList<EventData> eventsList){
+
+        EventListData[] listData = new EventListData[10];
+
+        int index = 0;
+
         for(EventData i : eventsList){
+            int eventImageIcon;
+            String eventName, eventDetails, eventTime;
+            
+            switch (i.eventType){
+                case "Note":
+                    eventImageIcon = R.drawable.ic_note_color;
+                    break;
+                case "Location Event":
+                    eventImageIcon = R.drawable.ic_location_color;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + i.eventType);
+            }
+
+            if(i.eventTitle == null){
+                eventName = i.eventType;
+            }else {
+                eventName = i.eventTitle;
+            }
+
+            if(i.eventContent == null){
+                eventDetails = i.eventDescription;
+            }else {
+                eventDetails = i.eventContent;
+            }
+            
+            eventTime = i.eventTime;
+
+            listData[index] = new EventListData(eventName, eventDetails, eventTime, eventImageIcon);
+            
+            index++;
+
             Log.i("Event type", i.eventType);
+            Log.i("Event date", i.eventDate);
         }
+
     }
 
     private void getEventsListFromFirestore(){
