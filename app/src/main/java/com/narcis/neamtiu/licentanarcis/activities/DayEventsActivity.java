@@ -31,19 +31,17 @@ public class DayEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_events_list);
 
-        firestoreClass = new FirestoreClass();
-        firestoreClass.getUserData();
 
-        EventListData[] myListData = new EventListData[] {
-                new EventListData("Note", "a lore ipsum", "32/12/2001", R.drawable.ic_note_color),
-                new EventListData("Audio", "facem cepsum", "21/09/2001", R.drawable.ic_audio_color),
-                new EventListData("Image", "cem ceva lore i", "12/11/2001", R.drawable.ic_image_color),
-                new EventListData("Location", "aceva losum", "65/13/2001", R.drawable.ic_location_color)
-        };
+        ArrayList<EventListData> myListData = (ArrayList<EventListData>) getIntent().getSerializableExtra("userData");
 
+//        EventListData[] myListData = new EventListData[] {
+//                new EventListData("Note", "a lore ipsum", "32/12/2001", R.drawable.ic_note_color),
+//                new EventListData("Audio", "facem cepsum", "21/09/2001", R.drawable.ic_audio_color),
+//                new EventListData("Image", "cem ceva lore i", "12/11/2001", R.drawable.ic_image_color),
+//                new EventListData("Location", "aceva losum", "65/13/2001", R.drawable.ic_location_color)
+//        };
 
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         EventListAdapter adapter = new EventListAdapter(myListData);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

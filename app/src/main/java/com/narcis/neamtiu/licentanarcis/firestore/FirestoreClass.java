@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class FirestoreClass {
 
     private FirebaseFirestore  mFireStore = FirebaseFirestore.getInstance();
+    private ArrayList<EventListData> listData;
 
     public void registerUser(final RegisterUserActivity activity, User userInfo){
 
@@ -91,7 +92,8 @@ public class FirestoreClass {
 
                             eventDataArrayList.add(eventData);
                         }
-                        new FirestoreClass().succesEventsListFromFirestore(eventDataArrayList);
+
+                        buildEventsListFromFirestore(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -137,11 +139,9 @@ public class FirestoreClass {
                 });
     }
 
-    private void succesEventsListFromFirestore(ArrayList<EventData> eventsList){
+    private void buildEventsListFromFirestore(ArrayList<EventData> eventsList){
 
-        EventListData[] listData = new EventListData[10];
-
-        int index = 0;
+        listData = new ArrayList<EventListData>();
 
         for(EventData i : eventsList){
             int eventImageIcon;
@@ -172,18 +172,15 @@ public class FirestoreClass {
             
             eventTime = i.eventTime;
 
-            listData[index] = new EventListData(eventName, eventDetails, eventTime, eventImageIcon);
-            
-            index++;
+            listData.add(new EventListData(eventName, eventDetails, eventTime, eventImageIcon));
 
             Log.i("Event type", i.eventType);
             Log.i("Event date", i.eventDate);
         }
-
     }
 
-    private void getEventsListFromFirestore(){
-        new FirestoreClass().getUserData();
+    public ArrayList<EventListData> getEventsListFromFirestore() {
+        return this.listData;
     }
 
     public String getCurrentUserID(){

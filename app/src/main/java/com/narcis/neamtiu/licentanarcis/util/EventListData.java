@@ -1,6 +1,8 @@
 package com.narcis.neamtiu.licentanarcis.util;
 
-public class EventListData {
+import java.io.Serializable;
+
+public class EventListData implements Serializable {
 
     private String title, description, date;
     private int imgId;

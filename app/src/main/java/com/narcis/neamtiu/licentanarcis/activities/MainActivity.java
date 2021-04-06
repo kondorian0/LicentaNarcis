@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
+import com.narcis.neamtiu.licentanarcis.util.EventListData;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -64,8 +66,10 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        firestoreClass = new FirestoreClass();
-//        firestoreClass.getUserData();
+        firestoreClass = new FirestoreClass();
+        firestoreClass.getUserData();
+
+        final ArrayList<EventListData> myListData = firestoreClass.getEventsListFromFirestore();
 
 
 //        myDb.doStaf();
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity{
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
                 Log.d(TAG, selectedDate);
+                intentDayEvent.putExtra("userData", myListData);
                 intentDayEvent.putExtra("selectedDay", selectedDate);
                 Log.d(TAG, String.valueOf(intentDayEvent));
                 startActivity(intentDayEvent);

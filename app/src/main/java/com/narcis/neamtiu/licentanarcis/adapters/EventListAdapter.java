@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
+import java.util.ArrayList;
+
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
-    private EventListData[] listData;
+    private ArrayList<EventListData> listData;
 
-    public EventListAdapter(EventListData[] listData) {
+    public EventListAdapter(ArrayList<EventListData> listData) {
         this.listData = listData;
     }
 
@@ -43,11 +45,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public void onBindViewHolder(@NonNull EventListAdapter.ViewHolder holder, int position) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        final EventListData myListData = listData[position];
-        holder.textViewTitle.setText(listData[position].getTitle());
-        holder.textViewDetails.setText(listData[position].getDescription());
-        holder.textViewDate.setText(listData[position].getDate());
-        holder.imageView.setImageResource(listData[position].getImgId());
+        final EventListData myListData = listData.get(position);
+        holder.textViewTitle.setText(listData.get(position).getTitle());
+        holder.textViewDetails.setText(listData.get(position).getDescription());
+        holder.textViewDate.setText(listData.get(position).getDate());
+        holder.imageView.setImageResource(listData.get(position).getImgId());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +61,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return listData.length;
+        return listData.size();
     }
 
 
