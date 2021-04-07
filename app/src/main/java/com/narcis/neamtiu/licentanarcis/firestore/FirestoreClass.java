@@ -161,7 +161,7 @@ public class FirestoreClass {
                     throw new IllegalStateException("Unexpected value: " + i.eventType);
             }
 
-            listData.add(new EventListData(eventName, eventDetails, i.eventDate, eventImageIcon));
+            listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
         }
     }
 

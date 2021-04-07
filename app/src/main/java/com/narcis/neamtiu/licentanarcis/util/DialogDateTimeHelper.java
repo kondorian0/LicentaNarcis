@@ -169,16 +169,11 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 break;
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(Constants.SELECTED_DATE, dateEvent);
-        setResult(Constants.RESULT_SUCCESS, intent);
-
-
-//        myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
+//        Intent intent = new Intent();
+//        intent.putExtra(Constants.SELECTED_DATE, dateEvent);
+//        setResult(Constants.RESULT_SUCCESS, intent);
 
         dateEvent = "";
         timeEvent = "";
-
-//        finish();
     }
 }

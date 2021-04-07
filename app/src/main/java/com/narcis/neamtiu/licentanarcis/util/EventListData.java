@@ -4,14 +4,22 @@ import java.io.Serializable;
 
 public class EventListData implements Serializable {
 
-    private String title, description, date;
+    private String type, title, description, date;
     private int imgId;
 
-    public EventListData(String title, String description, String date, int imgId) {
+    public EventListData(String type, String title, String description, String date, int imgId) {
+        this.type = type;
         this.title = title;
         this.description = description;
         this.date = date;
         this.imgId = imgId;
+    }
+
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getTitle() {

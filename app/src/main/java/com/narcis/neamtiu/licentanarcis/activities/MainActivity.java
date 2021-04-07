@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity{
 
     private MaterialCalendarView mCalendarView;
 
-    private FirestoreClass firestoreClass;
+    private FirestoreClass firestoreClass = new FirestoreClass();;
+    private ArrayList<EventListData> allDataList= new ArrayList<EventListData>();
 
 
     @Override
@@ -57,8 +58,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firestoreClass = new FirestoreClass();
         firestoreClass.getUserData();
+
+        updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity{
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
-                ArrayList<EventListData> allDataList = firestoreClass.getEventsListFromFirestore();
+                allDataList = firestoreClass.getEventsListFromFirestore();
                 Log.d(TAG, selectedDate);
                 intentDayEvent.putExtra("userData", allDataList);
                 intentDayEvent.putExtra(Constants.SELECTED_DATE, selectedDate);
@@ -151,36 +153,60 @@ public class MainActivity extends AppCompatActivity{
         return calendarDay;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    private void updateCalendarViewSpanDots(ArrayList<EventListData> allDataList)
     {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        // check if the request code is same as what is passed  here it is 2
-        if(requestCode == Constants.NOTE_ITEM)
-        {
-            if (resultCode == Constants.RESULT_SUCCESS)
-            {
-                String selectedDate = data.getStringExtra(Constants.SELECTED_DATE);
-                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-                mDecorators.get(selectedDay);
-                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
+        for (EventListData eventListData : allDataList) {
 
-                if (selectedDayDecorator == null)
-                {
-                    selectedDayDecorator = new EventDecorator(selectedDay);
-                }
-                else
-                {
-                    mCalendarView.removeDecorator(selectedDayDecorator);
-                }
+            String selectedDate = eventListData.getDate();
+            CalendarDay selectedDay = calendarDayFromString(selectedDate);
+            mDecorators.get(selectedDay);
+            EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
 
-                selectedDayDecorator.decorateNoteDot = true;
-
-                mCalendarView.addDecorator(selectedDayDecorator);
+            if (selectedDayDecorator == null) {
+                selectedDayDecorator = new EventDecorator(selectedDay);
+            }else {
+                mCalendarView.removeDecorator(selectedDayDecorator);
             }
 
+            switch (eventListData.getType()) {
+                case "Note":
+                    selectedDayDecorator.decorateNoteDot = true;
+                    break;
+                case "Location Event":
+                    selectedDayDecorator.decorateEventDot = true;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + eventListData.getType());
+            }
+
+            mCalendarView.addDecorator(selectedDayDecorator);
         }
+        // check if the request code is same as what is passed  here it is 2
+//        if(requestCode == Constants.NOTE_ITEM)
+//        {
+//            if (resultCode == Constants.RESULT_SUCCESS)
+//            {
+//                String selectedDate = data.getStringExtra(Constants.SELECTED_DATE);
+//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
+//                mDecorators.get(selectedDay);
+//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
+//
+//                if (selectedDayDecorator == null)
+//                {
+//                    selectedDayDecorator = new EventDecorator(selectedDay);
+//                }
+//                else
+//                {
+//                    mCalendarView.removeDecorator(selectedDayDecorator);
+//                }
+//
+//                selectedDayDecorator.decorateNoteDot = true;
+//
+//                mCalendarView.addDecorator(selectedDayDecorator);
+//            }
+//
+//        }
 //        else if (requestCode == EVENT_ITEM)
 //        {
 //            if (resultCode == EventActivity.RESULT_SUCCESS)
