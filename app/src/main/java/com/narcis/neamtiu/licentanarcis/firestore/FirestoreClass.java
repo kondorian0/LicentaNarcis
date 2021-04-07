@@ -144,8 +144,8 @@ public class FirestoreClass {
 
         for(EventData i : eventsList){
             int eventImageIcon;
-            String eventName, eventDetails, eventDate;
-            
+            String eventName, eventDetails;
+
             switch (i.eventType){
                 case "Note":
                     eventImageIcon = R.drawable.ic_note_color;
@@ -161,21 +161,7 @@ public class FirestoreClass {
                     throw new IllegalStateException("Unexpected value: " + i.eventType);
             }
 
-//            if(i.eventTitle == null){
-//                eventName = i.eventContent;
-//            }else {
-//                eventName = i.eventTitle;
-//            }
-//
-//            if(i.eventContent == null){
-//                eventDetails = i.eventDescription;
-//            }else {
-//                eventDetails = i.eventContent;
-//            }
-            
-            eventDate = i.eventDate;
-
-            listData.add(new EventListData(eventName, eventDetails, eventDate, eventImageIcon));
+            listData.add(new EventListData(eventName, eventDetails, i.eventDate, eventImageIcon));
         }
     }
 

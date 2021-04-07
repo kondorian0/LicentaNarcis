@@ -180,14 +180,6 @@ public class DrawActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        DialogDateTime.unregisterListener(this);
-        super.onDestroy();
-    }
-
-
     private void requestStoragePermission()
     {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -256,6 +248,19 @@ public class DrawActivity extends AppCompatActivity
         });
 
         ambilWarnaDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(DrawActivity.this, MainActivity.class));
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        DialogDateTime.unregisterListener(this);
+        super.onDestroy();
     }
 
     @Override

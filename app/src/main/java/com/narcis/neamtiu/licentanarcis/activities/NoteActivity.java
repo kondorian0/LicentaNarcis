@@ -75,6 +75,13 @@ public class NoteActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        startActivity(new Intent(NoteActivity.this, MainActivity.class));
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onDestroy() {
         DialogDateTime.unregisterListener(this);
         super.onDestroy();

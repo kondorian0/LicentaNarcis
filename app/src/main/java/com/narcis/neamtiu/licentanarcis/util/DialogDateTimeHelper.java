@@ -97,22 +97,22 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         else if(hourOfDay >= 10 && minute >= 10) {
             timeEvent = hourOfDay + ":" + minute;
         }
-//            time_from = startTime;
         commitDataEvent();
     }
 
     public void onDatePicked(int year, int month, int day) {
+        int valueOfMonth = month+1;  //Ugly hack TODO: Improve
         if(day < 10 && month < 10) {
-            dateEvent = "0" + day + "/" + "0" + month + "/" + year;
+            dateEvent = "0" + day + "/" + "0" + valueOfMonth + "/" + year;
         }
         else if(day < 10 && month >= 10) {
-            dateEvent = "0" + day + "/" + month + "/" + year;
+            dateEvent = "0" + day + "/" + valueOfMonth + "/" + year;
         }
         else if(day >= 10 && month < 10) {
-            dateEvent = day + "/" + "0" + month + "/" + year;
+            dateEvent = day + "/" + "0" + valueOfMonth + "/" + year;
         }
         else if(day >= 10 && month >= 10) {
-            dateEvent = day + "/" + month + "/" + year;
+            dateEvent = day + "/" + valueOfMonth + "/" + year;
         }
         commitDataEvent();
     }
@@ -172,6 +172,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(Constants.SELECTED_DATE, dateEvent);
         setResult(Constants.RESULT_SUCCESS, intent);
+
 
 //        myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
 

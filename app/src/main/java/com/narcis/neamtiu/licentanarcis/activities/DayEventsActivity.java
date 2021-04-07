@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.adapters.EventListAdapter;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class DayEventsActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if(extras != null) {
-            String value = extras.getString("selectedDay");
+            String value = extras.getString(Constants.SELECTED_DATE);
             return value;
         }else {
             return null;

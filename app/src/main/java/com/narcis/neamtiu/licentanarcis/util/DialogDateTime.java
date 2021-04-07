@@ -25,12 +25,12 @@ public class DialogDateTime extends AppCompatActivity
     static LocalTime mTime = LocalTime.now();
     static LocalDate mDate = LocalDate.now();
 
-    static int startYear =  mDate.getYear();
-    static int startMonth = mDate.getMonthValue();
-    static int startDay = mDate.getDayOfMonth();
+    static int mDateYear =  mDate.getYear();
+    static int mDateMonthValue = mDate.getMonthValue()-1; //Ugly hack TODO: Improve
+    static int mDateDayOfMonth = mDate.getDayOfMonth();
 
-    static int hour1 = mTime.getHour();
-    static int minute1 =  mTime.getMinute();
+    static int mTimeHour = mTime.getHour();
+    static int mTimeMinute =  mTime.getMinute();
 
     public interface Listener
     {
@@ -50,13 +50,13 @@ public class DialogDateTime extends AppCompatActivity
 
     public static void showDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callback)
     {
-        DatePickerDialog dialog = new DatePickerDialog(context, callback, startYear, startMonth, startDay);
+        DatePickerDialog dialog = new DatePickerDialog(context, callback, mDateYear, mDateMonthValue, mDateDayOfMonth);
         dialog.show();
     }
 
     public static void showTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callback)
     {
-        TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, hour1, minute1, true);
+        TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, mTimeHour, mTimeMinute, true);
         dialog.show();
 //        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
 //        {

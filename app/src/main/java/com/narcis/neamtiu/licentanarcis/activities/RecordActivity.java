@@ -342,8 +342,14 @@ public class RecordActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
+    public void onBackPressed() {
+        startActivity(new Intent(RecordActivity.this, MainActivity.class));
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
         DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }

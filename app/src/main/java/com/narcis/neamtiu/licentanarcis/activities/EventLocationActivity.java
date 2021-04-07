@@ -2,6 +2,7 @@ package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -79,6 +80,13 @@ public class EventLocationActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(EventLocationActivity.this, MainActivity.class));
+        finish();
+        super.onBackPressed();
     }
 
     @Override

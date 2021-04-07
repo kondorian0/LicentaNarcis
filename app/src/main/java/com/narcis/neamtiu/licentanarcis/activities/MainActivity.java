@@ -37,10 +37,6 @@ import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity{
-    private final int EVENT_ITEM = 1;
-    private final int NOTE_ITEM = 2;
-    private final int AUDIO_ITEM = 3;
-    private final int IMAGE_ITEM = 4;
 
     private TextView mTextView;
 
@@ -48,9 +44,7 @@ public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "MainActivity";
 
-//    DatabaseHelper myDb = new DatabaseHelper(this);
-
-    private FloatingActionButton mEventItem, mNoteItem, mAudioItem, mDrawItem;
+    private FloatingActionButton mEventLocationItem, mNoteItem, mAudioItem, mDrawItem;
 
     private MaterialCalendarView mCalendarView;
 
@@ -66,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
         firestoreClass = new FirestoreClass();
         firestoreClass.getUserData();
 
-//        myDb.doStaf();
         SharedPreferences sharedPreferences =
                 getSharedPreferences(
                         Constants.EVENTS,
@@ -74,13 +67,11 @@ public class MainActivity extends AppCompatActivity{
 
         String userName = sharedPreferences.getString(Constants.TYPE_OF_EVENT, "");
 
-//        myDb = new DatabaseHelper(this);
-
         mTextView = findViewById(R.id.testTestView);
         mTextView.setText(userName);
 
         mCalendarView = findViewById(R.id.calendarView);
-        mEventItem = findViewById(R.id.menu_item_event);
+        mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);
 
         selectCurrentDate();
@@ -95,18 +86,19 @@ public class MainActivity extends AppCompatActivity{
                 ArrayList<EventListData> allDataList = firestoreClass.getEventsListFromFirestore();
                 Log.d(TAG, selectedDate);
                 intentDayEvent.putExtra("userData", allDataList);
-                intentDayEvent.putExtra("selectedDay", selectedDate);
+                intentDayEvent.putExtra(Constants.SELECTED_DATE, selectedDate);
                 Log.d(TAG, String.valueOf(intentDayEvent));
                 startActivity(intentDayEvent);
             }
         });
 
-        mEventItem.setOnClickListener(new View.OnClickListener()
+        mEventLocationItem.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, EventLocationActivity.class);
-                startActivityForResult(intent, EVENT_ITEM);
+                startActivityForResult(intent, Constants.EVENT_LOCATION_ITEM);
+                finish();
             }
         });
 
@@ -115,9 +107,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-                startActivityForResult(intent, NOTE_ITEM);
-
-                // Cumva il dai mai departe
+                startActivityForResult(intent, Constants.NOTE_ITEM);
+                finish();
             }
         });
 
@@ -128,7 +119,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, RecordActivity.class);
-                startActivityForResult(intent, AUDIO_ITEM);
+                startActivityForResult(intent, Constants.AUDIO_ITEM);
+                finish();
             }
         });
 
@@ -139,7 +131,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
-                startActivityForResult(intent, IMAGE_ITEM);
+                startActivityForResult(intent, Constants.IMAGE_ITEM);
+                finish();
             }
         });
     }
@@ -158,14 +151,13 @@ public class MainActivity extends AppCompatActivity{
         return calendarDay;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode == NOTE_ITEM)
+        if(requestCode == Constants.NOTE_ITEM)
         {
             if (resultCode == Constants.RESULT_SUCCESS)
             {
