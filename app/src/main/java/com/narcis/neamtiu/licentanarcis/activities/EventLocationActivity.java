@@ -16,7 +16,7 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 
-public class EventActivity extends AppCompatActivity
+public class EventLocationActivity extends AppCompatActivity
         implements DialogDateTime.Listener {
 
     private String EVENT_TYPE = "Event";
@@ -29,7 +29,7 @@ public class EventActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_item);
+        setContentView(R.layout.activity_event_location);
 
         mTitle = findViewById(R.id.event_title);
         mDescription = findViewById(R.id.event_description);
@@ -51,8 +51,8 @@ public class EventActivity extends AppCompatActivity
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                DialogDateTime.onTimeSelectedClick(EventActivity.this);
-                DialogDateTime.onDateSelectedClick(EventActivity.this);
+                DialogDateTime.onTimeSelectedClick(EventLocationActivity.this);
+                DialogDateTime.onDateSelectedClick(EventLocationActivity.this);
             }
         });
 
@@ -60,7 +60,7 @@ public class EventActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EventLocationActivity.this);
 
                 builder.setMessage("Do you want to delete the text?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

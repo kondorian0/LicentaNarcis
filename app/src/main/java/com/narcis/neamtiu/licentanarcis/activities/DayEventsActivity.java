@@ -26,55 +26,41 @@ public class DayEventsActivity extends AppCompatActivity {
     /** Called when the activity is first created. */
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_events_list);
 
 
-        ArrayList<EventListData> myListData = (ArrayList<EventListData>) getIntent().getSerializableExtra("userData");
+        ArrayList<EventListData> allDataList = (ArrayList<EventListData>) getIntent().getSerializableExtra("userData");
 
-//        EventListData[] myListData = new EventListData[] {
-//                new EventListData("Note", "a lore ipsum", "32/12/2001", R.drawable.ic_note_color),
-//                new EventListData("Audio", "facem cepsum", "21/09/2001", R.drawable.ic_audio_color),
-//                new EventListData("Image", "cem ceva lore i", "12/11/2001", R.drawable.ic_image_color),
-//                new EventListData("Location", "aceva losum", "65/13/2001", R.drawable.ic_location_color)
-//        };
+        ArrayList<EventListData> dayDataList = new ArrayList<EventListData>();
+
+        for(int i=0; i<allDataList.size(); i++){
+            String eventDate = allDataList.get(i).getDate();
+            String dateSelected = dateSelected();
+
+            if(dateSelected.equals(eventDate)){
+                dayDataList.add(allDataList.get(i));
+            }
+        }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        EventListAdapter adapter = new EventListAdapter(myListData);
+        EventListAdapter adapter = new EventListAdapter(dayDataList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-//        displayEventsList();
     }
 
-    private String dateSelected()
-    {
+    private String dateSelected() {
         Bundle extras = getIntent().getExtras();
 
-        if(extras != null)
-        {
+        if(extras != null) {
             String value = extras.getString("selectedDay");
             return value;
-        }
-        else
-        {
+        }else {
             return null;
         }
-    };
-
-//    private void displayEventsList()
-//    {
-//        EventListAdapter itemAdapter = new EventListAdapter(this, getItemsList());
-//        mListView.setAdapter((ListAdapter) itemAdapter);
-//    }
-
-//    private ArrayList<String> getItemsList() {
-//        getItemsList().add("text");
-//        return getItemsList();
-//    }
+    }
 
     @Override
     protected void onStop() {

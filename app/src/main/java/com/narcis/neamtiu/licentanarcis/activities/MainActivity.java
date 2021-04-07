@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,9 +20,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
-import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -69,9 +66,6 @@ public class MainActivity extends AppCompatActivity{
         firestoreClass = new FirestoreClass();
         firestoreClass.getUserData();
 
-        final ArrayList<EventListData> myListData = firestoreClass.getEventsListFromFirestore();
-
-
 //        myDb.doStaf();
         SharedPreferences sharedPreferences =
                 getSharedPreferences(
@@ -98,8 +92,9 @@ public class MainActivity extends AppCompatActivity{
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
+                ArrayList<EventListData> allDataList = firestoreClass.getEventsListFromFirestore();
                 Log.d(TAG, selectedDate);
-                intentDayEvent.putExtra("userData", myListData);
+                intentDayEvent.putExtra("userData", allDataList);
                 intentDayEvent.putExtra("selectedDay", selectedDate);
                 Log.d(TAG, String.valueOf(intentDayEvent));
                 startActivity(intentDayEvent);
@@ -110,7 +105,7 @@ public class MainActivity extends AppCompatActivity{
         {
             public void onClick(View v)
             {
-                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                Intent intent = new Intent(MainActivity.this, EventLocationActivity.class);
                 startActivityForResult(intent, EVENT_ITEM);
             }
         });

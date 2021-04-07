@@ -102,7 +102,18 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     }
 
     public void onDatePicked(int year, int month, int day) {
-        dateEvent = day + "/" + month + "/" + year;
+        if(day < 10 && month < 10) {
+            dateEvent = "0" + day + "/" + "0" + month + "/" + year;
+        }
+        else if(day < 10 && month >= 10) {
+            dateEvent = "0" + day + "/" + month + "/" + year;
+        }
+        else if(day >= 10 && month < 10) {
+            dateEvent = day + "/" + "0" + month + "/" + year;
+        }
+        else if(day >= 10 && month >= 10) {
+            dateEvent = day + "/" + month + "/" + year;
+        }
         commitDataEvent();
     }
 

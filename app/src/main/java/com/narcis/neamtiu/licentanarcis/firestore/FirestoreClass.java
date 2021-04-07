@@ -49,7 +49,41 @@ public class FirestoreClass {
                         Log.e("error", "Error while registering the user", e);
                     }
                 });
+    }
 
+    public void getUserDetails(final LoginUserActivity activity){
+        //collection name from which we want the data
+        mFireStore.collection(Constants.USERS)
+                .document(getCurrentUserID())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                        Log.i("TAG", documentSnapshot.toString());
+//                        //convert snapshot doc to User Data model object
+//                        User user = documentSnapshot.toObject(User.class);
+//
+//                        SharedPreferences sharedPreferences =
+//                                activity.getSharedPreferences(
+//                                        Constants.EVENTS,
+//                                        Context.MODE_PRIVATE);
+//
+//                        SharedPreferences.Editor editor = sharedPreferences.edit();
+//                        // KEY: constants.events  ----  Value: user.name
+//                        editor.putString(Constants.TYPE_OF_EVENT, user.name);
+//                        editor.apply();
+
+                        //TODO pass the result to the login actity
+                        //start
+                        activity.userLoggedInSucces();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     public void registerDataEvent(final DialogDateTimeHelper activity, EventData eventData){
@@ -93,7 +127,7 @@ public class FirestoreClass {
                             eventDataArrayList.add(eventData);
                         }
 
-                        buildEventsListFromFirestore(eventDataArrayList);
+                        buildEventsList(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -104,78 +138,44 @@ public class FirestoreClass {
                 });
     }
 
-    public void getUserDetails(final LoginUserActivity activity){
-        //collection name from which we want the data
-        mFireStore.collection(Constants.USERS)
-                .document(getCurrentUserID())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        Log.i("TAG", documentSnapshot.toString());
-//                        //convert snapshot doc to User Data model object
-//                        User user = documentSnapshot.toObject(User.class);
-//
-//                        SharedPreferences sharedPreferences =
-//                                activity.getSharedPreferences(
-//                                        Constants.EVENTS,
-//                                        Context.MODE_PRIVATE);
-//
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        // KEY: constants.events  ----  Value: user.name
-//                        editor.putString(Constants.TYPE_OF_EVENT, user.name);
-//                        editor.apply();
-
-                        //TODO pass the result to the login actity
-                        //start
-                        activity.userLoggedInSucces();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-    }
-
-    private void buildEventsListFromFirestore(ArrayList<EventData> eventsList){
+    private void buildEventsList(ArrayList<EventData> eventsList){
 
         listData = new ArrayList<EventListData>();
 
         for(EventData i : eventsList){
             int eventImageIcon;
-            String eventName, eventDetails, eventTime;
+            String eventName, eventDetails, eventDate;
             
             switch (i.eventType){
                 case "Note":
                     eventImageIcon = R.drawable.ic_note_color;
+                    eventName = i.eventContent;
+                    eventDetails = "";
                     break;
                 case "Location Event":
                     eventImageIcon = R.drawable.ic_location_color;
+                    eventName = i.eventTitle;
+                    eventDetails = i.eventDescription;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + i.eventType);
             }
 
-            if(i.eventTitle == null){
-                eventName = i.eventType;
-            }else {
-                eventName = i.eventTitle;
-            }
-
-            if(i.eventContent == null){
-                eventDetails = i.eventDescription;
-            }else {
-                eventDetails = i.eventContent;
-            }
+//            if(i.eventTitle == null){
+//                eventName = i.eventContent;
+//            }else {
+//                eventName = i.eventTitle;
+//            }
+//
+//            if(i.eventContent == null){
+//                eventDetails = i.eventDescription;
+//            }else {
+//                eventDetails = i.eventContent;
+//            }
             
-            eventTime = i.eventTime;
+            eventDate = i.eventDate;
 
-            listData.add(new EventListData(eventName, eventDetails, eventTime, eventImageIcon));
-
-            Log.i("Event type", i.eventType);
-            Log.i("Event date", i.eventDate);
+            listData.add(new EventListData(eventName, eventDetails, eventDate, eventImageIcon));
         }
     }
 

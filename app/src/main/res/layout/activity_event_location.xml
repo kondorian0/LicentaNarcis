@@ -77,20 +77,20 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/save_event_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            android:text="@string/save"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/primary_color" />
-
-        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/delete_event_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             android:text="@string/delete"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary_color" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/save_event_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:text="@string/save"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/primary_color" />
     </LinearLayout>

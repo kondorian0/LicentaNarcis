@@ -25,44 +25,49 @@
     </LinearLayout>
 
     <!-- Title Of Event -->
-    <TextView
-        android:id="@+id/titleEvent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/titleLinearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:orientation="horizontal"
         android:layout_alignTop="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:layout_toEndOf="@id/thumbnail"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:textColor="#040404"
-        android:typeface="sans"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:layout_toEndOf="@id/thumbnail">
+
+        <!-- Rightend Date -->
+        <TextView
+            android:id="@+id/titleEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Some long text to see"
+            android:textColor="#040404"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <TextView
+            android:id="@+id/dateEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="Some long text to see"
+            android:textColor="@color/primary_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
     <!-- Event Details -->
     <TextView
         android:id="@+id/detailsEvent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleEvent"
+        android:layout_below="@id/titleLinearLayout"
         android:textColor="@color/primary_dark_color"
-        android:textSize="10sp"
+        android:text="Some long text to see"
         android:layout_marginTop="1dp"
         android:layout_toEndOf="@id/thumbnail"/>
-
-    <!-- Rightend Date -->
-    <TextView
-        android:id="@+id/dateEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/titleEvent"
-        android:gravity="end"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:textSize="10sp"
-        android:textColor="#10bcc9"
-        android:textStyle="bold"/>
 
     <!-- Rightend Arrow -->
 <!--    <ImageView-->
