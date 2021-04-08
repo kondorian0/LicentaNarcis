@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
+import com.narcis.neamtiu.licentanarcis.activities.MainActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
@@ -126,7 +127,6 @@ public class FirestoreClass {
 
                             eventDataArrayList.add(eventData);
                         }
-
                         buildEventsList(eventDataArrayList);
                     }
                 })
@@ -163,6 +163,8 @@ public class FirestoreClass {
 
             listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
         }
+
+        new MainActivity().updateCalendarViewSpanDots(listData);
     }
 
     public ArrayList<EventListData> getEventsListFromFirestore() {

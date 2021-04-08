@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity{
 
     private MaterialCalendarView mCalendarView;
 
-    private FirestoreClass firestoreClass = new FirestoreClass();;
-    private ArrayList<EventListData> allDataList= new ArrayList<EventListData>();
+    private FirestoreClass firestoreClass = new FirestoreClass();
 
 
     @Override
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         firestoreClass.getUserData();
-
-        updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity{
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
-                allDataList = firestoreClass.getEventsListFromFirestore();
+                ArrayList<EventListData> allDataList = firestoreClass.getEventsListFromFirestore();
                 Log.d(TAG, selectedDate);
                 intentDayEvent.putExtra("userData", allDataList);
                 intentDayEvent.putExtra(Constants.SELECTED_DATE, selectedDate);
@@ -153,21 +150,20 @@ public class MainActivity extends AppCompatActivity{
         return calendarDay;
     }
 
-    private void updateCalendarViewSpanDots(ArrayList<EventListData> allDataList)
+    public void updateCalendarViewSpanDots(ArrayList<EventListData> allDataList)
     {
 
         for (EventListData eventListData : allDataList) {
 
             String selectedDate = eventListData.getDate();
             CalendarDay selectedDay = calendarDayFromString(selectedDate);
-            mDecorators.get(selectedDay);
-            EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
+            EventDecorator selectedDayDecorator = new EventDecorator(selectedDay);
 
-            if (selectedDayDecorator == null) {
-                selectedDayDecorator = new EventDecorator(selectedDay);
-            }else {
-                mCalendarView.removeDecorator(selectedDayDecorator);
-            }
+//            if (selectedDayDecorator == null) {
+//                selectedDayDecorator = new EventDecorator(selectedDay);
+//            }else {
+//                mCalendarView.removeDecorator(selectedDayDecorator);
+//            }
 
             switch (eventListData.getType()) {
                 case "Note":
