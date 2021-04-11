@@ -27,7 +27,22 @@ import java.util.ArrayList;
 
 public class FirestoreClass {
 
-    private FirebaseFirestore  mFireStore = FirebaseFirestore.getInstance();
+    public interface Listener
+    {
+        void onUserDataAcquired(ArrayList<EventListData> list);
+    }
+
+    ArrayList<Listener> mListeners = new ArrayList<>();
+
+    public void registerListener(Listener listener) {
+        mListeners.add(listener);
+    }
+
+    public void unregisterListener(Listener listener) {
+        mListeners.remove(listener);
+    }
+
+    private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
     private ArrayList<EventListData> listData;
 
     public void registerUser(final RegisterUserActivity activity, User userInfo){
@@ -164,7 +179,10 @@ public class FirestoreClass {
             listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
         }
 
-        new MainActivity().updateCalendarViewSpanDots(listData);
+        for (Listener l : mListeners) {
+            l.onUserDataAcquired(listData);
+        }
+//        new MainActivity().updateCalendarViewSpanDots(listData);
     }
 
     public ArrayList<EventListData> getEventsListFromFirestore() {

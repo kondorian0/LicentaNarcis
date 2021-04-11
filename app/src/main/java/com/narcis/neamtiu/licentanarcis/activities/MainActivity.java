@@ -13,7 +13,6 @@ import android.widget.TextView;
 //import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -35,12 +34,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity{
 
     private TextView mTextView;
 
-    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
+//    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
 
     private static final String TAG = "MainActivity";
 
@@ -57,21 +55,19 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firestoreClass.getUserData();
-
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(
-                        Constants.EVENTS,
-                        Context.MODE_PRIVATE);
-
-        String userName = sharedPreferences.getString(Constants.TYPE_OF_EVENT, "");
-
-        mTextView = findViewById(R.id.testTestView);
-        mTextView.setText(userName);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
 
         mCalendarView = findViewById(R.id.calendarView);
         mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);
+
+        firestoreClass.registerListener(new FirestoreClass.Listener() {
+            @Override
+            public void onUserDataAcquired(ArrayList<EventListData> list) {
+                updateCalendarViewSpanDots(list);
+            }
+        });
+        firestoreClass.getUserData();
 
         selectCurrentDate();
 
@@ -157,26 +153,25 @@ public class MainActivity extends AppCompatActivity{
 
             String selectedDate = eventListData.getDate();
             CalendarDay selectedDay = calendarDayFromString(selectedDate);
-            EventDecorator selectedDayDecorator = new EventDecorator(selectedDay);
-
-//            if (selectedDayDecorator == null) {
-//                selectedDayDecorator = new EventDecorator(selectedDay);
+            EventDecorator dayDecorator = new EventDecorator(selectedDay);
+//            if (dayDecorator == null) {
+//                dayDecorator = new EventDecorator(selectedDay);
 //            }else {
-//                mCalendarView.removeDecorator(selectedDayDecorator);
+//                mCalendarView.removeDecorator(dayDecorator);
 //            }
 
             switch (eventListData.getType()) {
                 case "Note":
-                    selectedDayDecorator.decorateNoteDot = true;
+                    dayDecorator.decorateNoteDot = true;
                     break;
                 case "Location Event":
-                    selectedDayDecorator.decorateEventDot = true;
+                    dayDecorator.decorateEventDot = true;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + eventListData.getType());
             }
 
-            mCalendarView.addDecorator(selectedDayDecorator);
+            mCalendarView.addDecorator(dayDecorator);
         }
         // check if the request code is same as what is passed  here it is 2
 //        if(requestCode == Constants.NOTE_ITEM)
