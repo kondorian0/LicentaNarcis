@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.adapters.EventListAdapter;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
@@ -32,12 +33,12 @@ public class DayEventsActivity extends AppCompatActivity {
         setContentView(R.layout.day_events_list);
 
 
-        ArrayList<EventListData> allDataList = (ArrayList<EventListData>) getIntent().getSerializableExtra("userData");
+        ArrayList<EventData> allDataList = firestoreClass.getEventsListFromFirestore();
 
-        ArrayList<EventListData> dayDataList = new ArrayList<EventListData>();
+        ArrayList<EventData> dayDataList = new ArrayList<EventData>();
 
         for(int i=0; i<allDataList.size(); i++){
-            String eventDate = allDataList.get(i).getDate();
+            String eventDate = allDataList.get(i).getEventDate();
             String dateSelected = dateSelected();
 
             if(dateSelected.equals(eventDate)){

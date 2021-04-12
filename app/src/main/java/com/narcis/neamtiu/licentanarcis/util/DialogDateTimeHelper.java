@@ -114,7 +114,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         else if(day >= 10 && month >= 10) {
             dateEvent = day + "/" + valueOfMonth + "/" + year;
         }
-        commitDataEvent();
+//        commitDataEvent();
     }
 
     void commitDataEvent() {
@@ -128,10 +128,10 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 String description = mDescription.getText().toString();
                 String location = mLocation.getText().toString();
 
-                EventData locationEvent = new EventData(userID,"Location Event",
+                EventData locationEvent = new EventData(userID,Constants.LOCATION_EVENT,
                         dateEvent, timeEvent, title, description, location);
 
-                firestoreClass.registerDataEvent(this, locationEvent);
+                firestoreClass.registerDataEvent(locationEvent);
 
                 mTitle.getText().clear();
                 mDescription.getText().clear();
@@ -144,7 +144,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 EventData noteEvent = new EventData(userID,"Note",
                         dateEvent, timeEvent, note);
 
-                firestoreClass.registerDataEvent(this, noteEvent);
+                firestoreClass.registerDataEvent(noteEvent);
 
                 mNote.getText().clear();
 
@@ -158,7 +158,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 EventData imageEvent = new EventData(userID,"Image",
                         dateEvent, timeEvent, mImagePath);
 
-                firestoreClass.registerDataEvent(this, imageEvent);
+                firestoreClass.registerDataEvent(imageEvent);
 
                 break;
 
@@ -169,9 +169,9 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 break;
         }
 
-//        Intent intent = new Intent();
-//        intent.putExtra(Constants.SELECTED_DATE, dateEvent);
-//        setResult(Constants.RESULT_SUCCESS, intent);
+        Intent intent = new Intent();
+        intent.putExtra(Constants.SELECTED_DATE, dateEvent);
+        setResult(Constants.RESULT_SUCCESS, intent);
 
         dateEvent = "";
         timeEvent = "";

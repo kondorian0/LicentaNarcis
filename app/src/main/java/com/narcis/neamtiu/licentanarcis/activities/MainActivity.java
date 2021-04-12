@@ -13,12 +13,14 @@ import android.widget.TextView;
 //import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
 
     private MaterialCalendarView mCalendarView;
 
-    private FirestoreClass firestoreClass = new FirestoreClass();
+    private FirestoreClass firestoreClass;
 
 
     @Override
@@ -54,20 +56,15 @@ public class MainActivity extends AppCompatActivity{
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firestoreClass = (FirestoreClass) new Intent().getSerializableExtra("firestoreClass");
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
+//        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
 
         mCalendarView = findViewById(R.id.calendarView);
         mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);
 
-        firestoreClass.registerListener(new FirestoreClass.Listener() {
-            @Override
-            public void onUserDataAcquired(ArrayList<EventListData> list) {
-                updateCalendarViewSpanDots(list);
-            }
-        });
-        firestoreClass.getUserData();
+        updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
 
         selectCurrentDate();
 
@@ -78,9 +75,7 @@ public class MainActivity extends AppCompatActivity{
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
-                ArrayList<EventListData> allDataList = firestoreClass.getEventsListFromFirestore();
                 Log.d(TAG, selectedDate);
-                intentDayEvent.putExtra("userData", allDataList);
                 intentDayEvent.putExtra(Constants.SELECTED_DATE, selectedDate);
                 Log.d(TAG, String.valueOf(intentDayEvent));
                 startActivity(intentDayEvent);
@@ -146,12 +141,23 @@ public class MainActivity extends AppCompatActivity{
         return calendarDay;
     }
 
-    public void updateCalendarViewSpanDots(ArrayList<EventListData> allDataList)
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == REQUEST_CODE  && resultCode  == Constants.RESULT_SUCCESS) {
+//
+//            String requiredValue = data.getStringExtra("key");
+//        }
+//    }
+
+    public void updateCalendarViewSpanDots(ArrayList<EventData> allDataList)
     {
 
-        for (EventListData eventListData : allDataList) {
+        for (EventData eventListData : allDataList) {
 
-            String selectedDate = eventListData.getDate();
+            String selectedDate = eventListData.getEventDate();
             CalendarDay selectedDay = calendarDayFromString(selectedDate);
             EventDecorator dayDecorator = new EventDecorator(selectedDay);
 //            if (dayDecorator == null) {
@@ -160,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
 //                mCalendarView.removeDecorator(dayDecorator);
 //            }
 
-            switch (eventListData.getType()) {
+            switch (eventListData.getEventType()) {
                 case "Note":
                     dayDecorator.decorateNoteDot = true;
                     break;
@@ -168,7 +174,7 @@ public class MainActivity extends AppCompatActivity{
                     dayDecorator.decorateEventDot = true;
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + eventListData.getType());
+                    throw new IllegalStateException("Unexpected value: " + eventListData.getEventType());
             }
 
             mCalendarView.addDecorator(dayDecorator);

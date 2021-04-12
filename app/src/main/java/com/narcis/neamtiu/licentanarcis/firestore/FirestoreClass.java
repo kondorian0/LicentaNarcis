@@ -21,18 +21,22 @@ import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FirestoreClass {
+public class FirestoreClass implements Serializable {
 
     public interface Listener
     {
-        void onUserDataAcquired(ArrayList<EventListData> list);
+        void onUserDataAcquired(ArrayList<EventData> list);
     }
 
     ArrayList<Listener> mListeners = new ArrayList<>();
+    ArrayList<EventData> eventDataArrayList = new ArrayList();
 
     public void registerListener(Listener listener) {
         mListeners.add(listener);
@@ -102,7 +106,7 @@ public class FirestoreClass {
                 });
     }
 
-    public void registerDataEvent(final DialogDateTimeHelper activity, EventData eventData){
+    public void registerDataEvent(EventData eventData){
 
         mFireStore.collection(Constants.EVENTS)
                 .document()
@@ -119,7 +123,28 @@ public class FirestoreClass {
                         Log.e("error", "Error while registering the user", e);
                     }
                 });
+
+//        CalendarDay selectedDay = calendarDayFromString(eventData.eventDate);
+//        EventDecorator dayDecorator = new EventDecorator(selectedDay);
+//
+//        switch (eventData.eventType) {
+//            case "Note":
+//                dayDecorator.decorateNoteDot = true;
+//                break;
+//            case "Location Event":
+//                dayDecorator.decorateEventDot = true;
+//                break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + eventData.eventType);
+//        }
+//
+//        mCalendarView.addDecorator(dayDecorator);
+
     }
+
+//    public void unRegisterDataEvent(EventData eventData){
+//        mCalendarView.removeDecorator(dayDecorator);
+//    }
 
     public void getUserData(){
 
@@ -130,7 +155,6 @@ public class FirestoreClass {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         Log.e("List", queryDocumentSnapshots.toString());
-                        ArrayList<EventData> eventDataArrayList = new ArrayList();
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
 
                             EventData eventData = doc.toObject(new EventData().getClass());
@@ -142,7 +166,6 @@ public class FirestoreClass {
 
                             eventDataArrayList.add(eventData);
                         }
-                        buildEventsList(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -153,40 +176,39 @@ public class FirestoreClass {
                 });
     }
 
-    private void buildEventsList(ArrayList<EventData> eventsList){
+//    private void buildEventsList(ArrayList<EventData> eventsList){
+//
+//        listData = new ArrayList<EventListData>();
+//
+//        for(EventData i : eventsList){
+//            int eventImageIcon;
+//            String eventName, eventDetails;
+//
+//            switch (i.eventType){
+//                case "Note":
+//                    eventImageIcon = R.drawable.ic_note_color;
+//                    eventName = i.eventContent;
+//                    eventDetails = "";
+//                    break;
+//                case "Location Event":
+//                    eventImageIcon = R.drawable.ic_location_color;
+//                    eventName = i.eventTitle;
+//                    eventDetails = i.eventDescription;
+//                    break;
+//                default:
+//                    throw new IllegalStateException("Unexpected value: " + i.eventType);
+//            }
+//
+//            listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
+//        }
+//
+//        for (Listener l : mListeners) {
+//            l.onUserDataAcquired(listData);
+//        }
+//    }
 
-        listData = new ArrayList<EventListData>();
-
-        for(EventData i : eventsList){
-            int eventImageIcon;
-            String eventName, eventDetails;
-
-            switch (i.eventType){
-                case "Note":
-                    eventImageIcon = R.drawable.ic_note_color;
-                    eventName = i.eventContent;
-                    eventDetails = "";
-                    break;
-                case "Location Event":
-                    eventImageIcon = R.drawable.ic_location_color;
-                    eventName = i.eventTitle;
-                    eventDetails = i.eventDescription;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + i.eventType);
-            }
-
-            listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
-        }
-
-        for (Listener l : mListeners) {
-            l.onUserDataAcquired(listData);
-        }
-//        new MainActivity().updateCalendarViewSpanDots(listData);
-    }
-
-    public ArrayList<EventListData> getEventsListFromFirestore() {
-        return this.listData;
+    public ArrayList<EventData> getEventsListFromFirestore() {
+        return this.eventDataArrayList;
     }
 
     public String getCurrentUserID(){

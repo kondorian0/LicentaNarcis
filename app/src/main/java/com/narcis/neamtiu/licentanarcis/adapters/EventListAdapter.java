@@ -12,15 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
 import java.util.ArrayList;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
-    private ArrayList<EventListData> listData;
+    private ArrayList<EventData> listData ;
 
-    public EventListAdapter(ArrayList<EventListData> listData) {
+    public EventListAdapter(ArrayList<EventData> listData) {
         this.listData = listData;
     }
 
@@ -45,15 +46,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public void onBindViewHolder(@NonNull EventListAdapter.ViewHolder holder, int position) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        final EventListData myListData = listData.get(position);
-        holder.textViewTitle.setText(listData.get(position).getTitle());
-        holder.textViewDetails.setText(listData.get(position).getDescription());
-        holder.textViewDate.setText(listData.get(position).getDate());
-        holder.imageView.setImageResource(listData.get(position).getImgId());
+        final EventData myListData = listData.get(position);
+        holder.textViewTitle.setText(listData.get(position).getEventTitle());
+        holder.textViewDetails.setText(listData.get(position).getEventDescription());
+        holder.textViewDate.setText(listData.get(position).getEventDate());
+        holder.imageView.setImageResource(listData.get(position).getEventIcon());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"title: "+myListData.getTitle(), Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"title: "+myListData.getEventTitle(), Toast.LENGTH_LONG).show();
             }
         });
     }
