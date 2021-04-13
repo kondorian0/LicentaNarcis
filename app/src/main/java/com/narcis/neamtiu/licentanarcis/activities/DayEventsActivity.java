@@ -1,8 +1,6 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.os.Bundle;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,29 +11,19 @@ import com.narcis.neamtiu.licentanarcis.adapters.EventListAdapter;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
 import java.util.ArrayList;
 
-
 public class DayEventsActivity extends AppCompatActivity {
-//    private String tableName = TABLE_TODO_EVENTS;
-//    private String columnName = KEY_DATE_FROM;
 
-    private ListView mListView;
-    private FirestoreClass firestoreClass;
-
-    /** Called when the activity is first created. */
+    private FirestoreClass firestoreClass = FirestoreClass.getInstance();
+    private ArrayList<EventData> allDataList = firestoreClass.getEventsListFromFirestore();
+    private ArrayList<EventData> dayDataList = new ArrayList<EventData>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_events_list);
-
-
-        ArrayList<EventData> allDataList = firestoreClass.getEventsListFromFirestore();
-
-        ArrayList<EventData> dayDataList = new ArrayList<EventData>();
 
         for(int i=0; i<allDataList.size(); i++){
             String eventDate = allDataList.get(i).getEventDate();
@@ -59,7 +47,7 @@ public class DayEventsActivity extends AppCompatActivity {
         if(extras != null) {
             String value = extras.getString(Constants.SELECTED_DATE);
             return value;
-        }else {
+        } else {
             return null;
         }
     }

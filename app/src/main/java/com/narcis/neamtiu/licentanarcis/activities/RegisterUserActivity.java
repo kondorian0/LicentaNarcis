@@ -14,16 +14,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
 import com.narcis.neamtiu.licentanarcis.models.User;
-import com.narcis.neamtiu.licentanarcis.util.Constants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class RegisterUserActivity extends AppCompatActivity implements View.OnClickListener{
+public class RegisterUserActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private EditText mFullName, mEmail, mPassword;
@@ -55,32 +50,32 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
         String password = mPassword.getText().toString().trim();
 
 
-        if(name.isEmpty()){
+        if(name.isEmpty()) {
             mFullName.setError("Full name is required");
             mFullName.requestFocus();
             return;
         }
 
-        if(email.isEmpty()){
+        if(email.isEmpty()) {
             mEmail.setError("Email is required");
             mEmail.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmail.setError("Please provide valid email");
             mEmail.requestFocus();
             return;
         }
 
-        if(password.isEmpty()){
+        if(password.isEmpty()) {
             mPassword.setError("Age is required");
             mPassword.requestFocus();
             return;
         }
 
         //Firebase does not accept password less than 5 characters
-        if(password.length() < 6){
+        if(password.length() < 6) {
             mPassword.setError("Min password length should contain at lest 6 characters");
             mPassword.requestFocus();
             return;
@@ -91,13 +86,13 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful()) {
                             //Registered user
                             User user = new User(name, email);
 
-                            new FirestoreClass().registerUser(RegisterUserActivity.this, user);
+                            FirestoreClass.getInstance().registerUser(RegisterUserActivity.this, user);
 
-                        }else {
+                        } else {
                             Toast.makeText(RegisterUserActivity.this,
                                     "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
                         }

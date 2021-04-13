@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,13 +25,10 @@ import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-@RequiresApi(api = Build.VERSION_CODES.R)
 public class DrawActivity extends AppCompatActivity
         implements DialogDateTime.Listener {
 
     private String EVENT_TYPE = "Image";
-
-
 
     private DialogDateTimeHelper mDateTimeHelper;
 
@@ -43,68 +38,9 @@ public class DrawActivity extends AppCompatActivity
     private Button change_color_button, redo_button, undo_button, clear_button, save_button;
     private String mImagePath;
 
-//    class DialogDateTimeListener implements DialogDateTime.Listener
-//    {
-//        String date_from = "";
-//        String time_from = "";
-//
-//        @Override
-//        public void onTimePicked(int hourOfDay, int minute)
-//        {
-//            if(hourOfDay < 10 && minute < 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay < 10 && minute >= 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute < 10)
-//            {
-//                time_from = hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute >= 10)
-//            {
-//                time_from = hourOfDay + ":" + minute;
-//            }
-////            time_from = startTime;
-//            commitData();
-//        }
-//
-//        @Override
-//        public void onDatePicked(int year, int month, int day)
-//        {
-//            date_from = day + "/" + month + "/" + year;
-//            commitData();
-//        }
-//
-//        void commitData()
-//        {
-//            if (date_from.isEmpty() || time_from.isEmpty())
-//            {
-//                return;
-//            }
-//
-//            mPath = paintHelper.saveImage();
-//
-//            myDb.insertDataImage(mPath);
-//            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-//
-//            Intent intent = new Intent();
-//            intent.putExtra(SELECTED_DATE, date_from);
-//            setResult(RESULT_SUCCESS, intent);
-//
-//            date_from = "";
-//            time_from = "";
-//
-//            finish();
-//        }
-//    }
-
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
 
@@ -125,13 +61,10 @@ public class DrawActivity extends AppCompatActivity
 
         DialogDateTime.registerListener(this);
 
-        save_button.setOnClickListener(new View.OnClickListener()
-        {
+        save_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
+            public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestStoragePermission();
                 }
 
@@ -143,105 +76,80 @@ public class DrawActivity extends AppCompatActivity
             }
         });
 
-        change_color_button.setOnClickListener(new View.OnClickListener()
-        {
+        change_color_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 openColourPicker();
             }
         });
 
-        clear_button.setOnClickListener(new View.OnClickListener()
-        {
+        clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 paintHelper.clear();
             }
         });
 
-        undo_button.setOnClickListener(new View.OnClickListener()
-        {
+        undo_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 paintHelper.undo();
             }
         });
 
-        redo_button.setOnClickListener(new View.OnClickListener()
-        {
+        redo_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 paintHelper.redo();
             }
         });
     }
 
-    private void requestStoragePermission()
-    {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-        {
+    private void requestStoragePermission() {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("Needed to save image")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener()
-                    {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             ActivityCompat.requestPermissions(DrawActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                    {
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
                     })
                     .create().show();
-        }
-        else
-        {
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
 
         }
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        if(requestCode == STORAGE_PERMISSION_CODE)
-        {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Access granted", Toast.LENGTH_LONG).show();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(this, "Acces denied", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void openColourPicker()
-    {
-        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener()
-        {
+    private void openColourPicker() {
+        AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
-            public void onCancel(AmbilWarnaDialog dialog)
-            {
+            public void onCancel(AmbilWarnaDialog dialog) {
                 Toast.makeText(DrawActivity.this, "Unavailable", Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onOk(AmbilWarnaDialog dialog, int color)
-            {
+            public void onOk(AmbilWarnaDialog dialog, int color) {
                 defaultColor = color;
                 paintHelper.setColor(color);
             }

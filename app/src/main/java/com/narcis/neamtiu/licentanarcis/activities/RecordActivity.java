@@ -52,65 +52,8 @@ public class RecordActivity extends AppCompatActivity
 
     private String mRecordPath;
 
-//    class DialogDateTimeListener implements DialogDateTime.Listener
-//    {
-//        String date_from = "";
-//        String time_from = "";
-//
-//        @Override
-//        public void onTimePicked(int hourOfDay, int minute)
-//        {
-//            if(hourOfDay < 10 && minute < 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay < 10 && minute >= 10)
-//            {
-//                time_from = "0" + hourOfDay + ":" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute < 10)
-//            {
-//                time_from = hourOfDay + ":" + "0" + minute;
-//            }
-//            else if(hourOfDay >= 10 && minute >= 10)
-//            {
-//                time_from = hourOfDay + ":" + minute;
-//            }
-////            time_from = startTime;
-//            commitData();
-//        }
-//
-//        @Override
-//        public void onDatePicked(int year, int month, int day)
-//        {
-//            date_from = day + "/" + month + "/" + year;
-//            commitData();
-//        }
-//
-//        void commitData()
-//        {
-//            if (date_from.isEmpty() || time_from.isEmpty())
-//            {
-//                return;
-//            }
-//
-//            myDb.insertDataAudio(path);
-//            myDb.insertDataTodoEvent(EVENT_TYPE, date_from, time_from);
-//
-//            Intent intent = new Intent();
-//            intent.putExtra(SELECTED_DATE, date_from);
-//            setResult(RESULT_SUCCESS, intent);
-//
-//            date_from = "";
-//            time_from = "";
-//
-//            finish();
-//        }
-//    }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
@@ -132,18 +75,14 @@ public class RecordActivity extends AppCompatActivity
         DialogDateTime.registerListener(this);
 
         //Request RunTime permission
-        if(!checkPermissionFromDevice())
-        {
+        if(!checkPermissionFromDevice()) {
             requestPermission();
         }
 
-        record_button.setOnClickListener(new View.OnClickListener()
-        {
+        record_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(checkPermissionFromDevice())
-                {
+            public void onClick(View view) {
+                if(checkPermissionFromDevice()) {
                     record_button.setEnabled(false);
                     stop_record_button.setEnabled(true);
                     play_button.setEnabled(false);
@@ -153,8 +92,7 @@ public class RecordActivity extends AppCompatActivity
 
                     mRecordPath = AudioFileHelper.saveAudio();
 
-                    try
-                    {
+                    try {
                         setupMediaRecorder();
                         mRecorder.prepare();
                         mRecorder.start();
@@ -162,24 +100,18 @@ public class RecordActivity extends AppCompatActivity
                         isRecording = true;
 
                         Toast.makeText(getApplicationContext(),"Recording", Toast.LENGTH_LONG).show();
-                    }
-                    catch (IOException e)
-                    {
+                    }catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                else
-                {
+                } else {
                     requestPermission();
                 }
             }
         });
 
-        stop_record_button.setOnClickListener(new View.OnClickListener()
-        {
+        stop_record_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 stop_record_button.setEnabled(false);
                 play_button.setEnabled(true);
                 stop_play_button.setEnabled(true);
@@ -196,13 +128,10 @@ public class RecordActivity extends AppCompatActivity
             }
         });
 
-        play_button.setOnClickListener(new View.OnClickListener()
-        {
+        play_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if (mRecordPath==null)
-                {
+            public void onClick(View view) {
+                if (mRecordPath==null) {
                     Toast.makeText(getApplicationContext(),"No Record", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -214,46 +143,37 @@ public class RecordActivity extends AppCompatActivity
 
                 mPlayer = new MediaPlayer();
 
-                try
-                {
+                try {
                     mPlayer.setDataSource(mRecordPath);
                     mPlayer.prepare();
                     mPlayer.start();
 
                     Toast.makeText(getApplicationContext(),"Playing", Toast.LENGTH_LONG).show();
-                }
-                catch (IOException e)
-                {
+                }catch (IOException e) {
                     Log.e(LOG_TAG, "prepare() failed");
                 }
             }
         });
 
-        stop_play_button.setOnClickListener(new View.OnClickListener()
-        {
+        stop_play_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 stop_record_button.setEnabled(false);
                 record_button.setEnabled(true);
                 stop_play_button.setEnabled(false);
                 play_button.setEnabled(true);
 
-                if(mPlayer != null)
-                {
+                if(mPlayer != null) {
                     mPlayer.release();
                     mPlayer = null;
                 }
             }
         });
 
-        save_record_button.setOnClickListener(new View.OnClickListener()
-        {
+        save_record_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(isRecording)
-                {
+            public void onClick(View v) {
+                if(isRecording) {
                     mRecorder.stop();
                     mRecorder.release();
                     mRecorder = null;
@@ -265,31 +185,24 @@ public class RecordActivity extends AppCompatActivity
             }
         });
 
-        delete_record_button.setOnClickListener(new View.OnClickListener()
-        {
+        delete_record_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 final File forDelete = new File(mRecordPath);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
 
                 builder.setMessage("Do you want to delete the recorded audio?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 // FIRE ZE MISSILES!
-                                if(forDelete.exists())
-                                {
+                                if(forDelete.exists()) {
                                     forDelete.delete();
                                 }
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 // User cancelled the dialog
                             }
                         });
@@ -299,8 +212,7 @@ public class RecordActivity extends AppCompatActivity
         });
     }
 
-    private void setupMediaRecorder()
-    {
+    private void setupMediaRecorder() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -309,18 +221,13 @@ public class RecordActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case REQUEST_PERMISSIOON_CODE:
-            {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_PERMISSIOON_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
                 }
             }
@@ -328,16 +235,14 @@ public class RecordActivity extends AppCompatActivity
         }
     }
 
-    private boolean checkPermissionFromDevice()
-    {
+    private boolean checkPermissionFromDevice() {
         int write_external_storage_result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         int record_audio_result = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
         return  write_external_storage_result == PackageManager.PERMISSION_GRANTED &&
                 record_audio_result == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission()
-    {
+    private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, REQUEST_PERMISSIOON_CODE);
     }
 
@@ -355,8 +260,7 @@ public class RecordActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
     }
 

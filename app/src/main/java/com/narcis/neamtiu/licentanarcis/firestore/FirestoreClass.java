@@ -13,44 +13,50 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
-import com.narcis.neamtiu.licentanarcis.activities.MainActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
-import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
-import com.narcis.neamtiu.licentanarcis.util.EventListData;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FirestoreClass implements Serializable {
+public class FirestoreClass {
 
-    public interface Listener
-    {
+    // Observer
+    public interface Observer {
         void onUserDataAcquired(ArrayList<EventData> list);
+        void onDataEventRegistered(EventData eventData);
+    }
+    ArrayList<Observer> mObservers = new ArrayList<>();
+    public void register(Observer observer) {
+        mObservers.add(observer);
+    }
+    public void unregister(Observer observer) {
+        mObservers.remove(observer);
+    }
+    private void notifyObserversForUserDataAquired(ArrayList<EventData> eventData) {
+        for (Observer l : mObservers) {
+            l.onUserDataAcquired(eventData);
+        }
+    }
+    private void notifyObserversEventRegistered(EventData eventData) {
+        for (Observer l : mObservers) {
+            l.onDataEventRegistered(eventData);
+        }
     }
 
-    ArrayList<Listener> mListeners = new ArrayList<>();
-    ArrayList<EventData> eventDataArrayList = new ArrayList();
-
-    public void registerListener(Listener listener) {
-        mListeners.add(listener);
-    }
-
-    public void unregisterListener(Listener listener) {
-        mListeners.remove(listener);
+    // Singleton
+    private static FirestoreClass singleton = new FirestoreClass();
+    private FirestoreClass() { }
+    public static FirestoreClass getInstance() {
+        return singleton;
     }
 
     private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
-    private ArrayList<EventListData> listData;
+    private ArrayList<EventData> eventDataArrayList = new ArrayList();
 
     public void registerUser(final RegisterUserActivity activity, User userInfo){
-
         //if the collection is already created then it will not create the same or another
         mFireStore.collection(Constants.USERS)
                 //Id for users fields
@@ -106,8 +112,7 @@ public class FirestoreClass implements Serializable {
                 });
     }
 
-    public void registerDataEvent(EventData eventData){
-
+    public void registerDataEvent(final EventData eventData){
         mFireStore.collection(Constants.EVENTS)
                 .document()
                 .set(eventData, SetOptions.merge())
@@ -115,6 +120,8 @@ public class FirestoreClass implements Serializable {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.i("SUCCESS", "Data added successfully");
+                        notifyObserversEventRegistered(eventData);
+                        eventDataArrayList.add(eventData);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -146,8 +153,7 @@ public class FirestoreClass implements Serializable {
 //        mCalendarView.removeDecorator(dayDecorator);
 //    }
 
-    public void getUserData(){
-
+    public void getUserEventsList(){
         mFireStore.collection(Constants.EVENTS)
                 .whereEqualTo("userId", getCurrentUserID())
                 .get()
@@ -156,22 +162,20 @@ public class FirestoreClass implements Serializable {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         Log.e("List", queryDocumentSnapshots.toString());
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-
                             EventData eventData = doc.toObject(new EventData().getClass());
                             eventData.eventType = (String) doc.get("eventType");
                             eventData.eventTitle = (String) doc.get("eventTitle");
                             eventData.eventDate = (String) doc.get("eventDate");
                             eventData.eventContent = (String) doc.get("eventContent");
                             eventData.eventDescription = (String) doc.get("eventDescription");
-
                             eventDataArrayList.add(eventData);
                         }
+                        notifyObserversForUserDataAquired(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
                     }
                 });
     }

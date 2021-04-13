@@ -2,22 +2,14 @@ package com.narcis.neamtiu.licentanarcis.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.MyDotSpan;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 //////////////////// SINGLETON CLASS ////////////////////
 
@@ -36,7 +28,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     private String mImagePath;
     private String mRecordPath;
 
-    private FirestoreClass firestoreClass = new FirestoreClass();
+    private FirestoreClass firestoreClass = FirestoreClass.getInstance();
     private String userID = firestoreClass.getCurrentUserID();
 
     public  String dateEvent = "";
@@ -87,14 +79,11 @@ public class DialogDateTimeHelper extends AppCompatActivity {
     public void onTimePicked(int hourOfDay, int minute) {
         if(hourOfDay < 10 && minute < 10) {
             timeEvent = "0" + hourOfDay + ":" + "0" + minute;
-        }
-        else if(hourOfDay < 10 && minute >= 10) {
+        } else if(hourOfDay < 10 && minute >= 10) {
             timeEvent = "0" + hourOfDay + ":" + minute;
-        }
-        else if(hourOfDay >= 10 && minute < 10) {
+        } else if(hourOfDay >= 10 && minute < 10) {
             timeEvent = hourOfDay + ":" + "0" + minute;
-        }
-        else if(hourOfDay >= 10 && minute >= 10) {
+        } else if(hourOfDay >= 10 && minute >= 10) {
             timeEvent = hourOfDay + ":" + minute;
         }
         commitDataEvent();
@@ -104,17 +93,13 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         int valueOfMonth = month+1;  //Ugly hack TODO: Improve
         if(day < 10 && month < 10) {
             dateEvent = "0" + day + "/" + "0" + valueOfMonth + "/" + year;
-        }
-        else if(day < 10 && month >= 10) {
+        } else if(day < 10 && month >= 10) {
             dateEvent = "0" + day + "/" + valueOfMonth + "/" + year;
-        }
-        else if(day >= 10 && month < 10) {
+        } else if(day >= 10 && month < 10) {
             dateEvent = day + "/" + "0" + valueOfMonth + "/" + year;
-        }
-        else if(day >= 10 && month >= 10) {
+        } else if(day >= 10 && month >= 10) {
             dateEvent = day + "/" + valueOfMonth + "/" + year;
         }
-//        commitDataEvent();
     }
 
     void commitDataEvent() {
@@ -123,7 +108,7 @@ public class DialogDateTimeHelper extends AppCompatActivity {
         }
 
         switch (EVENT_TYPE) {
-            case "Event":
+            case Constants.LOCATION_EVENT:
                 String title = mTitle.getText().toString();
                 String description = mDescription.getText().toString();
                 String location = mLocation.getText().toString();
@@ -138,10 +123,10 @@ public class DialogDateTimeHelper extends AppCompatActivity {
 
                 break;
 
-            case "Note":
+            case Constants.NOTE_EVENT:
                 String note = mNote.getText().toString();
 
-                EventData noteEvent = new EventData(userID,"Note",
+                EventData noteEvent = new EventData(userID,Constants.NOTE_EVENT,
                         dateEvent, timeEvent, note);
 
                 firestoreClass.registerDataEvent(noteEvent);

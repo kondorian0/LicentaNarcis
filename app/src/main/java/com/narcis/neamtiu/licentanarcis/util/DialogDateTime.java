@@ -3,14 +3,10 @@ package com.narcis.neamtiu.licentanarcis.util;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
@@ -18,10 +14,7 @@ import org.threeten.bp.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DialogDateTime extends AppCompatActivity
-{
-    static MaterialCalendarView widget;
-
+public class DialogDateTime extends AppCompatActivity {
     static LocalTime mTime = LocalTime.now();
     static LocalDate mDate = LocalDate.now();
 
@@ -32,8 +25,7 @@ public class DialogDateTime extends AppCompatActivity
     static int mTimeHour = mTime.getHour();
     static int mTimeMinute =  mTime.getMinute();
 
-    public interface Listener
-    {
+    public interface Listener {
         void onTimePicked(int hourOfDay, int minute);
         void onDatePicked(int year, int month, int day);
     }
@@ -48,14 +40,12 @@ public class DialogDateTime extends AppCompatActivity
         mListeners.remove(listener);
     }
 
-    public static void showDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callback)
-    {
+    public static void showDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener callback) {
         DatePickerDialog dialog = new DatePickerDialog(context, callback, mDateYear, mDateMonthValue, mDateDayOfMonth);
         dialog.show();
     }
 
-    public static void showTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callback)
-    {
+    public static void showTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callback) {
         TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, mTimeHour, mTimeMinute, true);
         dialog.show();
 //        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()

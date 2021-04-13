@@ -3,8 +3,6 @@ package com.narcis.neamtiu.licentanarcis.models;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 
-import java.util.ArrayList;
-
 public class EventData {
     public String userId, eventContent, eventType, eventDate, eventTime;
     public String eventTitle, eventDescription, eventLocation;
@@ -15,7 +13,7 @@ public class EventData {
 
     //NoteEvent - ImageEvent - AudioEvent
     public EventData(String userId, String eventType, String eventDate,
-                     String eventTime, String eventContent){
+                     String eventTime, String eventContent) {
         this.userId = userId;
         this.eventType = eventType;
         this.eventDate = eventDate;
@@ -25,7 +23,7 @@ public class EventData {
 
     //LocationEvent
     public EventData(String userId, String eventType, String eventDate, String eventTime,
-                     String eventTitle, String eventDescription, String eventLocation){
+                     String eventTitle, String eventDescription, String eventLocation) {
         this.userId = userId;
         this.eventType = eventType;
         this.eventDate = eventDate;
@@ -35,7 +33,7 @@ public class EventData {
         this.eventLocation = eventLocation;
     }
 
-    public int getEventIcon(){
+    public int getEventIcon() {
         switch (eventType){
             case Constants.NOTE_EVENT:
                 eventImageIcon = R.drawable.ic_note_color;

@@ -1,8 +1,6 @@
 package com.narcis.neamtiu.licentanarcis.activities;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,10 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-//import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -23,20 +19,15 @@ import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
-import com.narcis.neamtiu.licentanarcis.util.EventListData;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-//import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-//import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
 
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private TextView mTextView;
 
@@ -48,15 +39,13 @@ public class MainActivity extends AppCompatActivity{
 
     private MaterialCalendarView mCalendarView;
 
-    private FirestoreClass firestoreClass;
-
+    private FirestoreClass firestoreClass = FirestoreClass.getInstance() ;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        firestoreClass = (FirestoreClass) new Intent().getSerializableExtra("firestoreClass");
+//        firestoreClass = (FirestoreClass) new Intent().getSerializableExtra("firestoreClass");
 
 //        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
 
@@ -67,6 +56,19 @@ public class MainActivity extends AppCompatActivity{
         updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
 
         selectCurrentDate();
+
+        FirestoreClass.getInstance().register(new FirestoreClass.Observer() {
+
+            @Override
+            public void onUserDataAcquired(ArrayList<EventData> list) {
+                updateCalendarViewSpanDots(list);
+            }
+
+            @Override
+            public void onDataEventRegistered(EventData eventData) {
+                updateDotData(eventData);
+            }
+        });
 
         final Intent intentDayEvent = new Intent(MainActivity.this, DayEventsActivity.class);
 
@@ -82,20 +84,16 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        mEventLocationItem.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        mEventLocationItem.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EventLocationActivity.class);
                 startActivityForResult(intent, Constants.EVENT_LOCATION_ITEM);
                 finish();
             }
         });
 
-        mNoteItem.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        mNoteItem.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
                 startActivityForResult(intent, Constants.NOTE_ITEM);
                 finish();
@@ -103,11 +101,9 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mAudioItem = findViewById(R.id.menu_item_audio);
-        mAudioItem.setOnClickListener(new View.OnClickListener()
-        {
+        mAudioItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RecordActivity.class);
                 startActivityForResult(intent, Constants.AUDIO_ITEM);
                 finish();
@@ -115,11 +111,9 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mDrawItem = findViewById(R.id.menu_item_draw);
-        mDrawItem.setOnClickListener(new View.OnClickListener()
-        {
+        mDrawItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
                 startActivityForResult(intent, Constants.IMAGE_ITEM);
                 finish();
@@ -127,8 +121,7 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    private static CalendarDay calendarDayFromString(String dayAsString)
-    {
+    private static CalendarDay calendarDayFromString(String dayAsString) {
         String[] dayMonthYear = dayAsString.split("/");
 
         // TODO: Validate & improve
@@ -152,63 +145,12 @@ public class MainActivity extends AppCompatActivity{
 //        }
 //    }
 
-    public void updateCalendarViewSpanDots(ArrayList<EventData> allDataList)
-    {
+    public void updateDotData(EventData eventData) {
+        String selectedDate = eventData.getEventDate();
+        CalendarDay selectedDay = calendarDayFromString(selectedDate);
+        EventDecorator dayDecorator = new EventDecorator(selectedDay);
 
-        for (EventData eventListData : allDataList) {
-
-            String selectedDate = eventListData.getEventDate();
-            CalendarDay selectedDay = calendarDayFromString(selectedDate);
-            EventDecorator dayDecorator = new EventDecorator(selectedDay);
-//            if (dayDecorator == null) {
-//                dayDecorator = new EventDecorator(selectedDay);
-//            }else {
-//                mCalendarView.removeDecorator(dayDecorator);
-//            }
-
-            switch (eventListData.getEventType()) {
-                case "Note":
-                    dayDecorator.decorateNoteDot = true;
-                    break;
-                case "Location Event":
-                    dayDecorator.decorateEventDot = true;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + eventListData.getEventType());
-            }
-
-            mCalendarView.addDecorator(dayDecorator);
-        }
-        // check if the request code is same as what is passed  here it is 2
-//        if(requestCode == Constants.NOTE_ITEM)
-//        {
-//            if (resultCode == Constants.RESULT_SUCCESS)
-//            {
-//                String selectedDate = data.getStringExtra(Constants.SELECTED_DATE);
-//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-//                mDecorators.get(selectedDay);
-//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
-//
-//                if (selectedDayDecorator == null)
-//                {
-//                    selectedDayDecorator = new EventDecorator(selectedDay);
-//                }
-//                else
-//                {
-//                    mCalendarView.removeDecorator(selectedDayDecorator);
-//                }
-//
-//                selectedDayDecorator.decorateNoteDot = true;
-//
-//                mCalendarView.addDecorator(selectedDayDecorator);
-//            }
-//
-//        }
-//        else if (requestCode == EVENT_ITEM)
-//        {
-//            if (resultCode == EventActivity.RESULT_SUCCESS)
-//            {
-//                String selectedDate = data.getStringExtra(EventActivity.SELECTED_DATE);
+//        String selectedDate = data.getStringExtra(EventActivity.SELECTED_DATE);
 //                CalendarDay selectedDay = calendarDayFromString(selectedDate);
 //                mDecorators.get(selectedDay);
 //                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
@@ -225,60 +167,27 @@ public class MainActivity extends AppCompatActivity{
 //                selectedDayDecorator.decorateEventDot = true;
 //
 //                mCalendarView.addDecorator(selectedDayDecorator);
-//            }
-//        }
-//        else if (requestCode == AUDIO_ITEM)
-//        {
-//            if (resultCode == RecordActivity.RESULT_SUCCESS)
-//            {
-//                String selectedDate = data.getStringExtra(RecordActivity.SELECTED_DATE);
-//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-//                mDecorators.get(selectedDay);
-//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
-//
-//                if (selectedDayDecorator == null)
-//                {
-//                    selectedDayDecorator = new EventDecorator(selectedDay);
-//                }
-//                else
-//                {
-//                    mCalendarView.removeDecorator(selectedDayDecorator);
-//                }
-//
-//                selectedDayDecorator.decorateAudioDot = true;
-//
-//                mCalendarView.addDecorator(selectedDayDecorator);
-//            }
-//
-//        }
-//        else if (requestCode == IMAGE_ITEM)
-//        {
-//            if (resultCode == DrawActivity.RESULT_SUCCESS)
-//            {
-//                String selectedDate = data.getStringExtra(DrawActivity.SELECTED_DATE);
-//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-//                mDecorators.get(selectedDay);
-//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
-//
-//                if (selectedDayDecorator == null)
-//                {
-//                    selectedDayDecorator = new EventDecorator(selectedDay);
-//                }
-//                else
-//                {
-//                    mCalendarView.removeDecorator(selectedDayDecorator);
-//                }
-//
-//                selectedDayDecorator.decorateImageDot = true;
-//
-//                mCalendarView.addDecorator(selectedDayDecorator);
-//            }
-//        }
+
+        switch (eventData.getEventType()) {
+            case Constants.NOTE_EVENT:
+                dayDecorator.decorateNoteDot = true;
+                break;
+            case Constants.LOCATION_EVENT:
+                dayDecorator.decorateEventDot = true;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + eventData.getEventType());
+        }
+        mCalendarView.addDecorator(dayDecorator);
     }
 
+    public void updateCalendarViewSpanDots(ArrayList<EventData> allDataList) {
+        for (EventData eventListData : allDataList) {
+            updateDotData(eventListData);
+        }
+    }
 
-
-    private void selectCurrentDate(){
+    private void selectCurrentDate() {
         mCalendarView.setSelectedDate(CalendarDay.today());
     }
 
@@ -291,20 +200,18 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logout_menu:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginUserActivity.class));
                 finish();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
         this.selectCurrentDate();
     }

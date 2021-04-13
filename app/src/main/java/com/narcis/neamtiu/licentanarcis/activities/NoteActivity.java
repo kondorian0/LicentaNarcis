@@ -13,13 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
 
 public class NoteActivity extends AppCompatActivity
         implements DialogDateTime.Listener {
 
-    private String EVENT_TYPE = "Note";
+    private String EVENT_TYPE = Constants.NOTE_EVENT;
 
     private DialogDateTimeHelper mDateTimeHelper;
 

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
-import com.narcis.neamtiu.licentanarcis.util.EventListData;
 
 import java.util.ArrayList;
 
@@ -24,8 +23,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public EventListAdapter(ArrayList<EventData> listData) {
         this.listData = listData;
     }
-
-
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
