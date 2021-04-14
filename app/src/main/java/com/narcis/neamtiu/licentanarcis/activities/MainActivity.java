@@ -28,11 +28,6 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextView;
-
-//    Map<CalendarDay, EventDecorator> mDecorators = new HashMap<CalendarDay, EventDecorator>();
-
     private static final String TAG = "MainActivity";
 
     private FloatingActionButton mEventLocationItem, mNoteItem, mAudioItem, mDrawItem;
@@ -45,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        firestoreClass = (FirestoreClass) new Intent().getSerializableExtra("firestoreClass");
 
 //        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
 
@@ -54,27 +48,19 @@ public class MainActivity extends AppCompatActivity {
         mNoteItem = findViewById(R.id.menu_item_note);
 
         updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
-
-        selectCurrentDate();
-
         FirestoreClass.getInstance().register(new FirestoreClass.Observer() {
-
-            @Override
-            public void onUserDataAcquired(ArrayList<EventData> list) {
-                updateCalendarViewSpanDots(list);
-            }
-
             @Override
             public void onDataEventRegistered(EventData eventData) {
                 updateDotData(eventData);
             }
         });
 
-        final Intent intentDayEvent = new Intent(MainActivity.this, DayEventsActivity.class);
+        selectCurrentDate();
 
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                Intent intentDayEvent = new Intent(MainActivity.this, DayEventsActivity.class);
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String selectedDate = date.getDate().format(dateTimeFormatter);
                 Log.d(TAG, selectedDate);
@@ -133,17 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         return calendarDay;
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == REQUEST_CODE  && resultCode  == Constants.RESULT_SUCCESS) {
-//
-//            String requiredValue = data.getStringExtra("key");
-//        }
-//    }
 
     public void updateDotData(EventData eventData) {
         String selectedDate = eventData.getEventDate();

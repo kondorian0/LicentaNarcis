@@ -22,10 +22,8 @@ import com.narcis.neamtiu.licentanarcis.util.Constants;
 import java.util.ArrayList;
 
 public class FirestoreClass {
-
     // Observer
     public interface Observer {
-        void onUserDataAcquired(ArrayList<EventData> list);
         void onDataEventRegistered(EventData eventData);
     }
     ArrayList<Observer> mObservers = new ArrayList<>();
@@ -34,11 +32,6 @@ public class FirestoreClass {
     }
     public void unregister(Observer observer) {
         mObservers.remove(observer);
-    }
-    private void notifyObserversForUserDataAquired(ArrayList<EventData> eventData) {
-        for (Observer l : mObservers) {
-            l.onUserDataAcquired(eventData);
-        }
     }
     private void notifyObserversEventRegistered(EventData eventData) {
         for (Observer l : mObservers) {
@@ -130,28 +123,7 @@ public class FirestoreClass {
                         Log.e("error", "Error while registering the user", e);
                     }
                 });
-
-//        CalendarDay selectedDay = calendarDayFromString(eventData.eventDate);
-//        EventDecorator dayDecorator = new EventDecorator(selectedDay);
-//
-//        switch (eventData.eventType) {
-//            case "Note":
-//                dayDecorator.decorateNoteDot = true;
-//                break;
-//            case "Location Event":
-//                dayDecorator.decorateEventDot = true;
-//                break;
-//            default:
-//                throw new IllegalStateException("Unexpected value: " + eventData.eventType);
-//        }
-//
-//        mCalendarView.addDecorator(dayDecorator);
-
     }
-
-//    public void unRegisterDataEvent(EventData eventData){
-//        mCalendarView.removeDecorator(dayDecorator);
-//    }
 
     public void getUserEventsList(){
         mFireStore.collection(Constants.EVENTS)
@@ -170,7 +142,6 @@ public class FirestoreClass {
                             eventData.eventDescription = (String) doc.get("eventDescription");
                             eventDataArrayList.add(eventData);
                         }
-                        notifyObserversForUserDataAquired(eventDataArrayList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -179,37 +150,6 @@ public class FirestoreClass {
                     }
                 });
     }
-
-//    private void buildEventsList(ArrayList<EventData> eventsList){
-//
-//        listData = new ArrayList<EventListData>();
-//
-//        for(EventData i : eventsList){
-//            int eventImageIcon;
-//            String eventName, eventDetails;
-//
-//            switch (i.eventType){
-//                case "Note":
-//                    eventImageIcon = R.drawable.ic_note_color;
-//                    eventName = i.eventContent;
-//                    eventDetails = "";
-//                    break;
-//                case "Location Event":
-//                    eventImageIcon = R.drawable.ic_location_color;
-//                    eventName = i.eventTitle;
-//                    eventDetails = i.eventDescription;
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + i.eventType);
-//            }
-//
-//            listData.add(new EventListData(i.eventType, eventName, eventDetails, i.eventDate, eventImageIcon));
-//        }
-//
-//        for (Listener l : mListeners) {
-//            l.onUserDataAcquired(listData);
-//        }
-//    }
 
     public ArrayList<EventData> getEventsListFromFirestore() {
         return this.eventDataArrayList;

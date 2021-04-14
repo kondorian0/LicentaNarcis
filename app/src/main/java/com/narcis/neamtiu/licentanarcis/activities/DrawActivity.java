@@ -36,7 +36,6 @@ public class DrawActivity extends AppCompatActivity
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
     private Button change_color_button, redo_button, undo_button, clear_button, save_button;
-    private String mImagePath;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
@@ -46,7 +45,7 @@ public class DrawActivity extends AppCompatActivity
 
         mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
         mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-        mDateTimeHelper.setmImagePath(mImagePath);
+//        mDateTimeHelper.setmImagePath(mImagePath);
 
         paintHelper = findViewById(R.id.paintView);
         change_color_button = findViewById(R.id.change_color_button);

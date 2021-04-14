@@ -20,10 +20,10 @@ import androidx.annotation.RequiresApi;
 import com.narcis.neamtiu.licentanarcis.models.Draw;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PaintFileHelper extends View {
 
@@ -66,7 +66,7 @@ public class PaintFileHelper extends View {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public void initialise (WindowMetrics displayMetrics) {
+    public void initialise(WindowMetrics displayMetrics) {
         int height = displayMetrics.getBounds().height();
         int width = displayMetrics.getBounds().width();
 
@@ -79,19 +79,19 @@ public class PaintFileHelper extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-       canvas.save();
-       mCanvas.drawColor(backgroundColor);
+        canvas.save();
+        mCanvas.drawColor(backgroundColor);
 
-       for(Draw draw : paths) {
-           mPaint.setColor(draw.color);
-           mPaint.setStrokeWidth(strokeWidth);
-           mPaint.setMaskFilter(null);
+        for (Draw draw : paths) {
+            mPaint.setColor(draw.color);
+            mPaint.setStrokeWidth(strokeWidth);
+            mPaint.setMaskFilter(null);
 
-           mCanvas.drawPath(draw.path, mPaint);
-       }
+            mCanvas.drawPath(draw.path, mPaint);
+        }
 
-       canvas.drawBitmap(mBitmap,0,0,mBitmapPaint);
-       canvas.restore();
+        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        canvas.restore();
     }
 
     private void touchStart(float x, float y) {
@@ -101,7 +101,7 @@ public class PaintFileHelper extends View {
         paths.add(draw);
 
         mPath.reset();
-        mPath.moveTo(x,y);
+        mPath.moveTo(x, y);
 
         mX = x;
         mY = y;
@@ -111,8 +111,8 @@ public class PaintFileHelper extends View {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mX);
 
-        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
         }
@@ -156,8 +156,8 @@ public class PaintFileHelper extends View {
     }
 
     public void undo() {
-        if(paths.size() > 0) {
-            undo.add(paths.remove(paths.size()-1));
+        if (paths.size() > 0) {
+            undo.add(paths.remove(paths.size() - 1));
             invalidate();
         } else {
             Toast.makeText(getContext(), "Nimic pentru a anula", Toast.LENGTH_LONG).show();
@@ -165,63 +165,52 @@ public class PaintFileHelper extends View {
     }
 
     public void redo() {
-        if(undo.size() > 0) {
-            paths.add(undo.remove(undo.size()-1));
+        if (undo.size() > 0) {
+            paths.add(undo.remove(undo.size() - 1));
             invalidate();
         } else {
             Toast.makeText(getContext(), "Nimic pentru a reface", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void setStrokeWidth(int width) {
-        strokeWidth = width;
-    }
-
     public void setColor(int color) {
         currentColor = color;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
     public String saveImage() {
-        String path = " ";
-        int count = 0;
-
-        File sdDirectory = new File(Environment.getStorageDirectory().getAbsolutePath());
-        File subDirectory = new File(sdDirectory.toString() + "/Images");
-
-        if(subDirectory.exists()) {
-            File[] existing = subDirectory.listFiles();
-
-            for(File file : existing) {
-                if(file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
-                    count++;
-                }
-            }
-        }  else {
-            subDirectory.mkdir();
+        File sdDirectory = new File(Environment.getExternalStorageDirectory() + "/DrawnImages");
+        if (!sdDirectory.exists()) {
+            sdDirectory.mkdirs();
         }
 
-        if(subDirectory.isDirectory()) {
-            File image =  new File(subDirectory, "/drawing_" + (count + 1) + ".png" );
-            FileOutputStream fileOutputStream;
+        if (!sdDirectory.exists()) {
+            sdDirectory.mkdirs();
+        }
 
-            path = image.getPath();
-
+        File file = new File(sdDirectory, "/drawing" + new Random().nextInt() + "_image" + new Random().nextInt() + ".png");
+        if (file.exists()) {
+            file.delete();
             try {
-                fileOutputStream = new FileOutputStream(image);
-
-                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-
-                fileOutputStream.flush();
-                fileOutputStream.close();
-
-                Toast.makeText(getContext(), "saved", Toast.LENGTH_LONG).show();
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        String path = file.getPath();
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+            Toast.makeText(getContext(), "Image saved", Toast.LENGTH_LONG).show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return path;
     }

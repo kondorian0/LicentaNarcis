@@ -134,22 +134,27 @@ public class DialogDateTimeHelper extends AppCompatActivity {
                 mNote.getText().clear();
 
                 break;
-            case "Image":
+            case Constants.DRAW_EVENT:
 //                myDb.insertDataImage(mImagePath);
 //                myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
 
 //                mImagePath = new PaintFileHelper().saveImage();
 
-                EventData imageEvent = new EventData(userID,"Image",
+                EventData drawEvent = new EventData(userID, Constants.DRAW_EVENT,
                         dateEvent, timeEvent, mImagePath);
 
-                firestoreClass.registerDataEvent(imageEvent);
+                firestoreClass.registerDataEvent(drawEvent);
 
                 break;
 
-            case "Record":
+            case Constants.RECORD_EVENT:
 //                myDb.insertDataAudio(mRecordPath);
 //                myDb.insertDataTodoEvent(EVENT_TYPE, dateEvent, timeEvent);
+
+                EventData recordEvent = new EventData(userID, Constants.RECORD_EVENT,
+                        dateEvent, timeEvent, mRecordPath);
+
+                firestoreClass.registerDataEvent(recordEvent);
 
                 break;
         }

@@ -41,6 +41,12 @@ public class EventData {
             case Constants.LOCATION_EVENT:
                 eventImageIcon = R.drawable.ic_location_color;
                 break;
+            case Constants.DRAW_EVENT:
+                eventImageIcon = R.drawable.ic_image_color;
+                break;
+            case Constants.RECORD_EVENT:
+                eventImageIcon = R.drawable.ic_audio_color;
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + eventType);
         }
