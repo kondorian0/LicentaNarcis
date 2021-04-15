@@ -48,14 +48,6 @@ public class DialogDateTime extends AppCompatActivity {
     public static void showTimePickerDialog(Context context, TimePickerDialog.OnTimeSetListener callback) {
         TimePickerDialog dialog = new TimePickerDialog(context, 0, callback, mTimeHour, mTimeMinute, true);
         dialog.show();
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-//        {
-//            @Override
-//            public void onDismiss(DialogInterface dialog)
-//            {
-//                Toast.makeText(context, "Data saved", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     public static void onDateSelectedClick(Context context) {
@@ -71,7 +63,7 @@ public class DialogDateTime extends AppCompatActivity {
     }
 
 
-    public static void onTimeSelectedClick(final Context context) {
+    public static void onTimeSelectedClick(Context context) {
         TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 for (Listener l : mListeners) {
@@ -79,13 +71,6 @@ public class DialogDateTime extends AppCompatActivity {
                 }
             }
         };
-//        TimePickerDialog myTPDialog = new TimePickerDialog(context, mTimeSetListener,0,0,false);
-//        myTPDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialog) {
-//                Toast.makeText(context, "No time selected", Toast.LENGTH_LONG);
-//            }
-//        });
         showTimePickerDialog(context, mTimeSetListener);
     }
 }

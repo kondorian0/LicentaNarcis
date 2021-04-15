@@ -1,5 +1,6 @@
 package com.narcis.neamtiu.licentanarcis.firestore;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,26 +14,39 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
+import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class FirestoreClass {
+public class FirestoreManager {
     // Observer
     public interface Observer {
         void onDataEventRegistered(EventData eventData);
     }
+
+    public interface OnImageUploadListener {
+        void onImageUploaded(String imageUrl);
+    }
+
     ArrayList<Observer> mObservers = new ArrayList<>();
+
     public void register(Observer observer) {
         mObservers.add(observer);
     }
+
     public void unregister(Observer observer) {
         mObservers.remove(observer);
     }
+
     private void notifyObserversEventRegistered(EventData eventData) {
         for (Observer l : mObservers) {
             l.onDataEventRegistered(eventData);
@@ -40,16 +54,19 @@ public class FirestoreClass {
     }
 
     // Singleton
-    private static FirestoreClass singleton = new FirestoreClass();
-    private FirestoreClass() { }
-    public static FirestoreClass getInstance() {
+    private static FirestoreManager singleton = new FirestoreManager();
+
+    private FirestoreManager() {
+    }
+
+    public static FirestoreManager getInstance() {
         return singleton;
     }
 
     private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
     private ArrayList<EventData> eventDataArrayList = new ArrayList();
 
-    public void registerUser(final RegisterUserActivity activity, User userInfo){
+    public void registerUser(final RegisterUserActivity activity, User userInfo) {
         //if the collection is already created then it will not create the same or another
         mFireStore.collection(Constants.USERS)
                 //Id for users fields
@@ -70,7 +87,7 @@ public class FirestoreClass {
                 });
     }
 
-    public void getUserDetails(final LoginUserActivity activity){
+    public void getUserDetails(final LoginUserActivity activity) {
         //collection name from which we want the data
         mFireStore.collection(Constants.USERS)
                 .document(getCurrentUserID())
@@ -105,7 +122,7 @@ public class FirestoreClass {
                 });
     }
 
-    public void registerDataEvent(final EventData eventData){
+    public void registerDataEvent(final EventData eventData) {
         mFireStore.collection(Constants.EVENTS)
                 .document()
                 .set(eventData, SetOptions.merge())
@@ -125,7 +142,7 @@ public class FirestoreClass {
                 });
     }
 
-    public void getUserEventsList(){
+    public void getUserEventsList() {
         mFireStore.collection(Constants.EVENTS)
                 .whereEqualTo("userId", getCurrentUserID())
                 .get()
@@ -133,7 +150,7 @@ public class FirestoreClass {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         Log.e("List", queryDocumentSnapshots.toString());
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             EventData eventData = doc.toObject(new EventData().getClass());
                             eventData.eventType = (String) doc.get("eventType");
                             eventData.eventTitle = (String) doc.get("eventTitle");
@@ -155,14 +172,46 @@ public class FirestoreClass {
         return this.eventDataArrayList;
     }
 
-    public String getCurrentUserID(){
+    public String getCurrentUserID() {
         //get currentUser using FirebaseAuth
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String currentUserID = "";
-        if(currentUser != null){
+        if (currentUser != null) {
             currentUserID = currentUser.getUid();
         }
         return currentUserID;
+    }
+
+    public void uploadImageToCloudStorage(final PaintFileHelper activity, String filename, Uri imageFileURI, final OnImageUploadListener listener) {
+        StorageReference sRef = FirebaseStorage.getInstance()
+                .getReference()
+                .child(filename);
+
+        sRef.putFile(imageFileURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.e("Firebase image URL", Objects.requireNonNull(taskSnapshot.getMetadata()).getReference().getDownloadUrl().toString());
+
+                //get  the downloadable url from the task snapshot
+                Objects.requireNonNull(taskSnapshot.getMetadata().getReference()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.e("Downloadable IMAGE URL", uri.toString());
+                        activity.imageUploadSucces(uri.toString());
+                        listener.onImageUploaded(uri.toString());
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(
+                        activity.getClass().getSimpleName(),
+                        e.getMessage(),
+                        e
+                );
+            }
+        });
     }
 }

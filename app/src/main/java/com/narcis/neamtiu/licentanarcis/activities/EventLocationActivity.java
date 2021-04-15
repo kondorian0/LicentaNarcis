@@ -14,13 +14,13 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
 public class EventLocationActivity extends AppCompatActivity
         implements DialogDateTime.Listener {
 
     private String EVENT_TYPE = Constants.LOCATION_EVENT;
-    private DialogDateTimeHelper mDateTimeHelper;
+    private EventHelper mDateTimeHelper;
     private EditText mTitle, mDescription;
     private TextView mLocation;
 
@@ -37,12 +37,12 @@ public class EventLocationActivity extends AppCompatActivity
         add_location_button = findViewById(R.id.add_location_button);
         save_event_button = findViewById(R.id.save_event_button);
         delete_event_button = findViewById(R.id.delete_event_button);
-
-        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
-        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-        mDateTimeHelper.setTitle(mTitle);
-        mDateTimeHelper.setDescription(mDescription);
-        mDateTimeHelper.setLocation(mLocation);
+//
+//        mDateTimeHelper = EventHelper.getInstance(getApplicationContext());
+//        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
+//        mDateTimeHelper.setTitle(mTitle);
+//        mDateTimeHelper.setDescription(mDescription);
+//        mDateTimeHelper.setLocation(mLocation);
 
         DialogDateTime.registerListener(this);
 
@@ -104,11 +104,11 @@ public class EventLocationActivity extends AppCompatActivity
 
     @Override
     public void onTimePicked(int hourOfDay, int minute) {
-        mDateTimeHelper.onTimePicked(hourOfDay, minute);
+//        mDateTimeHelper.onTimePicked(hourOfDay, minute);
     }
 
     @Override
     public void onDatePicked(int year, int month, int day) {
-        mDateTimeHelper.onDatePicked(year, month, day);
+//        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

@@ -9,7 +9,8 @@ public class EventData {
 
     int eventImageIcon;
 
-    public EventData() {}
+    public EventData() {
+    }
 
     //NoteEvent - ImageEvent - AudioEvent
     public EventData(String userId, String eventType, String eventDate,
@@ -34,7 +35,7 @@ public class EventData {
     }
 
     public int getEventIcon() {
-        switch (eventType){
+        switch (eventType) {
             case Constants.NOTE_EVENT:
                 eventImageIcon = R.drawable.ic_note_color;
                 break;
@@ -94,10 +95,22 @@ public class EventData {
     }
 
     public String getEventTitle() {
-        if(!eventType.equals(Constants.LOCATION_EVENT)){
-            return eventContent;
+        String eventInformation = " ";
+        switch (eventType) {
+            case Constants.LOCATION_EVENT:
+                eventInformation = eventTitle;
+                break;
+            case Constants.NOTE_EVENT:
+                eventInformation = eventContent;
+                break;
+            case Constants.DRAW_EVENT:
+                eventInformation = eventContent;
+                break;
+            case Constants.RECORD_EVENT:
+                eventInformation = eventContent;
+                break;
         }
-        return eventTitle;
+        return eventInformation;
     }
 
     public void setEventTitle(String eventTitle) {
@@ -105,7 +118,7 @@ public class EventData {
     }
 
     public String getEventDescription() {
-        if(!eventType.equals(Constants.LOCATION_EVENT)){
+        if (!eventType.equals(Constants.LOCATION_EVENT)) {
             return " ";
         }
         return eventDescription;

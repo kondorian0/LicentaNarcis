@@ -1,31 +1,50 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
-public class NoteActivity extends AppCompatActivity
-        implements DialogDateTime.Listener {
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 
-    private String EVENT_TYPE = Constants.NOTE_EVENT;
-
-    private DialogDateTimeHelper mDateTimeHelper;
-
+public class NoteActivity extends AppCompatActivity {
     private AppCompatButton save_note_button, delete_note_button;
     private EditText mNote;
+
+    String mCurrentSelectedTime = new String();
+    String mCurrentSelectedDate = new String();
+
+    DatePickerDialog mDateDialog = null;
+    TimePickerDialog mTimeDialog = null;
+
+    void commitData() {
+        String note = mNote.getText().toString();
+
+        final String userId = FirestoreManager.getInstance().getCurrentUserID();
+        EventData noteEvent = new EventData(userId, Constants.NOTE_EVENT, mCurrentSelectedDate, mCurrentSelectedTime, note);
+
+        FirestoreManager.getInstance().registerDataEvent(noteEvent);
+
+        mNote.getText().clear();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +55,26 @@ public class NoteActivity extends AppCompatActivity
         delete_note_button = findViewById(R.id.delete_event_button);
         mNote = findViewById(R.id.editText);
 
-        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
-        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-        mDateTimeHelper.setNote(mNote);
+        mDateDialog = new DatePickerDialog(NoteActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                mCurrentSelectedDate = EventHelper.formatDatePicked(year, month, day);
+                mTimeDialog.show();
+            }
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
 
-        DialogDateTime.registerListener(this);
+        mTimeDialog = new TimePickerDialog(NoteActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                mCurrentSelectedTime = EventHelper.formatTimePicked(hourOfDay, minute);
+                commitData();
+            }
+        }, LocalTime.now().getHour(), LocalTime.now().getMinute(), true);
 
         save_note_button.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onClick(View v)
-            {
-                DialogDateTime.onTimeSelectedClick(NoteActivity.this);
-                DialogDateTime.onDateSelectedClick(NoteActivity.this);
+            public void onClick(View v) {
+                mDateDialog.show();
             }
         });
 
@@ -84,7 +110,6 @@ public class NoteActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }
 
@@ -95,15 +120,5 @@ public class NoteActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-    }
-
-    @Override
-    public void onTimePicked(int hourOfDay, int minute) {
-        mDateTimeHelper.onTimePicked(hourOfDay, minute);
-    }
-
-    @Override
-    public void onDatePicked(int year, int month, int day) {
-        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

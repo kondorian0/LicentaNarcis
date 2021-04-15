@@ -1,14 +1,23 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,33 +28,68 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
+
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-public class DrawActivity extends AppCompatActivity
-        implements DialogDateTime.Listener {
+public class DrawActivity extends AppCompatActivity {
 
-    private String EVENT_TYPE = "Image";
-
-    private DialogDateTimeHelper mDateTimeHelper;
+    private String EVENT_TYPE = Constants.DRAW_EVENT;
 
     private PaintFileHelper paintHelper;
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
     private Button change_color_button, redo_button, undo_button, clear_button, save_button;
 
+    String mCurrentSelectedTime = new String();
+    String mCurrentSelectedDate = new String();
+
+    DatePickerDialog mDateDialog = null;
+    TimePickerDialog mTimeDialog = null;
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    void commitData() {
+        paintHelper.saveImage();
+
+        final String filename = "image_"+ System.currentTimeMillis() + ".jpg";
+        final String mimeType = "image/jpeg";
+        final String directory = Environment.DIRECTORY_PICTURES + "/CalendarNarcis";
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
+        values.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, directory);
+
+        ContentResolver resolver = getContentResolver();
+        Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        FirestoreManager.getInstance().uploadImageToCloudStorage(paintHelper, filename, imageUri,
+                new FirestoreManager.OnImageUploadListener() {
+                    @Override
+                    public void onImageUploaded(String imageUrl) {
+                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
+                        EventData drawEvent = new EventData(userId, Constants.DRAW_EVENT,
+                                mCurrentSelectedDate, mCurrentSelectedTime, imageUrl);
+                        FirestoreManager.getInstance().registerDataEvent(drawEvent);
+                    }
+                });
+
+        paintHelper.clear();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
-
-        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
-        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-//        mDateTimeHelper.setmImagePath(mImagePath);
 
         paintHelper = findViewById(R.id.paintView);
         change_color_button = findViewById(R.id.change_color_button);
@@ -58,20 +102,29 @@ public class DrawActivity extends AppCompatActivity
 
         paintHelper.initialise(displayMetrics);
 
-        DialogDateTime.registerListener(this);
+        mDateDialog = new DatePickerDialog(DrawActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                mCurrentSelectedDate = EventHelper.formatDatePicked(year, month, day);
+                mTimeDialog.show();
+            }
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
+
+        mTimeDialog = new TimePickerDialog(DrawActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                mCurrentSelectedTime = EventHelper.formatTimePicked(hourOfDay, minute);
+                commitData();
+            }
+        }, LocalTime.now().getHour(), LocalTime.now().getMinute(), true);
 
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(DrawActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestStoragePermission();
                 }
-
-                mDateTimeHelper.setmImagePath(paintHelper.saveImage());
-
-                DialogDateTime.onTimeSelectedClick(DrawActivity.this);
-                DialogDateTime.onDateSelectedClick(DrawActivity.this);
-                paintHelper.clear();
+                mDateDialog.show();
             }
         });
 
@@ -105,7 +158,7 @@ public class DrawActivity extends AppCompatActivity
     }
 
     private void requestStoragePermission() {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this)
                     .setTitle("Permission needed")
                     .setMessage("Needed to save image")
@@ -166,22 +219,11 @@ public class DrawActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-    }
-
-    @Override
-    public void onTimePicked(int hourOfDay, int minute) {
-        mDateTimeHelper.onTimePicked(hourOfDay, minute);
-    }
-
-    @Override
-    public void onDatePicked(int year, int month, int day) {
-        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -21,7 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTimeHelper;
+import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class RecordActivity extends AppCompatActivity
     private String EVENT_TYPE = "Record";
 
 
-    private DialogDateTimeHelper mDateTimeHelper;
+    private EventHelper mDateTimeHelper;
 
     private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
     private AppCompatButton save_record_button, delete_record_button;
@@ -69,8 +71,8 @@ public class RecordActivity extends AppCompatActivity
         recording.setVisibility(View.INVISIBLE);
         not_recording.setVisibility(View.VISIBLE);
 
-        mDateTimeHelper = DialogDateTimeHelper.getInstance(getApplicationContext());
-        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
+//        mDateTimeHelper = EventHelper.getInstance(getApplicationContext());
+//        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
 
         DialogDateTime.registerListener(this);
 
@@ -80,6 +82,7 @@ public class RecordActivity extends AppCompatActivity
         }
 
         record_button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View view) {
                 if(checkPermissionFromDevice()) {
@@ -266,11 +269,11 @@ public class RecordActivity extends AppCompatActivity
 
     @Override
     public void onTimePicked(int hourOfDay, int minute) {
-        mDateTimeHelper.onTimePicked(hourOfDay, minute);
+//        mDateTimeHelper.onTimePicked(hourOfDay, minute);
     }
 
     @Override
     public void onDatePicked(int year, int month, int day) {
-        mDateTimeHelper.onDatePicked(year, month, day);
+//        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

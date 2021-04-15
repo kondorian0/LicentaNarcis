@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MaterialCalendarView mCalendarView;
 
-    private FirestoreClass firestoreClass = FirestoreClass.getInstance() ;
+    private FirestoreManager firestoreManager = FirestoreManager.getInstance() ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);
 
-        updateCalendarViewSpanDots(firestoreClass.getEventsListFromFirestore());
-        FirestoreClass.getInstance().register(new FirestoreClass.Observer() {
+        updateCalendarViewSpanDots(firestoreManager.getEventsListFromFirestore());
+        FirestoreManager.getInstance().register(new FirestoreManager.Observer() {
             @Override
             public void onDataEventRegistered(EventData eventData) {
                 updateDotData(eventData);
@@ -149,6 +148,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case Constants.LOCATION_EVENT:
                 dayDecorator.decorateEventDot = true;
+                break;
+            case Constants.DRAW_EVENT:
+                dayDecorator.decorateImageDot = true;
+                break;
+            case Constants.RECORD_EVENT:
+                dayDecorator.decorateAudioDot = true;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + eventData.getEventType());

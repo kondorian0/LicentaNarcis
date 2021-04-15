@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.firestore.FirestoreClass;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity implements View.OnClickListener {
@@ -90,7 +90,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                             //Registered user
                             User user = new User(name, email);
 
-                            FirestoreClass.getInstance().registerUser(RegisterUserActivity.this, user);
+                            FirestoreManager.getInstance().registerUser(RegisterUserActivity.this, user);
 
                         } else {
                             Toast.makeText(RegisterUserActivity.this,
