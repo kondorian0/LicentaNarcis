@@ -38,6 +38,10 @@ import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Objects;
+
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity {
@@ -55,9 +59,7 @@ public class DrawActivity extends AppCompatActivity {
     DatePickerDialog mDateDialog = null;
     TimePickerDialog mTimeDialog = null;
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     void commitData() {
-        paintHelper.saveImage();
 
         final String filename = "image_"+ System.currentTimeMillis() + ".jpg";
         final String mimeType = "image/jpeg";
@@ -70,6 +72,15 @@ public class DrawActivity extends AppCompatActivity {
 
         ContentResolver resolver = getContentResolver();
         Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = (FileOutputStream) resolver.openOutputStream(Objects.requireNonNull(imageUri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        paintHelper.compressImage(fileOutputStream);
 
         FirestoreManager.getInstance().uploadImageToCloudStorage(paintHelper, filename, imageUri,
                 new FirestoreManager.OnImageUploadListener() {

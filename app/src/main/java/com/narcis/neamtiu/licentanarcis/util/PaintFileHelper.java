@@ -1,17 +1,12 @@
 package com.narcis.neamtiu.licentanarcis.util;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,10 +19,8 @@ import androidx.annotation.RequiresApi;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.Draw;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PaintFileHelper extends View {
 
@@ -47,14 +40,6 @@ public class PaintFileHelper extends View {
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
-
-    private String filename = "image_"+ System.currentTimeMillis() + ".jpg";
-    private String mimeType = "image/jpeg";
-    private String directory = Environment.DIRECTORY_PICTURES + "/CalendarNarcis";
-    private Uri mediaContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    private FileOutputStream fileOutputStream = null;
-    private Uri imageUri = null;
-    private String imageURL = "";
 
     private FirestoreManager firestoreManager = FirestoreManager.getInstance();
 
@@ -191,32 +176,7 @@ public class PaintFileHelper extends View {
         currentColor = color;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void saveImage() {
-        try {
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
-            values.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, directory);
-
-            ContentResolver resolver = getContext().getContentResolver();
-            imageUri = resolver.insert(mediaContentUri, values);
-
-            fileOutputStream = (FileOutputStream) resolver.openOutputStream(Objects.requireNonNull(imageUri));
-
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Image not saved" + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        firestoreManager.uploadImageToCloudStorage(this, filename, imageUri);
-    }
-    public void imageUploadSucces(String imageURL){
-        this.imageURL = imageURL;
-    }
-
-    public String getImageURL(){
-        return imageURL;
+    public void compressImage(FileOutputStream fileOutputStream) {
+        mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
     }
 }

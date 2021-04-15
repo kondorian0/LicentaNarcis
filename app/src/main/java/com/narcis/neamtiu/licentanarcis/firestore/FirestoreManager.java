@@ -198,7 +198,6 @@ public class FirestoreManager {
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.e("Downloadable IMAGE URL", uri.toString());
-                        activity.imageUploadSucces(uri.toString());
                         listener.onImageUploaded(uri.toString());
                     }
                 });
