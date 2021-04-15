@@ -29,11 +29,11 @@ public class NoteActivity extends AppCompatActivity {
     private AppCompatButton save_note_button, delete_note_button;
     private EditText mNote;
 
-    String mCurrentSelectedTime = new String();
-    String mCurrentSelectedDate = new String();
+    private String mCurrentSelectedTime = new String();
+    private String mCurrentSelectedDate = new String();
 
-    DatePickerDialog mDateDialog = null;
-    TimePickerDialog mTimeDialog = null;
+    private DatePickerDialog mDateDialog = null;
+    private TimePickerDialog mTimeDialog = null;
 
     void commitData() {
         String note = mNote.getText().toString();
@@ -86,7 +86,6 @@ public class NoteActivity extends AppCompatActivity {
                 builder.setMessage("Do you want to delete the text?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // FIRE ZE MISSILES!
                                 delete();
                             }
                         })

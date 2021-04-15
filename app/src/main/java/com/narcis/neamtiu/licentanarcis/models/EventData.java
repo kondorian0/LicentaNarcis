@@ -22,6 +22,16 @@ public class EventData {
         this.eventContent = eventContent;
     }
 
+    public EventData(String userId, String eventType, String eventDate,
+                     String eventTime, String eventTitle, String eventContent) {
+        this.userId = userId;
+        this.eventType = eventType;
+        this.eventDate = eventDate;
+        this.eventTime = eventTime;
+        this.eventTitle = eventTitle;
+        this.eventContent = eventContent;
+    }
+
     //LocationEvent
     public EventData(String userId, String eventType, String eventDate, String eventTime,
                      String eventTitle, String eventDescription, String eventLocation) {
@@ -95,22 +105,11 @@ public class EventData {
     }
 
     public String getEventTitle() {
-        String eventInformation = " ";
-        switch (eventType) {
-            case Constants.LOCATION_EVENT:
-                eventInformation = eventTitle;
-                break;
-            case Constants.NOTE_EVENT:
-                eventInformation = eventContent;
-                break;
-            case Constants.DRAW_EVENT:
-                eventInformation = eventContent;
-                break;
-            case Constants.RECORD_EVENT:
-                eventInformation = eventContent;
-                break;
+        if (eventType.equals(Constants.NOTE_EVENT)) {
+            return eventContent;
+        } else {
+            return eventTitle;
         }
-        return eventInformation;
     }
 
     public void setEventTitle(String eventTitle) {
@@ -119,9 +118,10 @@ public class EventData {
 
     public String getEventDescription() {
         if (!eventType.equals(Constants.LOCATION_EVENT)) {
-            return " ";
+            return "";
+        } else {
+            return eventDescription;
         }
-        return eventDescription;
     }
 
     public void setEventDescription(String eventDescription) {

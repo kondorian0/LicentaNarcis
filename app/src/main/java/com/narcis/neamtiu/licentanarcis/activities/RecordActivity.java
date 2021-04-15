@@ -1,15 +1,24 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,18 +30,26 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
+import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class RecordActivity extends AppCompatActivity
-        implements DialogDateTime.Listener {
+public class RecordActivity extends AppCompatActivity {
 
     private String EVENT_TYPE = "Record";
 
@@ -52,7 +69,55 @@ public class RecordActivity extends AppCompatActivity
     //    private static String mFileName = null;
     private final int REQUEST_PERMISSIOON_CODE = 1;
 
-    private String mRecordPath;
+    FileOutputStream fileOutputStream = null;
+
+    private String mCurrentSelectedTime = new String();
+    private String mCurrentSelectedDate = new String();
+
+    private DatePickerDialog mDateDialog = null;
+    private TimePickerDialog mTimeDialog = null;
+
+    void commitData() {
+        final String filename = "audio_"+ System.currentTimeMillis() + ".mp3";
+        final String mimeType = "audio/mp3";
+        final String directory = Environment.DIRECTORY_MUSIC + "/CalendarNarcis";
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Audio.Media.DISPLAY_NAME, filename);
+        values.put(MediaStore.Audio.Media.MIME_TYPE, mimeType);
+        values.put(MediaStore.Audio.Media.RELATIVE_PATH, directory);
+
+        ContentResolver resolver = getContentResolver();
+        Uri audioUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+
+        try {
+            fileOutputStream = (FileOutputStream) resolver.openOutputStream(Objects.requireNonNull(audioUri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+//        paintHelper.compressImage(fileOutputStream);
+//
+//        FirestoreManager.getInstance().uploadImageToCloudStorage(paintHelper, filename, imageUri,
+//                new FirestoreManager.OnImageUploadListener() {
+//                    @Override
+//                    public void onImageUploaded(String audioUrl) {
+//                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
+//                        EventData recordEvent = new EventData(userId, Constants.DRAW_EVENT,
+//                                mCurrentSelectedDate, mCurrentSelectedTime, filename, audioUrl);
+//                        FirestoreManager.getInstance().registerDataEvent(recordEvent);
+//                    }
+//                });
+//
+//        paintHelper.clear();
+    }
+
+    private void setupMediaRecorder() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setOutputFile(String.valueOf(fileOutputStream));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +136,39 @@ public class RecordActivity extends AppCompatActivity
         recording.setVisibility(View.INVISIBLE);
         not_recording.setVisibility(View.VISIBLE);
 
-//        mDateTimeHelper = EventHelper.getInstance(getApplicationContext());
-//        mDateTimeHelper.setEVENT_TYPE(EVENT_TYPE);
-
-        DialogDateTime.registerListener(this);
-
         //Request RunTime permission
         if(!checkPermissionFromDevice()) {
             requestPermission();
         }
+
+        mDateDialog = new DatePickerDialog(RecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                mCurrentSelectedDate = EventHelper.formatDatePicked(year, month, day);
+                mTimeDialog.show();
+            }
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue()-1, LocalDate.now().getDayOfMonth());
+
+        mTimeDialog = new TimePickerDialog(RecordActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                mCurrentSelectedTime = EventHelper.formatTimePicked(hourOfDay, minute);
+                commitData();
+            }
+        }, LocalTime.now().getHour(), LocalTime.now().getMinute(), true);
+
+        save_record_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isRecording) {
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
+                    isRecording = false;
+                }
+                mDateDialog.show();
+            }
+        });
 
         record_button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.R)
@@ -93,10 +182,9 @@ public class RecordActivity extends AppCompatActivity
                     not_recording.setVisibility(View.INVISIBLE);
                     recording.setVisibility(View.VISIBLE);
 
-                    mRecordPath = AudioFileHelper.saveAudio();
-
+                    commitData();
+                    setupMediaRecorder();
                     try {
-                        setupMediaRecorder();
                         mRecorder.prepare();
                         mRecorder.start();
 
@@ -134,7 +222,7 @@ public class RecordActivity extends AppCompatActivity
         play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mRecordPath==null) {
+                if (String.valueOf(fileOutputStream)==null) {
                     Toast.makeText(getApplicationContext(),"No Record", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -147,7 +235,7 @@ public class RecordActivity extends AppCompatActivity
                 mPlayer = new MediaPlayer();
 
                 try {
-                    mPlayer.setDataSource(mRecordPath);
+                    mPlayer.setDataSource(String.valueOf(fileOutputStream));
                     mPlayer.prepare();
                     mPlayer.start();
 
@@ -173,25 +261,10 @@ public class RecordActivity extends AppCompatActivity
             }
         });
 
-        save_record_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isRecording) {
-                    mRecorder.stop();
-                    mRecorder.release();
-                    mRecorder = null;
-
-                    isRecording = false;
-                }
-                DialogDateTime.onTimeSelectedClick(RecordActivity.this);
-                DialogDateTime.onDateSelectedClick(RecordActivity.this);
-            }
-        });
-
         delete_record_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final File forDelete = new File(mRecordPath);
+                final File forDelete = new File(String.valueOf(fileOutputStream));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
 
@@ -213,14 +286,6 @@ public class RecordActivity extends AppCompatActivity
                 alert.show();
             }
         });
-    }
-
-    private void setupMediaRecorder() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mRecorder.setOutputFile(mRecordPath);
     }
 
     @Override
@@ -258,22 +323,11 @@ public class RecordActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        DialogDateTime.unregisterListener(this);
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-    }
-
-    @Override
-    public void onTimePicked(int hourOfDay, int minute) {
-//        mDateTimeHelper.onTimePicked(hourOfDay, minute);
-    }
-
-    @Override
-    public void onDatePicked(int year, int month, int day) {
-//        mDateTimeHelper.onDatePicked(year, month, day);
     }
 }

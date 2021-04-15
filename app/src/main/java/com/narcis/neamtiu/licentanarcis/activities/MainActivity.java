@@ -124,24 +124,6 @@ public class MainActivity extends AppCompatActivity {
         CalendarDay selectedDay = calendarDayFromString(selectedDate);
         EventDecorator dayDecorator = new EventDecorator(selectedDay);
 
-//        String selectedDate = data.getStringExtra(EventActivity.SELECTED_DATE);
-//                CalendarDay selectedDay = calendarDayFromString(selectedDate);
-//                mDecorators.get(selectedDay);
-//                EventDecorator selectedDayDecorator = mDecorators.get(selectedDay);
-//
-//                if (selectedDayDecorator == null)
-//                {
-//                    selectedDayDecorator = new EventDecorator(selectedDay);
-//                }
-//                else
-//                {
-//                    mCalendarView.removeDecorator(selectedDayDecorator);
-//                }
-//
-//                selectedDayDecorator.decorateEventDot = true;
-//
-//                mCalendarView.addDecorator(selectedDayDecorator);
-
         switch (eventData.getEventType()) {
             case Constants.NOTE_EVENT:
                 dayDecorator.decorateNoteDot = true;

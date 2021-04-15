@@ -31,7 +31,6 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
@@ -45,19 +44,16 @@ import java.util.Objects;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class DrawActivity extends AppCompatActivity {
-
-    private String EVENT_TYPE = Constants.DRAW_EVENT;
-
     private PaintFileHelper paintHelper;
     private int defaultColor;
     private int STORAGE_PERMISSION_CODE = 1;
     private Button change_color_button, redo_button, undo_button, clear_button, save_button;
 
-    String mCurrentSelectedTime = new String();
-    String mCurrentSelectedDate = new String();
+    private String mCurrentSelectedTime = new String();
+    private String mCurrentSelectedDate = new String();
 
-    DatePickerDialog mDateDialog = null;
-    TimePickerDialog mTimeDialog = null;
+    private DatePickerDialog mDateDialog = null;
+    private TimePickerDialog mTimeDialog = null;
 
     void commitData() {
 
@@ -88,7 +84,7 @@ public class DrawActivity extends AppCompatActivity {
                     public void onImageUploaded(String imageUrl) {
                         final String userId = FirestoreManager.getInstance().getCurrentUserID();
                         EventData drawEvent = new EventData(userId, Constants.DRAW_EVENT,
-                                mCurrentSelectedDate, mCurrentSelectedTime, imageUrl);
+                                mCurrentSelectedDate, mCurrentSelectedTime, filename, imageUrl);
                         FirestoreManager.getInstance().registerDataEvent(drawEvent);
                     }
                 });
