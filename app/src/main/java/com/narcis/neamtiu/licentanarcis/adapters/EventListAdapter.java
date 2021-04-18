@@ -1,10 +1,14 @@
 package com.narcis.neamtiu.licentanarcis.adapters;
 
+import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,21 +16,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.narcis.neamtiu.licentanarcis.R;
+import com.narcis.neamtiu.licentanarcis.activities.DayEventsActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
+import com.narcis.neamtiu.licentanarcis.util.Constants;
 
 import java.util.ArrayList;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
     private ArrayList<EventData> listData ;
+    private DayEventsActivity activity;
 
-    public EventListAdapter(ArrayList<EventData> listData) {
+    public EventListAdapter(ArrayList<EventData> listData, DayEventsActivity activity) {
         this.listData = listData;
+        this.activity = activity;
     }
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
 
     @NonNull
     // Create new views (invoked by the layout manager)
@@ -51,7 +55,19 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"title: "+myListData.getEventTitle(), Toast.LENGTH_LONG).show();
+                switch (myListData.getEventType()){
+                    case Constants.LOCATION_EVENT:
+                        activity.showEventLocationDialog(myListData.getEventTitle(),  myListData.getEventDescription(), myListData.getEventLocation());
+                        break;
+                    case Constants.NOTE_EVENT:
+                        activity.showNoteDialog(myListData.getEventContent());
+                        break;
+                    case Constants.DRAW_EVENT:
+                        activity.showImageDialog(myListData.getEventContent());
+                        break;
+                    case Constants.RECORD_EVENT:
+                        activity.showAudioDialog(myListData.getEventContent());
+                }
             }
         });
     }

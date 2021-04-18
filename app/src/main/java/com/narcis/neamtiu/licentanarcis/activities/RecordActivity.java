@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -32,9 +33,7 @@ import androidx.core.content.ContextCompat;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
-import com.narcis.neamtiu.licentanarcis.util.AudioFileHelper;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
 import org.threeten.bp.LocalDate;
@@ -42,20 +41,12 @@ import org.threeten.bp.LocalTime;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class RecordActivity extends AppCompatActivity {
-
-    private String EVENT_TYPE = "Record";
-
-
-    private EventHelper mDateTimeHelper;
-
     private AppCompatButton record_button, stop_record_button, play_button, stop_play_button;
     private AppCompatButton save_record_button, delete_record_button;
     private AppCompatImageView recording, not_recording;
@@ -66,10 +57,8 @@ public class RecordActivity extends AppCompatActivity {
     private boolean isRecording = false;
 
     private static final String LOG_TAG = "AudioRecording";
-    //    private static String mFileName = null;
-    private final int REQUEST_PERMISSIOON_CODE = 1;
 
-    FileOutputStream fileOutputStream = null;
+    private final int REQUEST_PERMISSIOON_CODE = 1;
 
     private String mCurrentSelectedTime = new String();
     private String mCurrentSelectedDate = new String();
@@ -77,38 +66,41 @@ public class RecordActivity extends AppCompatActivity {
     private DatePickerDialog mDateDialog = null;
     private TimePickerDialog mTimeDialog = null;
 
-    void commitData() {
-        final String filename = "audio_"+ System.currentTimeMillis() + ".mp3";
-        final String mimeType = "audio/mp3";
-        final String directory = Environment.DIRECTORY_MUSIC + "/CalendarNarcis";
+    private String filename = "audio_"+ System.currentTimeMillis() + ".mp3";
+    private String mimeType = "audio/mp3";
+    private String directory = Environment.DIRECTORY_MUSIC + "/CalendarNarcis";
+    private Uri audioUri = null;
+    private ParcelFileDescriptor file = null;
+    private ContentResolver resolver;
 
+    void setupFileData() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, filename);
         values.put(MediaStore.Audio.Media.MIME_TYPE, mimeType);
+        values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (System.currentTimeMillis() / 1000));
         values.put(MediaStore.Audio.Media.RELATIVE_PATH, directory);
 
-        ContentResolver resolver = getContentResolver();
-        Uri audioUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+        resolver = getContentResolver();
+        audioUri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 
         try {
-            fileOutputStream = (FileOutputStream) resolver.openOutputStream(Objects.requireNonNull(audioUri));
+            file = resolver.openFileDescriptor(audioUri, "w");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-//        paintHelper.compressImage(fileOutputStream);
-//
-//        FirestoreManager.getInstance().uploadImageToCloudStorage(paintHelper, filename, imageUri,
-//                new FirestoreManager.OnImageUploadListener() {
-//                    @Override
-//                    public void onImageUploaded(String audioUrl) {
-//                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
-//                        EventData recordEvent = new EventData(userId, Constants.DRAW_EVENT,
-//                                mCurrentSelectedDate, mCurrentSelectedTime, filename, audioUrl);
-//                        FirestoreManager.getInstance().registerDataEvent(recordEvent);
-//                    }
-//                });
-//
-//        paintHelper.clear();
+    }
+
+    void commitData() {
+        FirestoreManager.getInstance().uploadFileToCloudStorage(filename, audioUri,
+                new FirestoreManager.OnImageUploadListener() {
+                    @Override
+                    public void onFileUpload(String audioUrl) {
+                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
+                        EventData recordEvent = new EventData(userId, Constants.RECORD_EVENT,
+                                mCurrentSelectedDate, mCurrentSelectedTime, filename, audioUrl);
+                        FirestoreManager.getInstance().registerDataEvent(recordEvent);
+                    }
+                });
     }
 
     private void setupMediaRecorder() {
@@ -116,7 +108,7 @@ public class RecordActivity extends AppCompatActivity {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mRecorder.setOutputFile(String.valueOf(fileOutputStream));
+        mRecorder.setOutputFile(file.getFileDescriptor());
     }
 
     @Override
@@ -182,8 +174,9 @@ public class RecordActivity extends AppCompatActivity {
                     not_recording.setVisibility(View.INVISIBLE);
                     recording.setVisibility(View.VISIBLE);
 
-                    commitData();
+                    setupFileData();
                     setupMediaRecorder();
+
                     try {
                         mRecorder.prepare();
                         mRecorder.start();
@@ -222,7 +215,7 @@ public class RecordActivity extends AppCompatActivity {
         play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (String.valueOf(fileOutputStream)==null) {
+                if (file.getFileDescriptor()==null) {
                     Toast.makeText(getApplicationContext(),"No Record", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -235,7 +228,7 @@ public class RecordActivity extends AppCompatActivity {
                 mPlayer = new MediaPlayer();
 
                 try {
-                    mPlayer.setDataSource(String.valueOf(fileOutputStream));
+                    mPlayer.setDataSource(file.getFileDescriptor());
                     mPlayer.prepare();
                     mPlayer.start();
 
@@ -262,18 +255,17 @@ public class RecordActivity extends AppCompatActivity {
         });
 
         delete_record_button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View v) {
-                final File forDelete = new File(String.valueOf(fileOutputStream));
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecordActivity.this);
 
                 builder.setMessage("Do you want to delete the recorded audio?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // FIRE ZE MISSILES!
-                                if(forDelete.exists()) {
-                                    forDelete.delete();
+                                if(file.getFileDescriptor().valid()) {
+                                    resolver.delete(audioUri, null);
+                                    Toast.makeText(getApplicationContext(),"Deleted", Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

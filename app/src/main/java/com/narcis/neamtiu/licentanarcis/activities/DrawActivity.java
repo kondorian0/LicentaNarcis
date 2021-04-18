@@ -55,12 +55,11 @@ public class DrawActivity extends AppCompatActivity {
     private DatePickerDialog mDateDialog = null;
     private TimePickerDialog mTimeDialog = null;
 
+    private String filename = "image_"+ System.currentTimeMillis() + ".jpg";
+    private String mimeType = "image/jpeg";
+    private String directory = Environment.DIRECTORY_PICTURES + "/CalendarNarcis";
+
     void commitData() {
-
-        final String filename = "image_"+ System.currentTimeMillis() + ".jpg";
-        final String mimeType = "image/jpeg";
-        final String directory = Environment.DIRECTORY_PICTURES + "/CalendarNarcis";
-
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DISPLAY_NAME, filename);
         values.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
@@ -78,10 +77,10 @@ public class DrawActivity extends AppCompatActivity {
 
         paintHelper.compressImage(fileOutputStream);
 
-        FirestoreManager.getInstance().uploadImageToCloudStorage(paintHelper, filename, imageUri,
+        FirestoreManager.getInstance().uploadFileToCloudStorage(filename, imageUri,
                 new FirestoreManager.OnImageUploadListener() {
                     @Override
-                    public void onImageUploaded(String imageUrl) {
+                    public void onFileUpload(String imageUrl) {
                         final String userId = FirestoreManager.getInstance().getCurrentUserID();
                         EventData drawEvent = new EventData(userId, Constants.DRAW_EVENT,
                                 mCurrentSelectedDate, mCurrentSelectedTime, filename, imageUrl);

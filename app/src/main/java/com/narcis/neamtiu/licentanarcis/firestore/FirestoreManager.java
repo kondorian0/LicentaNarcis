@@ -22,7 +22,6 @@ import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.models.User;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.PaintFileHelper;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,7 +33,7 @@ public class FirestoreManager {
     }
 
     public interface OnImageUploadListener {
-        void onImageUploaded(String imageUrl);
+        void onFileUpload(String imageUrl);
     }
 
     ArrayList<Observer> mObservers = new ArrayList<>();
@@ -183,33 +182,29 @@ public class FirestoreManager {
         return currentUserID;
     }
 
-    public void uploadImageToCloudStorage(final PaintFileHelper activity, String filename, Uri imageFileURI, final OnImageUploadListener listener) {
+    public void uploadFileToCloudStorage(String filename, Uri fileURI, final OnImageUploadListener listener) {
         StorageReference sRef = FirebaseStorage.getInstance()
                 .getReference()
                 .child(filename);
 
-        sRef.putFile(imageFileURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        sRef.putFile(fileURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.e("Firebase image URL", Objects.requireNonNull(taskSnapshot.getMetadata()).getReference().getDownloadUrl().toString());
+                Log.e("Firebase file URL", Objects.requireNonNull(taskSnapshot.getMetadata()).getReference().getDownloadUrl().toString());
 
                 //get  the downloadable url from the task snapshot
                 Objects.requireNonNull(taskSnapshot.getMetadata().getReference()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.e("Downloadable IMAGE URL", uri.toString());
-                        listener.onImageUploaded(uri.toString());
+                        Log.e("Downloadable FILE URL", uri.toString());
+                        listener.onFileUpload(uri.toString());
                     }
                 });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(
-                        activity.getClass().getSimpleName(),
-                        e.getMessage(),
-                        e
-                );
+                Log.e("Failed",e.getMessage());
             }
         });
     }
