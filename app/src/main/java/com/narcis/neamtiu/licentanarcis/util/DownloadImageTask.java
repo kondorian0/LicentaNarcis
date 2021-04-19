@@ -1,22 +1,12 @@
 package com.narcis.neamtiu.licentanarcis.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.ViewTarget;
-import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
-import com.narcis.neamtiu.licentanarcis.models.EventData;
-
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 
 public class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
     String urldisplay = null;

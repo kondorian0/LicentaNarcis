@@ -21,7 +21,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/textContentView"
+                android:id="@+id/textAudioContentView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -31,13 +31,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <Button
-                    android:id="@+id/playAudioButtonDialog"
+                    android:id="@+id/playAudioDialogButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Play" />
 
                 <Button
-                    android:id="@+id/stopEventButtonDialog"
+                    android:id="@+id/stopAudioDialogButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stop" />
@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/deleteEventButtonDialog"
+            android:id="@+id/deleteAudioDialogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

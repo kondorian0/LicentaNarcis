@@ -14,19 +14,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <TextView
-            android:id="@+id/textContentView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="imageURL" />
-
         <ImageView
             android:id="@+id/imageContentView"
             android:layout_width="300dp"
-            android:layout_height="400dp" />
+            android:layout_height="500dp" />
 
         <Button
-            android:id="@+id/deleteEventButton"
+            android:id="@+id/deleteImageDialogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"

@@ -2,7 +2,7 @@ package com.narcis.neamtiu.licentanarcis.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,15 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.adapters.EventListAdapter;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DownloadImageTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DayEventsActivity extends AppCompatActivity {
@@ -76,7 +76,7 @@ public class DayEventsActivity extends AppCompatActivity {
 
         //Initializing the views of the dialog.
         final TextView textContent = dialog.findViewById(R.id.textContentView);
-        Button deleteEvent = dialog.findViewById(R.id.deleteEventButtonDialog);
+        Button deleteEvent = dialog.findViewById(R.id.deleteNoteDialogButton);
 
         textContent.setText(eventContent);
 
@@ -105,7 +105,7 @@ public class DayEventsActivity extends AppCompatActivity {
         final TextView titleEvent = dialog.findViewById(R.id.titleEventDialog);
         final TextView descriptionEvent = dialog.findViewById(R.id.descriptionEventDialog);
         final TextView locationEvent = dialog.findViewById(R.id.locationEventDialog);
-        Button deleteEvent = dialog.findViewById(R.id.deleteEventButtonDialog);
+        Button deleteEvent = dialog.findViewById(R.id.deleteEventLocationDialogButton);
 
         titleEvent.setText(title);
         descriptionEvent.setText(description);
@@ -134,15 +134,13 @@ public class DayEventsActivity extends AppCompatActivity {
         //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
         //Mention the name of the layout of your custom dialog.
-        dialog.setContentView(R.layout.dialog_event_note);
+        dialog.setContentView(R.layout.dialog_event_image);
 
         //Initializing the views of the dialog.
         final TextView textContent = dialog.findViewById(R.id.textContentView);
         ImageView imageContentView = dialog.findViewById(R.id.imageContentView);
-        Button deleteEvent = dialog.findViewById(R.id.deleteEventButtonDialog);
+        Button deleteEvent = dialog.findViewById(R.id.deleteImageDialogButton);
 
-//        textContent.setText(eventContent);
-//        Glide.with(this).load(eventContent).into(imageContentView);
         new DownloadImageTask(imageContentView).execute(eventContent);
 
         deleteEvent.setOnClickListener(new View.OnClickListener() {
@@ -153,11 +151,19 @@ public class DayEventsActivity extends AppCompatActivity {
             }
         });
 
+//        Picasso.get()
+//                .load(eventContent)
+//                .error(R.drawable.ic_note_color)
+//                .into(imageContentView);
+
         dialog.show();
+
     }
 
-    public void showAudioDialog(String eventContent) {
+    public void showAudioDialog(final String eventContent) {
         final Dialog dialog = new Dialog(DayEventsActivity.this);
+
+        final MediaPlayer mediaPlayer = new MediaPlayer();
 
         //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -167,10 +173,11 @@ public class DayEventsActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_event_audio);
 
         //Initializing the views of the dialog.
-        final TextView textContent = dialog.findViewById(R.id.textContentView);
-        Button deleteEvent = dialog.findViewById(R.id.deleteEventButtonDialog);
-        final Button playAudio = dialog.findViewById(R.id.playAudioButtonDialog);
-        final Button stopAudio = dialog.findViewById(R.id.stopEventButtonDialog);
+        final TextView textContent = dialog.findViewById(R.id.textAudioContentView);
+        final Button playAudio = dialog.findViewById(R.id.playAudioDialogButton);
+        final Button stopAudio = dialog.findViewById(R.id.stopAudioDialogButton);
+        Button deleteEvent = dialog.findViewById(R.id.deleteAudioDialogButton);
+
         stopAudio.setVisibility(View.GONE);
 
         textContent.setText(eventContent);
@@ -181,6 +188,19 @@ public class DayEventsActivity extends AppCompatActivity {
                 //TODO
                 playAudio.setVisibility(View.GONE);
                 stopAudio.setVisibility(View.VISIBLE);
+
+                try {
+                    mediaPlayer.setDataSource(eventContent);
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                        }
+                    });
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
