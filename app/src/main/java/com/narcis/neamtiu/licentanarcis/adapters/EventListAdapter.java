@@ -50,7 +50,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         final EventData myListData = listData.get(position);
         holder.textViewTitle.setText(listData.get(position).getEventTitle());
         holder.textViewDetails.setText(listData.get(position).getEventDescription());
-        holder.textViewDate.setText(listData.get(position).getEventDate());
+        holder.textViewDate.setText(listData.get(position).getEventTime());
         holder.imageView.setImageResource(listData.get(position).getEventIcon());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
