@@ -151,6 +151,7 @@ public class FirestoreManager {
                         Log.e("List", queryDocumentSnapshots.toString());
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             EventData eventData = doc.toObject(new EventData().getClass());
+                            eventData.eventId = (String) doc.get("eventId");
                             eventData.eventType = (String) doc.get("eventType");
                             eventData.eventTitle = (String) doc.get("eventTitle");
                             eventData.eventDate = (String) doc.get("eventDate");
@@ -170,6 +171,12 @@ public class FirestoreManager {
     public ArrayList<EventData> getEventsListFromFirestore() {
         return this.eventDataArrayList;
     }
+
+    public String getProductID() {
+
+        return "0";
+    }
+
 
     public String getCurrentUserID() {
         //get currentUser using FirebaseAuth

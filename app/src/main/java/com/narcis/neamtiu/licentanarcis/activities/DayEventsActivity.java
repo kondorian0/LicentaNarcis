@@ -4,13 +4,17 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,10 +42,11 @@ public class DayEventsActivity extends AppCompatActivity {
 
         TextView noEventsTextView = findViewById(R.id.noEventsTextView);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        AppCompatImageButton deleteEventButton = findViewById(R.id.deleteEventButton);
 
-        for(int i=0; i<allDataList.size(); i++){
+        for (int i = 0; i < allDataList.size(); i++) {
             String eventDate = allDataList.get(i).getEventDate();
-            if(eventDate.equals(dateSelected())){
+            if (eventDate.equals(dateSelected())) {
                 dayDataList.add(allDataList.get(i));
                 noEventsTextView.setVisibility(View.GONE);
             }
@@ -56,7 +61,7 @@ public class DayEventsActivity extends AppCompatActivity {
     private String dateSelected() {
         Bundle extras = getIntent().getExtras();
 
-        if(extras != null) {
+        if (extras != null) {
             String value = extras.getString(Constants.SELECTED_DATE);
             return value;
         } else {
@@ -76,17 +81,8 @@ public class DayEventsActivity extends AppCompatActivity {
 
         //Initializing the views of the dialog.
         final TextView textContent = dialog.findViewById(R.id.textContentView);
-        Button deleteEvent = dialog.findViewById(R.id.deleteNoteDialogButton);
 
         textContent.setText(eventContent);
-
-        deleteEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-                dialog.dismiss();
-            }
-        });
 
         dialog.show();
     }
@@ -105,25 +101,12 @@ public class DayEventsActivity extends AppCompatActivity {
         final TextView titleEvent = dialog.findViewById(R.id.titleEventDialog);
         final TextView descriptionEvent = dialog.findViewById(R.id.descriptionEventDialog);
         final TextView locationEvent = dialog.findViewById(R.id.locationEventDialog);
-        Button deleteEvent = dialog.findViewById(R.id.deleteEventLocationDialogButton);
 
         titleEvent.setText(title);
         descriptionEvent.setText(description);
         locationEvent.setText(location);
 
-        deleteEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-                dialog.dismiss();
-            }
-        });
-
         dialog.show();
-    }
-
-    public interface OnEventContentLoadListener {
-        void onFileUpload(String imageUrl);
     }
 
     public void showImageDialog(String eventContent) {
@@ -137,19 +120,9 @@ public class DayEventsActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_event_image);
 
         //Initializing the views of the dialog.
-        final TextView textContent = dialog.findViewById(R.id.textContentView);
         ImageView imageContentView = dialog.findViewById(R.id.imageContentView);
-        Button deleteEvent = dialog.findViewById(R.id.deleteImageDialogButton);
 
         new DownloadImageTask(imageContentView).execute(eventContent);
-
-        deleteEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-                dialog.dismiss();
-            }
-        });
 
 //        Picasso.get()
 //                .load(eventContent)
@@ -160,7 +133,7 @@ public class DayEventsActivity extends AppCompatActivity {
 
     }
 
-    public void showAudioDialog(final String eventContent) {
+    public void showAudioDialog(final String filename, final String eventContent) {
         final Dialog dialog = new Dialog(DayEventsActivity.this);
 
         final MediaPlayer mediaPlayer = new MediaPlayer();
@@ -176,11 +149,10 @@ public class DayEventsActivity extends AppCompatActivity {
         final TextView textContent = dialog.findViewById(R.id.textAudioContentView);
         final Button playAudio = dialog.findViewById(R.id.playAudioDialogButton);
         final Button stopAudio = dialog.findViewById(R.id.stopAudioDialogButton);
-        Button deleteEvent = dialog.findViewById(R.id.deleteAudioDialogButton);
 
         stopAudio.setVisibility(View.GONE);
 
-        textContent.setText(eventContent);
+        textContent.setText(filename);
 
         playAudio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,18 +182,21 @@ public class DayEventsActivity extends AppCompatActivity {
                 //TODO
                 stopAudio.setVisibility(View.GONE);
                 playAudio.setVisibility(View.VISIBLE);
-            }
-        });
 
-        deleteEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-                dialog.dismiss();
+                mediaPlayer.stop();
+                mediaPlayer.reset();
             }
         });
 
         dialog.show();
+    }
+
+    public void deleteEvent(String eventID){
+        Toast.makeText(this, "You can now delete the event "+eventID, Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteEventSucces(){
+        firestoreManager.getEventsListFromFirestore();
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 
 public class EventData {
-    public String userId, eventContent, eventType, eventDate, eventTime;
+    public String userId, eventId, eventContent, eventType, eventDate, eventTime;
     public String eventTitle, eventDescription, eventLocation;
 
     int eventImageIcon;
@@ -14,7 +14,8 @@ public class EventData {
 
     //NoteEvent - ImageEvent - AudioEvent
     public EventData(String userId, String eventType, String eventDate,
-                     String eventTime, String eventContent) {
+                     String eventTime, String eventContent, String eventId) {
+        this.eventId = eventId;
         this.userId = userId;
         this.eventType = eventType;
         this.eventDate = eventDate;
@@ -23,8 +24,9 @@ public class EventData {
     }
 
     public EventData(String userId, String eventType, String eventDate,
-                     String eventTime, String eventTitle, String eventContent) {
+                     String eventTime, String eventTitle, String eventContent, String eventId) {
         this.userId = userId;
+        this.eventId = eventId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
@@ -34,8 +36,9 @@ public class EventData {
 
     //LocationEvent
     public EventData(String userId, String eventType, String eventDate, String eventTime,
-                     String eventTitle, String eventDescription, String eventLocation) {
+                     String eventTitle, String eventDescription, String eventLocation, String eventId) {
         this.userId = userId;
+        this.eventId = eventId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
@@ -71,6 +74,10 @@ public class EventData {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    public String getEventId() { return eventId; }
+
+    public void setEventId() { this.eventId = eventId; }
 
     public String getEventContent() {
         return eventContent;

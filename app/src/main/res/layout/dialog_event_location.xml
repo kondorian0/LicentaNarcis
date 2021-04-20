@@ -9,6 +9,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="@dimen/normal_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,25 +19,24 @@
             android:id="@+id/titleEventDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title" />
+            android:textAlignment="center"
+            android:text="Title"
+            android:textColor="#040404"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
         <TextView
             android:id="@+id/descriptionEventDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"/>
+            android:text="Description"
+            android:textColor="#040404" />
         <TextView
             android:id="@+id/locationEventDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location" />
-
-        <Button
-            android:id="@+id/deleteEventLocationDialogButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Delete"
-            android:layout_gravity="right"/>
+            android:text="Location"
+            android:textColor="#040404" />
 
     </LinearLayout>
 

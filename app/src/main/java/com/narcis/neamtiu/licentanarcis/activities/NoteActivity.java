@@ -39,6 +39,7 @@ public class NoteActivity extends AppCompatActivity {
         String note = mNote.getText().toString();
 
         final String userId = FirestoreManager.getInstance().getCurrentUserID();
+
         EventData noteEvent = new EventData(userId, Constants.NOTE_EVENT, mCurrentSelectedDate, mCurrentSelectedTime, note);
 
         FirestoreManager.getInstance().registerDataEvent(noteEvent);

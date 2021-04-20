@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentStart="true"
+        android:background="#F3F3F3"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="5dp"
-        android:background="#F3F3F3">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/listItemImage"
@@ -27,54 +27,37 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/small_margin">
-            <!-- Title Of Event -->
-            <LinearLayout
-                android:id="@+id/titleLinearLayout"
+            android:layout_margin="@dimen/small_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleEvent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="Some long text to see"
+                android:textColor="#040404"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="sans" />
 
-                <!-- Rightend Date -->
-                <TextView
-                    android:id="@+id/titleEvent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Some long text to see"
-                    android:textColor="#040404"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:typeface="sans" />
-
-                <TextView
-                    android:id="@+id/dateEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Some long text to see"
-                    android:textColor="@color/primary_color"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-
-            <!-- Event Details -->
+            <!-- Event Time -->
             <TextView
-                android:id="@+id/detailsEvent"
-                android:layout_width="fill_parent"
+                android:id="@+id/timeEvent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:text="Some long text to see"
                 android:textColor="@color/primary_dark_color" />
         </LinearLayout>
+
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/deleteEventButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_event_item"
+            android:padding="@dimen/normal_margin"
+            android:background="@android:color/transparent"
 
-            android:background="@android:color/transparent"/>
+            android:src="@drawable/ic_delete_event_item" />
 
     </LinearLayout>
 

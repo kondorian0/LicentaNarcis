@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.narcis.neamtiu.licentanarcis.R;
@@ -49,8 +50,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         // contents of the view with that element
         final EventData myListData = listData.get(position);
         holder.textViewTitle.setText(listData.get(position).getEventTitle());
-        holder.textViewDetails.setText(listData.get(position).getEventDescription());
-        holder.textViewDate.setText(listData.get(position).getEventTime());
+        holder.textViewTime.setText(listData.get(position).getEventTime());
         holder.imageView.setImageResource(listData.get(position).getEventIcon());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +66,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                         activity.showImageDialog(myListData.getEventContent());
                         break;
                     case Constants.RECORD_EVENT:
-                        activity.showAudioDialog(myListData.getEventContent());
+                        activity.showAudioDialog(myListData.getEventTitle(), myListData.getEventContent());
                 }
+            }
+        });
+        holder.deleteEventView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO delete element
+//                activity.deleteEvent(myListData);
             }
         });
     }
@@ -81,15 +88,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
-        public TextView textViewTitle, textViewDetails, textViewDate;
+        public TextView textViewTitle, textViewTime;
+        public AppCompatImageButton deleteEventView;
         public RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.imageView = (ImageView) itemView.findViewById(R.id.listItemImage);
-            this.textViewTitle = (TextView) itemView.findViewById(R.id.titleEvent);
-            this.textViewDetails = (TextView) itemView.findViewById(R.id.detailsEvent);
-            this.textViewDate = (TextView) itemView.findViewById(R.id.dateEvent);
+            this.imageView = itemView.findViewById(R.id.listItemImage);
+            this.textViewTitle = itemView.findViewById(R.id.titleEvent);
+            this.textViewTime = itemView.findViewById(R.id.timeEvent);
+            this.deleteEventView = itemView.findViewById(R.id.deleteEventButton);
 
             relativeLayout = (RelativeLayout)itemView.findViewById(R.id.relativeLayoutItem);
         }
