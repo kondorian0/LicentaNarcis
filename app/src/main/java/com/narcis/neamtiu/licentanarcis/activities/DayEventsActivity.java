@@ -1,6 +1,8 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -24,7 +26,6 @@ import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.DownloadImageTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class DayEventsActivity extends AppCompatActivity {
 
         TextView noEventsTextView = findViewById(R.id.noEventsTextView);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        AppCompatImageButton deleteEventButton = findViewById(R.id.deleteEventButton);
 
         for (int i = 0; i < allDataList.size(); i++) {
             String eventDate = allDataList.get(i).getEventDate();
@@ -57,6 +57,8 @@ public class DayEventsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
+
+
 
     private String dateSelected() {
         Bundle extras = getIntent().getExtras();
@@ -112,14 +114,10 @@ public class DayEventsActivity extends AppCompatActivity {
     public void showImageDialog(String eventContent) {
         final Dialog dialog = new Dialog(DayEventsActivity.this);
 
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.dialog_event_image);
 
-        //Initializing the views of the dialog.
         ImageView imageContentView = dialog.findViewById(R.id.imageContentView);
 
         new DownloadImageTask(imageContentView).execute(eventContent);
@@ -130,7 +128,6 @@ public class DayEventsActivity extends AppCompatActivity {
 //                .into(imageContentView);
 
         dialog.show();
-
     }
 
     public void showAudioDialog(final String filename, final String eventContent) {
@@ -138,14 +135,10 @@ public class DayEventsActivity extends AppCompatActivity {
 
         final MediaPlayer mediaPlayer = new MediaPlayer();
 
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.dialog_event_audio);
 
-        //Initializing the views of the dialog.
         final TextView textContent = dialog.findViewById(R.id.textAudioContentView);
         final Button playAudio = dialog.findViewById(R.id.playAudioDialogButton);
         final Button stopAudio = dialog.findViewById(R.id.stopAudioDialogButton);
@@ -191,12 +184,47 @@ public class DayEventsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void deleteEvent(String eventID){
-        Toast.makeText(this, "You can now delete the event "+eventID, Toast.LENGTH_SHORT).show();
+    public void deleteEvent(String eventID) {
+        showAlertDialogToDeleteEvent(eventID);
     }
 
-    public void deleteEventSucces(){
-        firestoreManager.getEventsListFromFirestore();
+    public void eventDeleteSuccess(String eventId) {
+        Toast.makeText(this, "Event deleted successfully ", Toast.LENGTH_SHORT).show();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        for (EventData eventData : dayDataList) {
+            if (eventData.getEventId() == eventId) {
+                dayDataList.remove(eventData);
+                break;
+            }
+        }
+        EventListAdapter adapter = new EventListAdapter(dayDataList, this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void showAlertDialogToDeleteEvent(final String eventId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete the event?");
+        builder.setIcon(R.drawable.ic_warning_dialog);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                firestoreManager.deleteEvent(DayEventsActivity.this, eventId);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     @Override
@@ -204,6 +232,12 @@ public class DayEventsActivity extends AppCompatActivity {
         startActivity(new Intent(DayEventsActivity.this, MainActivity.class));
         finish();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        firestoreManager.getUserEventsList();
     }
 
     @Override

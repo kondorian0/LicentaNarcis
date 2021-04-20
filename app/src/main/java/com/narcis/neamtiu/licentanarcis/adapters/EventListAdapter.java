@@ -48,25 +48,29 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public void onBindViewHolder(@NonNull EventListAdapter.ViewHolder holder, int position) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        final EventData myListData = listData.get(position);
+        final EventData model = listData.get(position);
         holder.textViewTitle.setText(listData.get(position).getEventTitle());
         holder.textViewTime.setText(listData.get(position).getEventTime());
         holder.imageView.setImageResource(listData.get(position).getEventIcon());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (myListData.getEventType()){
+                switch (model.getEventType()){
                     case Constants.LOCATION_EVENT:
-                        activity.showEventLocationDialog(myListData.getEventTitle(),  myListData.getEventDescription(), myListData.getEventLocation());
+                        activity.showEventLocationDialog(
+                                model.getEventTitle(),
+                                model.getEventDescription(),
+                                model.getEventLocation()
+                        );
                         break;
                     case Constants.NOTE_EVENT:
-                        activity.showNoteDialog(myListData.getEventContent());
+                        activity.showNoteDialog(model.getEventContent());
                         break;
                     case Constants.DRAW_EVENT:
-                        activity.showImageDialog(myListData.getEventContent());
+                        activity.showImageDialog(model.getEventContent());
                         break;
                     case Constants.RECORD_EVENT:
-                        activity.showAudioDialog(myListData.getEventTitle(), myListData.getEventContent());
+                        activity.showAudioDialog(model.getEventTitle(), model.getEventContent());
                 }
             }
         });
@@ -74,7 +78,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             @Override
             public void onClick(View v) {
                 //TODO delete element
-//                activity.deleteEvent(myListData);
+                activity.deleteEvent(model.getEventId());
             }
         });
     }

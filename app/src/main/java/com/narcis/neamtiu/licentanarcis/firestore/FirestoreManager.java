@@ -17,6 +17,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.narcis.neamtiu.licentanarcis.activities.DayEventsActivity;
 import com.narcis.neamtiu.licentanarcis.activities.LoginUserActivity;
 import com.narcis.neamtiu.licentanarcis.activities.RegisterUserActivity;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
@@ -94,20 +95,6 @@ public class FirestoreManager {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        Log.i("TAG", documentSnapshot.toString());
-//                        //convert snapshot doc to User Data model object
-//                        User user = documentSnapshot.toObject(User.class);
-//
-//                        SharedPreferences sharedPreferences =
-//                                activity.getSharedPreferences(
-//                                        Constants.EVENTS,
-//                                        Context.MODE_PRIVATE);
-//
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        // KEY: constants.events  ----  Value: user.name
-//                        editor.putString(Constants.TYPE_OF_EVENT, user.name);
-//                        editor.apply();
-
                         //TODO pass the result to the login actity
                         //start
                         activity.userLoggedInSucces();
@@ -122,8 +109,12 @@ public class FirestoreManager {
     }
 
     public void registerDataEvent(final EventData eventData) {
+        String newEventId = mFireStore.collection(Constants.EVENTS)
+                .document().getId();
+        eventData.setEventId(newEventId);
+
         mFireStore.collection(Constants.EVENTS)
-                .document()
+                .document(newEventId)
                 .set(eventData, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -151,7 +142,7 @@ public class FirestoreManager {
                         Log.e("List", queryDocumentSnapshots.toString());
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             EventData eventData = doc.toObject(new EventData().getClass());
-                            eventData.eventId = (String) doc.get("eventId");
+                            eventData.eventId = (String) doc.getId();
                             eventData.eventType = (String) doc.get("eventType");
                             eventData.eventTitle = (String) doc.get("eventTitle");
                             eventData.eventDate = (String) doc.get("eventDate");
@@ -172,9 +163,28 @@ public class FirestoreManager {
         return this.eventDataArrayList;
     }
 
-    public String getProductID() {
-
-        return "0";
+    public void deleteEvent(final DayEventsActivity activity, final String eventId) {
+        mFireStore.collection(Constants.EVENTS)
+                .document(eventId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        activity.eventDeleteSuccess(eventId);
+                        for (EventData eventData : eventDataArrayList) {
+                            if (eventData.getEventId() == eventId) {
+                                eventDataArrayList.remove(eventData);
+                                break;
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("ERROR", "Error while deleting the event",e);
+                    }
+                });
     }
 
 
@@ -211,7 +221,7 @@ public class FirestoreManager {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("Failed",e.getMessage());
+                Log.e("Failed", e.getMessage());
             }
         });
     }

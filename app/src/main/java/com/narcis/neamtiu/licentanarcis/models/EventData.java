@@ -14,9 +14,9 @@ public class EventData {
 
     //NoteEvent - ImageEvent - AudioEvent
     public EventData(String userId, String eventType, String eventDate,
-                     String eventTime, String eventContent, String eventId) {
-        this.eventId = eventId;
+                     String eventTime, String eventContent) {
         this.userId = userId;
+        this.eventId = eventId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
@@ -24,7 +24,7 @@ public class EventData {
     }
 
     public EventData(String userId, String eventType, String eventDate,
-                     String eventTime, String eventTitle, String eventContent, String eventId) {
+                     String eventTime, String eventTitle, String eventContent) {
         this.userId = userId;
         this.eventId = eventId;
         this.eventType = eventType;
@@ -36,7 +36,7 @@ public class EventData {
 
     //LocationEvent
     public EventData(String userId, String eventType, String eventDate, String eventTime,
-                     String eventTitle, String eventDescription, String eventLocation, String eventId) {
+                     String eventTitle, String eventDescription, String eventLocation) {
         this.userId = userId;
         this.eventId = eventId;
         this.eventType = eventType;
@@ -77,7 +77,7 @@ public class EventData {
 
     public String getEventId() { return eventId; }
 
-    public void setEventId() { this.eventId = eventId; }
+    public void setEventId(String eventId) { this.eventId = eventId; }
 
     public String getEventContent() {
         return eventContent;
