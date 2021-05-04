@@ -1,7 +1,9 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
+import com.narcis.neamtiu.licentanarcis.firestore.NotificationBroadcastReceiver;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventHelper;
@@ -25,12 +28,17 @@ import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+
 public class NoteActivity extends AppCompatActivity {
     private AppCompatButton save_note_button, delete_note_button;
     private EditText mNote;
 
-    private String mCurrentSelectedTime = new String();
-    private String mCurrentSelectedDate = new String();
+    private String mCurrentSelectedTime;
+    private String mCurrentSelectedDate;
 
     private DatePickerDialog mDateDialog = null;
     private TimePickerDialog mTimeDialog = null;
@@ -43,6 +51,25 @@ public class NoteActivity extends AppCompatActivity {
         EventData noteEvent = new EventData(userId, Constants.NOTE_EVENT, mCurrentSelectedDate, mCurrentSelectedTime, note);
 
         FirestoreManager.getInstance().registerDataEvent(noteEvent);
+
+        LocalDateTime localDateTime = LocalDateTime.parse(mCurrentSelectedDate+" "+mCurrentSelectedTime,
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm") );
+
+        long millis = localDateTime
+                .atZone(ZoneId.systemDefault())
+                .toInstant().toEpochMilli();
+
+        Intent intent = new Intent(this, NotificationBroadcastReceiver.class);
+        intent.putExtra(Constants.NOTIFICATION_TITLE, note);
+        intent.putExtra(Constants.NOTIFICATION_MESSAGE, " ");
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP,
+                millis,
+                pendingIntent);
 
         mNote.getText().clear();
     }

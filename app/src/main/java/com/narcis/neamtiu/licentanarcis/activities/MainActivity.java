@@ -33,6 +33,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -72,15 +73,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NotificationBroadcastReceiver.class);
+                intent.putExtra(Constants.NOTIFICATION_TITLE, "content title");
+                intent.putExtra(Constants.NOTIFICATION_MESSAGE, "content message");
+
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-                long timeAtButtonClick = System.currentTimeMillis();
-                long tenSecondsInMillis = 1000 * 10;
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, 14);
+                calendar.set(Calendar.MINUTE, 8);
 
                 alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        timeAtButtonClick + tenSecondsInMillis,
+                        calendar.getTimeInMillis(),
                         pendingIntent);
             }
         });
@@ -145,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-
     }
 
     private static CalendarDay calendarDayFromString(String dayAsString) {
