@@ -13,6 +13,14 @@
         android:layout_height="match_parent"
         app:mcv_firstDayOfWeek="monday"
         app:mcv_showOtherDates="other_months"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/testButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Button"
+        android:layout_alignParentBottom="true"/>
+
     <include
         layout="@layout/fab_submenu"/>
 
