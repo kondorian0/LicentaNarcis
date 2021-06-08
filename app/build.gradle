@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.narcis.neamtiu.licentanarcis"
         minSdkVersion 26
@@ -37,7 +37,7 @@ dependencies {
     //Import Calendar
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
     // Import playservices for google maps
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     // Import Google maps services
     implementation 'com.google.maps:google-maps-services:0.2.4'
@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 
     //work manager
-    implementation "androidx.work:work-runtime:2.5.0"
+    implementation "androidx.work:work-runtime:2.6.0-alpha02"
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -59,8 +59,9 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.0"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+    implementation 'com.google.android.material:material:1.2.1'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
