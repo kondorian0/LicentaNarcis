@@ -108,14 +108,6 @@ public class EventLocationActivity extends AppCompatActivity {
                 alert.show();
             }
         });
-
-        add_location_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EventLocationActivity.this, MapsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
