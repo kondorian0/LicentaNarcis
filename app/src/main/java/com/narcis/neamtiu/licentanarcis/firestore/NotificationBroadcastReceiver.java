@@ -12,19 +12,18 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.narcis.neamtiu.licentanarcis.R;
-import com.narcis.neamtiu.licentanarcis.util.Constants;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        String title = intent.getStringExtra(Constants.NOTIFICATION_TITLE);
-        String message = intent.getStringExtra(Constants.NOTIFICATION_MESSAGE);
+        String title = intent.getStringExtra("NOTIFICATION_TITLE");
+        String message = intent.getStringExtra("NOTIFICATION_MESSAGE");
 
         // Create Notification Data
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,"notifyNarcis")
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(title)
-                .setContentText(message)
+                .setSmallIcon(R.drawable.ic_play_icon)
+                .setContentTitle("Content Title")
+                .setContentText("Content Text")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

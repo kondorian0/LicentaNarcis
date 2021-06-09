@@ -18,8 +18,7 @@ public class Constants {
     public static final int AUDIO_ITEM = 3;
     public static final int IMAGE_ITEM = 4;
 
+    public static final int RESULT_SUCCESS = 0;
     public static final String SELECTED_DATE = "selected_day";
 
-    public static final String NOTIFICATION_TITLE = "notification_title";
-    public static final String NOTIFICATION_MESSAGE = "notification_message";
 }
