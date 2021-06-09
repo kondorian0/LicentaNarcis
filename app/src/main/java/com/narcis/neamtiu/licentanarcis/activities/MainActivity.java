@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 intentDayEvent.putExtra(Constants.SELECTED_DATE, selectedDate);
                 Log.d(TAG, String.valueOf(intentDayEvent));
                 startActivity(intentDayEvent);
+                finish();
             }
         });
 
