@@ -1,10 +1,5 @@
 package com.narcis.neamtiu.licentanarcis.activities;
 
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +10,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
-import com.narcis.neamtiu.licentanarcis.firestore.NotificationBroadcastReceiver;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
 import com.narcis.neamtiu.licentanarcis.util.EventDecorator;
@@ -39,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton mEventLocationItem, mNoteItem, mAudioItem, mDrawItem;
 
-    private AppCompatButton mTestButton;
-
     private MaterialCalendarView mCalendarView;
 
     private FirestoreManager firestoreManager = FirestoreManager.getInstance() ;
@@ -55,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         mCalendarView = findViewById(R.id.calendarView);
         mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);
-        mTestButton = findViewById(R.id.testButton);
 
         updateCalendarViewSpanDots(firestoreManager.getEventsListFromFirestore());
         FirestoreManager.getInstance().register(new FirestoreManager.Observer() {
@@ -66,24 +55,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         selectCurrentDate();
-        createNotificationChannel();
-
-        mTestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NotificationBroadcastReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-                long timeAtButtonClick = System.currentTimeMillis();
-                long tenSecondsInMillis = 1000 * 10;
-
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        timeAtButtonClick + tenSecondsInMillis,
-                        pendingIntent);
-            }
-        });
 
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -134,19 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void createNotificationChannel(){
-        CharSequence name = "NarcisReminderChannel";
-        String description = "Channel for Narcis Reminders";
-        int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
-        @SuppressLint("WrongConstant")
-        NotificationChannel channel = new NotificationChannel("notifyNarcis", name, importance);
-        channel.setDescription(description);
-
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
-
     }
 
     private static CalendarDay calendarDayFromString(String dayAsString) {

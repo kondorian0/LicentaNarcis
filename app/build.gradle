@@ -46,12 +46,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.google.firebase:firebase-core'
-    implementation 'com.google.firebase:firebase-iid'
-    implementation 'com.google.firebase:firebase-messaging'
-
-    //work manager
-    implementation "androidx.work:work-runtime:2.5.0"
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
