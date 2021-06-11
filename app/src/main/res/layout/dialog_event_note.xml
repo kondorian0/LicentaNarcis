@@ -19,7 +19,7 @@
             android:id="@+id/textContentView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="#040404"
             android:textSize="15sp"
             android:textStyle="bold"

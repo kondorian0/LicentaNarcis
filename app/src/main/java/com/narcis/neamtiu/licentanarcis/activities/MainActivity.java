@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EVENTS, Context.MODE_PRIVATE);
-
         mCalendarView = findViewById(R.id.calendarView);
         mEventLocationItem = findViewById(R.id.menu_item_event);
         mNoteItem = findViewById(R.id.menu_item_note);

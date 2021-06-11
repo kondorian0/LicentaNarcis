@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="#040404"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -29,13 +29,13 @@
             android:id="@+id/descriptionEventDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="@string/description"
             android:textColor="#040404" />
         <TextView
             android:id="@+id/locationEventDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="@string/location"
             android:textColor="#040404" />
 
     </LinearLayout>

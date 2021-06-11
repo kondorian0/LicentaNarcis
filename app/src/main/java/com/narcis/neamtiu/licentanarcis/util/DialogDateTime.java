@@ -19,7 +19,7 @@ public class DialogDateTime extends AppCompatActivity {
     static LocalDate mDate = LocalDate.now();
 
     static int mDateYear =  mDate.getYear();
-    static int mDateMonthValue = mDate.getMonthValue()-1; //Ugly hack TODO: Improve
+    static int mDateMonthValue = mDate.getMonthValue()-1;
     static int mDateDayOfMonth = mDate.getDayOfMonth();
 
     static int mTimeHour = mTime.getHour();
@@ -30,7 +30,7 @@ public class DialogDateTime extends AppCompatActivity {
         void onDatePicked(int year, int month, int day);
     }
 
-    static private List<Listener> mListeners = new LinkedList<>();
+    static private final List<Listener> mListeners = new LinkedList<>();
 
     public static void registerListener(Listener listener) {
         mListeners.add(listener);

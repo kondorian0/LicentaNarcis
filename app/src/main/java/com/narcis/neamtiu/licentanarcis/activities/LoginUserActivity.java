@@ -28,7 +28,6 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
     private FirebaseAuth mAuth;
     private FirestoreManager firestoreManager = FirestoreManager.getInstance();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +73,7 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
             return;
         }
 
-        //Firebase does not accept password less than 5 characters
+        //Firebase nu accepta parole mai mici de 5 caractere
         if(password.length() < 6){
             mPassword.setError("Min password length should contain at lest 6 characters");
             mPassword.requestFocus();
@@ -87,11 +86,8 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     Toast.makeText(LoginUserActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
-                    //redirect to calendar
                     firestoreManager.getUserDetails(LoginUserActivity.this);
                     firestoreManager.getUserEventsList();
-//                    startActivity(new Intent(LoginUserActivity.this, MainActivity.class));
-//                    finish();
                 } else {
                     Toast.makeText(LoginUserActivity.this, "Failed to login!", Toast.LENGTH_SHORT).show();
                 }
@@ -101,7 +97,6 @@ public class LoginUserActivity extends AppCompatActivity implements View.OnClick
 
     public void userLoggedInSucces(){
         Intent startIntent = new Intent(LoginUserActivity.this, MainActivity.class);
-//        startIntent.putExtra("firestoreClass", firestoreClass);
         startActivity(startIntent);
         finish();
     }

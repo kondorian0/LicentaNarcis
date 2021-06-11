@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.Draw;
 
 import java.io.FileOutputStream;
@@ -24,27 +23,19 @@ import java.util.ArrayList;
 
 public class PaintFileHelper extends View {
 
-    //constant values
-    public static int BRUSH_SIZE = 10;
-    public static final int DEFAULT_COLOR = Color.RED;
-    public static final int DEFAULT_BG_COLOR = Color.WHITE;
-    private static final float TOUCH_TOLERANCE = 4;
-
     //variables
     private float mX, mY;
     private Path mPath;
     private Paint mPaint;
     private int currentColor;
-    private int backgroundColor = DEFAULT_BG_COLOR;
+    private int backgroundColor = Constants.DEFAULT_BG_COLOR;
     private int strokeWidth;
     private Bitmap mBitmap;
     private Canvas mCanvas;
-    private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private final Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-    private FirestoreManager firestoreManager = FirestoreManager.getInstance();
-
-    private ArrayList<Draw> paths = new ArrayList<>();
-    private ArrayList<Draw> undo = new ArrayList<>();
+    private final ArrayList<Draw> paths = new ArrayList<>();
+    private final ArrayList<Draw> undo = new ArrayList<>();
 
     public PaintFileHelper(Context context) {
         super(context, null);
@@ -56,7 +47,7 @@ public class PaintFileHelper extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setColor(DEFAULT_COLOR);
+        mPaint.setColor(Constants.DEFAULT_COLOR);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -72,8 +63,8 @@ public class PaintFileHelper extends View {
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
 
-        currentColor = DEFAULT_COLOR;
-        strokeWidth = BRUSH_SIZE;
+        currentColor = Constants.DEFAULT_COLOR;
+        strokeWidth = Constants.BRUSH_SIZE;
     }
 
     @Override
@@ -110,7 +101,7 @@ public class PaintFileHelper extends View {
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mX);
 
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+        if (dx >= Constants.TOUCH_TOLERANCE || dy >= Constants.TOUCH_TOLERANCE) {
             mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
             mX = x;
             mY = y;
@@ -149,7 +140,7 @@ public class PaintFileHelper extends View {
     }
 
     public void clear() {
-        backgroundColor = DEFAULT_BG_COLOR;
+        backgroundColor = Constants.DEFAULT_BG_COLOR;
         paths.clear();
         invalidate();
     }

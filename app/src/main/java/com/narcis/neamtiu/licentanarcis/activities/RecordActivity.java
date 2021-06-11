@@ -39,7 +39,6 @@ import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -128,7 +127,6 @@ public class RecordActivity extends AppCompatActivity {
         recording.setVisibility(View.INVISIBLE);
         not_recording.setVisibility(View.VISIBLE);
 
-        //Request RunTime permission
         if(!checkPermissionFromDevice()) {
             requestPermission();
         }
@@ -271,7 +269,6 @@ public class RecordActivity extends AppCompatActivity {
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // User cancelled the dialog
                             }
                         });
                 AlertDialog alert = builder.create();

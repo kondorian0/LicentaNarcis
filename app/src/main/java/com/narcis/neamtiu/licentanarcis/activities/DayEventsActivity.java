@@ -58,8 +58,6 @@ public class DayEventsActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-
-
     private String dateSelected() {
         Bundle extras = getIntent().getExtras();
 
@@ -74,14 +72,10 @@ public class DayEventsActivity extends AppCompatActivity {
     public void showNoteDialog(String eventContent) {
         final Dialog dialog = new Dialog(DayEventsActivity.this);
 
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.dialog_event_note);
 
-        //Initializing the views of the dialog.
         final TextView textContent = dialog.findViewById(R.id.textContentView);
 
         textContent.setText(eventContent);
@@ -92,14 +86,10 @@ public class DayEventsActivity extends AppCompatActivity {
     public void showEventLocationDialog(String title, String description, String location) {
         final Dialog dialog = new Dialog(DayEventsActivity.this);
 
-        //We have added a title in the custom layout. So let's disable the default title.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //The user will be able to cancel the dialog bu clicking anywhere outside the dialog.
         dialog.setCancelable(true);
-        //Mention the name of the layout of your custom dialog.
         dialog.setContentView(R.layout.dialog_event_location);
 
-        //Initializing the views of the dialog.
         final TextView titleEvent = dialog.findViewById(R.id.titleEventDialog);
         final TextView descriptionEvent = dialog.findViewById(R.id.descriptionEventDialog);
         final TextView locationEvent = dialog.findViewById(R.id.locationEventDialog);
@@ -121,12 +111,6 @@ public class DayEventsActivity extends AppCompatActivity {
         ImageView imageContentView = dialog.findViewById(R.id.imageContentView);
 
         new DownloadImageTask(imageContentView).execute(eventContent);
-
-//        Picasso.get()
-//                .load(eventContent)
-//                .error(R.drawable.ic_note_color)
-//                .into(imageContentView);
-
         dialog.show();
     }
 
@@ -237,7 +221,6 @@ public class DayEventsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        firestoreManager.getUserEventsList();
     }
 
     @Override

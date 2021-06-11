@@ -6,7 +6,7 @@
     <!-- Primary dark color of the app (shown in the status bar) -->
     <color name="primary_dark_color">#b2411b</color>
 
-    <color name="colorAccent">#ff4400</color>
+    <color name="primary_color_acccent">#ff4400</color>
 
     <!-- Background color for app -->
     <color name="tan_background">#FFF7DA</color>

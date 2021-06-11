@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="AudioURL"
+                    android:text="@string/audiourl"
                     android:textColor="#040404"/>
 
 <!--                <androidx.appcompat.widget.AppCompatSeekBar-->
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     app:backgroundTint="@color/primary_color"
-                    android:text="Play" />
+                    android:text="@string/play" />
 
                 <Button
                     android:id="@+id/stopAudioDialogButton"
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     app:backgroundTint="@color/primary_color"
-                    android:text="Stop" />
+                    android:text="@string/stop" />
             </FrameLayout>
 
         </LinearLayout>

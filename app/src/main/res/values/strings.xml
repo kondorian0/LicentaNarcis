@@ -25,6 +25,8 @@
     <string name="save">Save</string>
     <string name="write_note">write note</string>
     <string name="no_note">no note</string>
+    <string name="add_location">Add Location</string>
+    <string name="no_events_for_this_day">No events for this day!</string>
 
     <!-- Fab menu -->
     <string name="note">Note</string>
@@ -36,7 +38,6 @@
     <string name="undo">Undo</string>
     <string name="clear">Clear</string>
     <string name="record">Record</string>
-    <string name="Stop">Stop</string>
     <string name="play">Play</string>
     <string name="stop">Stop</string>
     <string name="delete">Delete</string>
@@ -45,5 +46,19 @@
     <string name="pen_size">Pen size:</string>
     <string name="todo">TODO</string>
     <string name="enter_text">Enter text</string>
+
+    <!-- List items -->
+    <string name="icon">Icon</string>
+    <string name="some_long_text_to_see">Some long text to see</string>
+    <string name="image">image</string>
+    <string name="audiourl">AudioURL</string>
+
+
+    <!-- Register / Login User -->
+    <string name="register">Register</string>
+    <string name="type_a_full_name">Type a full name</string>
+    <string name="register_user">Register user</string>
+    <string name="type_a_password">Type a password</string>
+    <string name="type_an_email">Type an email</string>
 
 </resources>

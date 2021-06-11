@@ -50,13 +50,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
-            android:text="Add Location"
+            android:text="@string/add_location"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/primary_color" />
 
         <TextView
             android:id="@+id/event_location"
-            android:layout_toRightOf="@id/add_location_button"
+            android:layout_toEndOf="@id/add_location_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

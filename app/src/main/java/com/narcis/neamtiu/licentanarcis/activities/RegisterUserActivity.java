@@ -74,24 +74,21 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
             return;
         }
 
-        //Firebase does not accept password less than 5 characters
+        //Firebase nu accepta parole mai mici de 5 caractere
         if(password.length() < 6) {
             mPassword.setError("Min password length should contain at lest 6 characters");
             mPassword.requestFocus();
             return;
         }
 
-        //create an instance and create a register user with email and password
+        //creaza o instanta si o inregistrare de user cu email si parola
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            //Registered user
                             User user = new User(name, email);
-
                             FirestoreManager.getInstance().registerUser(RegisterUserActivity.this, user);
-
                         } else {
                             Toast.makeText(RegisterUserActivity.this,
                                     "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
@@ -102,7 +99,6 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
     public void userRegistrationSuccess() {
         Toast.makeText(RegisterUserActivity.this,
                 "User has been registered succesfully!", Toast.LENGTH_SHORT).show();
-
         FirebaseAuth.getInstance().signOut();
         finish();
     }

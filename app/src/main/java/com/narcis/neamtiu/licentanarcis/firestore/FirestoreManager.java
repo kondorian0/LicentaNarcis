@@ -67,11 +67,9 @@ public class FirestoreManager {
     private ArrayList<EventData> eventDataArrayList = new ArrayList();
 
     public void registerUser(final RegisterUserActivity activity, User userInfo) {
-        //if the collection is already created then it will not create the same or another
+        //Daca colectia este deja creata atunci nu se va crea din nou
         mFireStore.collection(Constants.USERS)
-                //Id for users fields
                 .document(getCurrentUserID())
-                //userInfo are Field and the SetOption is set to merge instead of replace fields.
                 .set(userInfo, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -88,7 +86,7 @@ public class FirestoreManager {
     }
 
     public void getUserDetails(final LoginUserActivity activity) {
-        //collection name from which we want the data
+        //numele colectiei a carei data avem nevoie
         mFireStore.collection(Constants.USERS)
                 .document(getCurrentUserID())
                 .get()
@@ -187,9 +185,8 @@ public class FirestoreManager {
                 });
     }
 
-
     public String getCurrentUserID() {
-        //get currentUser using FirebaseAuth
+        //preia userul current folosind FirebaseAuth
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String currentUserID = "";
@@ -209,7 +206,7 @@ public class FirestoreManager {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.e("Firebase file URL", Objects.requireNonNull(taskSnapshot.getMetadata()).getReference().getDownloadUrl().toString());
 
-                //get  the downloadable url from the task snapshot
+                //preia url-ul downloadat din taskSnapshot
                 Objects.requireNonNull(taskSnapshot.getMetadata().getReference()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {

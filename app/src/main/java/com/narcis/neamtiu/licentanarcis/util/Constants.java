@@ -1,5 +1,7 @@
 package com.narcis.neamtiu.licentanarcis.util;
 
+import android.graphics.Color;
+
 public class Constants {
     public static final String USERS = "users";
     public static final String EVENTS ="events";
@@ -21,4 +23,9 @@ public class Constants {
     public static final int RESULT_SUCCESS = 0;
     public static final String SELECTED_DATE = "selected_day";
 
+    //PaintFileHelper
+    public static int BRUSH_SIZE = 10;
+    public static final int DEFAULT_COLOR = Color.RED;
+    public static final int DEFAULT_BG_COLOR = Color.WHITE;
+    public static final float TOUCH_TOLERANCE = 4;
 }

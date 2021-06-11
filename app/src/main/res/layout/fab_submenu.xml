@@ -15,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         fab:menu_fab_size="normal"
         fab:menu_showShadow="true"
         fab:menu_shadowColor="#66000000"

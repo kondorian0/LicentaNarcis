@@ -1,16 +1,11 @@
 package com.narcis.neamtiu.licentanarcis.adapters;
 
-import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -34,7 +29,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     @NonNull
-    // Create new views (invoked by the layout manager)
+    // Creaza noi views
     @Override
     public EventListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -43,11 +38,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         return viewHolder;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Inlocuieste continutul unei view
     @Override
     public void onBindViewHolder(@NonNull EventListAdapter.ViewHolder holder, int position) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
+        // Obtine elementul din dataset aflat in pozitia currenta si inlocuieste continutul view-ului cu acel element.
         final EventData model = listData.get(position);
         holder.textViewTitle.setText(listData.get(position).getEventTitle());
         holder.textViewTime.setText(listData.get(position).getEventTime());
@@ -83,7 +77,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         });
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Returneaza marimea dataset-ului
     @Override
     public int getItemCount() {
         return listData.size();
