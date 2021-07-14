@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class DayEventsActivity extends AppCompatActivity {
-
     private FirestoreManager firestoreManager = FirestoreManager.getInstance();
     private ArrayList<EventData> allDataList = firestoreManager.getEventsListFromFirestore();
     private ArrayList<EventData> dayDataList = new ArrayList<EventData>();

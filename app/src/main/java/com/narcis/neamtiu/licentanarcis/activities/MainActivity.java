@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static CalendarDay calendarDayFromString(String dayAsString) {
         String[] dayMonthYear = dayAsString.split("/");
-
-        // TODO: Validate & improve
         String day = dayMonthYear[0];
         String month = dayMonthYear[1];
         String year = dayMonthYear[2];

@@ -72,7 +72,20 @@ public class RecordActivity extends AppCompatActivity {
     private ParcelFileDescriptor file = null;
     private ContentResolver resolver;
 
-    void setupFileData() {
+    void commitData() {
+        FirestoreManager.getInstance().uploadFileToCloudStorage(filename, audioUri,
+                new FirestoreManager.OnImageUploadListener() {
+                    @Override
+                    public void onFileUpload(String audioUrl) {
+                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
+                        EventData recordEvent = new EventData(userId, Constants.RECORD_EVENT,
+                                mCurrentSelectedDate, mCurrentSelectedTime, filename, audioUrl);
+                        FirestoreManager.getInstance().registerDataEvent(recordEvent);
+                    }
+                });
+    }
+
+    private void setupFileData() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, filename);
         values.put(MediaStore.Audio.Media.MIME_TYPE, mimeType);
@@ -87,19 +100,6 @@ public class RecordActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    void commitData() {
-        FirestoreManager.getInstance().uploadFileToCloudStorage(filename, audioUri,
-                new FirestoreManager.OnImageUploadListener() {
-                    @Override
-                    public void onFileUpload(String audioUrl) {
-                        final String userId = FirestoreManager.getInstance().getCurrentUserID();
-                        EventData recordEvent = new EventData(userId, Constants.RECORD_EVENT,
-                                mCurrentSelectedDate, mCurrentSelectedTime, filename, audioUrl);
-                        FirestoreManager.getInstance().registerDataEvent(recordEvent);
-                    }
-                });
     }
 
     private void setupMediaRecorder() {

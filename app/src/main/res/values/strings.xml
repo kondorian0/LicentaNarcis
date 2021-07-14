@@ -60,5 +60,6 @@
     <string name="register_user">Register user</string>
     <string name="type_a_password">Type a password</string>
     <string name="type_an_email">Type an email</string>
+    <string name="logout">Logout</string>
 
 </resources>

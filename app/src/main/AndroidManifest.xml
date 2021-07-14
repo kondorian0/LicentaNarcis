@@ -39,5 +39,4 @@
         <activity android:name=".activities.EventLocationActivity" />
         <activity android:name=".activities.DayEventsActivity" />
     </application>
-
 </manifest>

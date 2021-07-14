@@ -83,7 +83,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         return listData.size();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textViewTitle, textViewTime;

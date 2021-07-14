@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import com.narcis.neamtiu.licentanarcis.R;
 import com.narcis.neamtiu.licentanarcis.firestore.FirestoreManager;
 import com.narcis.neamtiu.licentanarcis.models.EventData;
 import com.narcis.neamtiu.licentanarcis.util.Constants;
-import com.narcis.neamtiu.licentanarcis.util.DialogDateTime;
 import com.narcis.neamtiu.licentanarcis.util.EventHelper;
 
 import org.threeten.bp.LocalDate;
@@ -27,10 +25,9 @@ import org.threeten.bp.LocalTime;
 
 public class EventLocationActivity extends AppCompatActivity {
 
-    private EditText mTitle, mDescription;
-    private TextView mLocation;
+    private EditText mTitle, mDescription, mLocation;
 
-    private AppCompatButton add_location_button, save_event_button, delete_event_button;
+    private AppCompatButton save_event_button, delete_event_button;
 
     private String mCurrentSelectedTime = new String();
     private String mCurrentSelectedDate = new String();
@@ -53,14 +50,12 @@ public class EventLocationActivity extends AppCompatActivity {
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_location);
 
         mTitle = findViewById(R.id.event_title);
         mDescription = findViewById(R.id.event_description);
         mLocation = findViewById(R.id.event_location);
-        add_location_button = findViewById(R.id.add_location_button);
         save_event_button = findViewById(R.id.save_event_button);
         delete_event_button = findViewById(R.id.delete_event_button);
 

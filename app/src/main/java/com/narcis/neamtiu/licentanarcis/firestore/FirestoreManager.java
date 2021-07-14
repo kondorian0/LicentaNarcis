@@ -56,8 +56,7 @@ public class FirestoreManager {
     // Singleton
     private static FirestoreManager singleton = new FirestoreManager();
 
-    private FirestoreManager() {
-    }
+    private FirestoreManager() { }
 
     public static FirestoreManager getInstance() {
         return singleton;
@@ -157,10 +156,6 @@ public class FirestoreManager {
                 });
     }
 
-    public ArrayList<EventData> getEventsListFromFirestore() {
-        return this.eventDataArrayList;
-    }
-
     public void deleteEvent(final DayEventsActivity activity, final String eventId) {
         mFireStore.collection(Constants.EVENTS)
                 .document(eventId)
@@ -183,17 +178,6 @@ public class FirestoreManager {
                         Log.e("ERROR", "Error while deleting the event",e);
                     }
                 });
-    }
-
-    public String getCurrentUserID() {
-        //preia userul current folosind FirebaseAuth
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        String currentUserID = "";
-        if (currentUser != null) {
-            currentUserID = currentUser.getUid();
-        }
-        return currentUserID;
     }
 
     public void uploadFileToCloudStorage(String filename, Uri fileURI, final OnImageUploadListener listener) {
@@ -221,5 +205,20 @@ public class FirestoreManager {
                 Log.e("Failed", e.getMessage());
             }
         });
+    }
+
+    public ArrayList<EventData> getEventsListFromFirestore() {
+        return this.eventDataArrayList;
+    }
+
+    public String getCurrentUserID() {
+        //preia userul current folosind FirebaseAuth
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String currentUserID = "";
+        if (currentUser != null) {
+            currentUserID = currentUser.getUid();
+        }
+        return currentUserID;
     }
 }
